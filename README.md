@@ -16,3 +16,5 @@ Use these exact settings:
 The build script copies the static CapDent site into `dist/` so Cloudflare Pages always has a clear output directory.
 
 The main Micirql company website remains in `mkraja826/micirql-website`.
+
+Deployment trigger: 2026-07-16
