@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "micirql-dms",
+  "compatibility_date": "2026-07-16",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "./dist"
+  }
+}
