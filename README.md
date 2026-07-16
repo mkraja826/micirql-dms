@@ -2,12 +2,17 @@
 
 Standalone product website for CapDent dental clinic management software.
 
-## Deployment
+## Cloudflare Pages deployment
 
-This is a static website. Deploy the repository root directly with Cloudflare Pages.
+Use these exact settings:
 
-- Build command: leave empty
-- Build output directory: `/`
-- Intended domain: `capdent.micirql.com`
+- Production branch: `main`
+- Framework preset: `None`
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Root directory: leave empty
+- Intended custom domain: `capdent.micirql.com`
+
+The build script copies the static CapDent site into `dist/` so Cloudflare Pages always has a clear output directory.
 
 The main Micirql company website remains in `mkraja826/micirql-website`.
