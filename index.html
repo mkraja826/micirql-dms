@@ -1,114 +1,233 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f3fbfb" />
-  <title>CapDent | Free Dental Clinic Management Software</title>
-  <meta name="description" content="CapDent keeps every clinic-management feature free. Each clinic gets 1 GB of cloud storage and pays only when more storage is needed." />
-  <meta name="robots" content="index,follow" />
+  <meta name="theme-color" content="#f4fbfc" />
+  <meta name="color-scheme" content="light" />
+
+  <title>Free Dental Clinic Software for Patient Records & Appointments | CapDent</title>
+  <meta name="description" content="CapDent is free dental clinic management software for patient records, appointments, treatments, payments, follow-ups, staff workflows and clinical files. Every clinic gets 1 GB of cloud storage." />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
   <link rel="canonical" href="https://capdent.micirql.com/" />
   <link rel="icon" type="image/svg+xml" href="/capdent-mark.svg" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="CapDent" />
-  <meta property="og:title" content="CapDent is free for every clinic" />
-  <meta property="og:description" content="All clinic-management features are included with 1 GB of free cloud storage. Upgrade only when your clinic needs more space." />
+  <meta property="og:locale" content="en_IN" />
+  <meta property="og:title" content="CapDent — Free Dental Clinic Management Software" />
+  <meta property="og:description" content="Manage patients, appointments, treatments, payments and follow-ups in one clear clinic workflow. All features are free with 1 GB included." />
   <meta property="og:url" content="https://capdent.micirql.com/" />
+  <meta property="og:image" content="https://capdent.micirql.com/images/capdent-social.webp" />
+  <meta property="og:image:type" content="image/webp" />
+  <meta property="og:image:width" content="1000" />
+  <meta property="og:image:height" content="525" />
+  <meta property="og:image:alt" content="CapDent dental clinic management software screens for dashboard, payments and owner tools" />
+
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="CapDent is free for every clinic" />
-  <meta name="twitter:description" content="All dental clinic-management features with 1 GB of free cloud storage." />
-  <style>
-    :root{--navy:#0b2855;--navy2:#0a5267;--teal:#0db7b7;--teal2:#13c7bd;--gold:#f4c542;--ink:#102a43;--muted:#627d98;--bg:#f3fbfb;--line:#d9e8ec;--soft:#e7f8f6;--white:#fff;--shadow:0 28px 90px rgba(11,40,85,.14);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:radial-gradient(circle at 12% 6%,rgba(13,183,183,.12),transparent 30%),radial-gradient(circle at 88% 14%,rgba(11,40,85,.08),transparent 28%),var(--bg);overflow-x:hidden}a{color:inherit;text-decoration:none}.shell{width:min(1180px,calc(100% - 34px));margin:auto}
-    .nav{position:sticky;top:12px;z-index:30;margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:11px 14px;border:1px solid rgba(217,232,236,.92);border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);box-shadow:0 16px 50px rgba(11,40,85,.1)}
-    .brand{display:flex;align-items:center;gap:11px;font-weight:950}.tooth{width:43px;height:43px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#fff,var(--soft));box-shadow:inset 0 0 0 1px #d9efec}.tooth svg{width:31px;height:31px}.brand strong{font-size:20px;letter-spacing:-.04em}.brand strong span{color:var(--teal)}.navlinks{display:flex;gap:4px;color:var(--muted);font-weight:800;font-size:13px}.navlinks a{padding:10px 12px;border-radius:999px}.navlinks a:hover{background:var(--soft);color:var(--navy)}
-    .navcta,.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:900}.navcta{padding:12px 17px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--teal));box-shadow:0 12px 30px rgba(13,183,183,.2)}
-    .hero{min-height:calc(100vh - 86px);display:grid;grid-template-columns:1.04fr .96fr;gap:58px;align-items:center;padding:70px 0}.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:9px 13px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--teal);font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 5px rgba(13,183,183,.12)}h1{margin:22px 0 20px;font-size:clamp(52px,7vw,90px);line-height:.92;letter-spacing:-.075em;color:var(--navy)}h1 span{background:linear-gradient(120deg,var(--teal),var(--teal2));-webkit-background-clip:text;background-clip:text;color:transparent}.lead{max-width:690px;color:var(--muted);font-size:18px;line-height:1.75}.hero-price{display:flex;align-items:baseline;gap:12px;margin-top:22px}.hero-price strong{font-size:43px;color:var(--navy);letter-spacing:-.06em}.hero-price span{color:var(--muted);font-size:14px;font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:28px}.button{min-height:52px;padding:0 20px;border:1px solid var(--line)}.primary{color:#fff;background:linear-gradient(135deg,var(--navy),var(--teal));box-shadow:0 20px 52px rgba(13,183,183,.2)}.secondary{background:#fff}.proof{display:flex;flex-wrap:wrap;gap:9px;margin-top:28px}.proof span{padding:10px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);color:#486581;font-size:12px;font-weight:850}
-    .visual{position:relative;min-height:540px;display:grid;place-items:center}.visual:before{content:"";position:absolute;width:470px;height:470px;border-radius:50%;background:radial-gradient(circle,rgba(13,183,183,.22),rgba(13,183,183,.05) 47%,transparent 70%);filter:blur(7px)}.console{position:relative;width:min(100%,540px);padding:21px;border-radius:38px;background:rgba(255,255,255,.9);border:1px solid #fff;box-shadow:var(--shadow)}.console-top{display:flex;justify-content:space-between;padding:8px 8px 18px;color:#7990a5;font-size:10px;font-weight:900;letter-spacing:.12em}.console-top b{color:var(--teal)}.screen{padding:28px;border-radius:27px;background:linear-gradient(145deg,var(--navy),#0b6174);color:#fff}.screen small{display:block;color:#9fe9e6;font-size:10px;font-weight:900;letter-spacing:.13em}.screen h2{margin:13px 0 7px;font-size:38px;letter-spacing:-.055em}.screen p{margin:0;color:#cbe3e7;line-height:1.6}.meter{height:13px;margin:28px 0 11px;border-radius:999px;background:rgba(255,255,255,.17);overflow:hidden}.meter span{display:block;width:71%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#7ff4e9,var(--gold))}.usage{display:flex;justify-content:space-between;color:#cae6e9;font-size:12px;font-weight:850}.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.mini{padding:17px;border:1px solid var(--line);border-radius:20px;background:#fff}.mini small{display:block;color:var(--teal);font-size:9px;font-weight:950;letter-spacing:.1em}.mini strong{display:block;margin-top:7px;color:var(--navy);font-size:18px}
-    .strip{overflow:hidden;border-block:1px solid var(--line);background:rgba(255,255,255,.62)}.track{width:max-content;display:flex;gap:28px;align-items:center;padding:16px 0;color:var(--navy);font-size:12px;font-weight:950;letter-spacing:.14em;animation:move 25s linear infinite}.track i{color:var(--teal);font-style:normal}@keyframes move{to{transform:translateX(-50%)}}
-    .section{padding:94px 0}.kicker{color:var(--teal);font-size:12px;font-weight:950;letter-spacing:.15em;text-transform:uppercase}.intro{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:end;margin-top:15px}.intro h2{margin:0;font-size:clamp(40px,5.8vw,68px);line-height:.97;letter-spacing:-.06em;color:var(--navy)}.intro p{margin:0;color:var(--muted);font-size:17px;line-height:1.75}.grid3,.grid4{display:grid;gap:16px;margin-top:40px}.grid3{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(4,1fr)}.card{padding:24px;border:1px solid var(--line);border-radius:27px;background:rgba(255,255,255,.88);box-shadow:0 15px 45px rgba(11,40,85,.05)}.card h3{margin:18px 0 10px;font-size:21px;color:var(--navy)}.card p{margin:0;color:var(--muted);line-height:1.65;font-size:14px}.icon{width:46px;height:46px;display:grid;place-items:center;border-radius:16px;background:var(--soft);color:var(--teal);font-size:20px;font-weight:950}
-    .storage-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}.storage-step{position:relative;padding:27px;border-radius:27px;border:1px solid var(--line);background:#fff;overflow:hidden}.storage-step:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--teal)}.storage-step.warn:before{background:var(--gold)}.storage-step.stop:before{background:var(--navy)}.storage-step span{color:var(--teal);font-size:12px;font-weight:950}.storage-step strong{display:block;margin:14px 0 9px;font-size:22px;color:var(--navy)}.storage-step p{margin:0;color:var(--muted);line-height:1.65;font-size:14px}
-    .plans .card{display:flex;flex-direction:column;position:relative}.badge{position:absolute;top:18px;right:18px;padding:7px 10px;border-radius:999px;background:var(--navy);color:#fff;font-size:9px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.storage{margin-top:14px;color:var(--teal);font-size:13px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.price{margin:13px 0 3px;font-size:38px;font-weight:950;color:var(--navy);letter-spacing:-.05em}.price small{font-size:13px;color:var(--muted);letter-spacing:0}.annual{margin:0 0 15px;color:var(--muted);font-size:12px;font-weight:750}.plans ul{padding-left:18px;color:#486581}.plans li{margin:8px 0;font-size:13px;line-height:1.45}.plans .button{margin-top:auto}.popular{border-color:rgba(13,183,183,.5);background:linear-gradient(160deg,#fff,var(--soft));box-shadow:0 25px 70px rgba(13,183,183,.13)}.note{margin-top:24px;padding:20px 22px;border-radius:22px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.65}.note strong{color:var(--navy)}
-    .faq{max-width:900px}.faq details{padding:21px 0;border-bottom:1px solid var(--line)}.faq summary{cursor:pointer;font-size:18px;font-weight:900;color:var(--navy)}.faq p{color:var(--muted);line-height:1.7}.cta{margin-bottom:80px;padding:44px;border-radius:36px;color:#fff;background:radial-gradient(circle at 80% 10%,rgba(19,199,189,.35),transparent 30%),linear-gradient(135deg,var(--navy),var(--navy2));display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;box-shadow:var(--shadow)}.cta h2{margin:8px 0 12px;font-size:clamp(38px,5vw,62px);line-height:.96;letter-spacing:-.06em}.cta p{margin:0;color:#c8e2e7;line-height:1.65}.cta .actions{justify-content:flex-end;margin:0}.cta .primary{background:#fff;color:var(--navy);box-shadow:none}.footer{padding:28px 0 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;color:var(--muted);font-size:12px}.footer div{display:flex;gap:15px}
-    @media(max-width:1080px){.grid4{grid-template-columns:repeat(2,1fr)}}@media(max-width:980px){.navlinks{display:none}.hero,.intro,.cta{grid-template-columns:1fr}.hero{padding-top:50px}.visual{min-height:470px}.grid3,.storage-flow{grid-template-columns:1fr}.cta .actions{justify-content:flex-start}}@media(max-width:650px){.shell{width:min(100% - 24px,1180px)}.nav{top:7px;margin-top:7px}.navcta{padding:11px 13px;font-size:12px}.hero{padding:42px 0 58px}h1{font-size:50px}.lead{font-size:16px}.hero-price strong{font-size:35px}.visual{min-height:400px}.console{padding:14px;border-radius:27px}.screen{padding:22px}.screen h2{font-size:31px}.section{padding:72px 0}.intro h2{font-size:42px}.grid4{grid-template-columns:1fr}.cta{padding:28px}.footer{flex-direction:column}}
-  </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"CapDent","applicationCategory":"BusinessApplication","operatingSystem":"Android","url":"https://capdent.micirql.com/","publisher":{"@type":"Organization","name":"Micirql"},"offers":[{"@type":"Offer","name":"Free Forever — 1 GB","price":"0","priceCurrency":"INR"},{"@type":"Offer","name":"Storage 5","price":"299","priceCurrency":"INR"},{"@type":"Offer","name":"Storage 20","price":"599","priceCurrency":"INR"},{"@type":"Offer","name":"Storage 50","price":"999","priceCurrency":"INR"}]}</script>
+  <meta name="twitter:title" content="CapDent — Free Dental Clinic Management Software" />
+  <meta name="twitter:description" content="Patients, appointments, treatments, payments and follow-ups in one simple dental clinic app." />
+  <meta name="twitter:image" content="https://capdent.micirql.com/images/capdent-social.webp" />
+  <meta name="twitter:image:alt" content="CapDent dental clinic management software screens" />
+
+  <link rel="stylesheet" href="/styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://capdent.micirql.com/#website",
+        "url": "https://capdent.micirql.com/",
+        "name": "CapDent",
+        "alternateName": "CapDent Dental Clinic Software",
+        "inLanguage": "en-IN",
+        "publisher": { "@id": "https://capdent.micirql.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://capdent.micirql.com/#organization",
+        "name": "Micirql",
+        "url": "https://micirql.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://capdent.micirql.com/capdent-mark.svg"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://capdent.micirql.com/#software",
+        "name": "CapDent",
+        "url": "https://capdent.micirql.com/",
+        "downloadUrl": "https://play.google.com/store/apps/details?id=com.dms.clinic",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Dental clinic management software",
+        "operatingSystem": "Android",
+        "description": "Dental clinic management software for patient records, appointments, treatment tracking, payments, follow-ups, staff workflows and clinical files.",
+        "image": "https://capdent.micirql.com/images/capdent-social.webp",
+        "screenshot": [
+          "https://capdent.micirql.com/images/capdent-product-screens.webp",
+          "https://capdent.micirql.com/images/capdent-social.webp"
+        ],
+        "publisher": { "@id": "https://capdent.micirql.com/#organization" },
+        "offers": {
+          "@type": "Offer",
+          "name": "Free Forever — 1 GB included",
+          "price": "0",
+          "priceCurrency": "INR",
+          "availability": "https://schema.org/InStock"
+        },
+        "featureList": [
+          "Patient records",
+          "Appointments and waiting queue",
+          "Treatment tracking",
+          "Payments and pending dues",
+          "Clinical photos and documents",
+          "Follow-up reminders",
+          "Role-based staff access",
+          "Clinic reports"
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
-  <header class="nav shell">
-    <a class="brand" href="#home" aria-label="CapDent home"><span class="tooth"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M18 10c6-3 10 2 14 2s8-5 14-2c9 4 9 15 5 25-3 7-4 19-10 19-5 0-4-12-9-12s-4 12-9 12c-6 0-7-12-10-19-4-10-4-21 5-25Z" stroke="#0b2855" stroke-width="5"/><path d="M18 18c9 6 19 6 28 0" stroke="#0db7b7" stroke-width="5" stroke-linecap="round"/><path d="M27 8h10v9H27z" fill="#f4c542"/></svg></span><strong>Cap<span>Dent</span></strong></a>
-    <nav class="navlinks"><a href="#features">Features</a><a href="#storage">Storage</a><a href="#plans">Pricing</a><a href="#faq">FAQ</a></nav>
-    <a class="navcta" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Google Play ↗</a>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="CapDent home">
+        <img src="/capdent-mark.svg" alt="" width="44" height="44" />
+        <strong>Cap<span>Dent</span></strong>
+      </a>
+      <div class="nav-links">
+        <a href="#screens">App screens</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a class="button button-small button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get the app <span aria-hidden="true">↗</span></a>
+    </nav>
   </header>
 
-  <main>
-    <section class="hero shell" id="home">
-      <div>
-        <div class="eyebrow"><span class="dot"></span> All clinic features included</div>
-        <h1>CapDent is free. <span>Pay only for storage.</span></h1>
-        <p class="lead">Run patient records, appointments, visits, payments, follow-ups, staff workflows, reports and clinical uploads without paying for feature access. Every clinic receives 1 GB of cloud storage.</p>
-        <div class="hero-price"><strong>₹0</strong><span>with 1 GB included per clinic</span></div>
-        <div class="actions"><a class="button primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get CapDent ↗</a><a class="button secondary" href="#plans">See storage plans</a></div>
-        <div class="proof"><span>No patient-count paywall</span><span>All staff roles included</span><span>No feature paywall</span><span>1 GB free storage</span></div>
+  <main id="main">
+    <section id="top" class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> Built for everyday dental clinic work</p>
+        <h1>Free dental clinic software for <em>records, appointments and payments.</em></h1>
+        <p class="hero-lead">CapDent keeps patients, treatments, collections, follow-ups, staff workflows and clinical files in one clear Android app—without locking essential clinic features behind a subscription.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Download on Google Play <span aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="#screens">See how CapDent works</a>
+        </div>
+        <div class="proof-row" aria-label="CapDent plan highlights">
+          <span>All features included</span>
+          <span>1 GB free storage</span>
+          <span>No patient-count paywall</span>
+        </div>
       </div>
-      <div class="visual">
-        <div class="console">
-          <div class="console-top"><span>CAPDENT / STORAGE CONTROL</span><b>● ACTIVE</b></div>
-          <div class="screen"><small>FREE CLINIC STORAGE</small><h2>726 MB of 1 GB</h2><p>Every clinic feature is active. Storage Saver begins near the limit.</p><div class="meter"><span></span></div><div class="usage"><span>71% used</span><span>298 MB available</span></div></div>
-          <div class="mini-grid"><div class="mini"><small>FEATURE ACCESS</small><strong>Everything included</strong></div><div class="mini"><small>UPGRADE REASON</small><strong>More file space</strong></div></div>
+
+      <div class="hero-visual">
+        <img src="/images/capdent-product-screens.webp" width="1200" height="1600" alt="CapDent app overview showing clinic dashboard, patient directory, payment report, treatment workflow, owner tools and login screens" fetchpriority="high" />
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Core clinic workflows">
+      <div class="shell trust-track">
+        <span>Patient records</span><i>✦</i><span>Appointments</span><i>✦</i><span>Treatments</span><i>✦</i><span>Payments</span><i>✦</i><span>Follow-ups</span><i>✦</i><span>Clinic reports</span>
+      </div>
+    </section>
+
+    <section id="screens" class="section shell">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">Real CapDent screens</p>
+          <h2>See the clinic workflow before you install.</h2>
+        </div>
+        <p>These privacy-safe previews use demo information and show the actual CapDent visual system for clinic dashboards, payments, patients, treatments, owner tools and access.</p>
+      </div>
+
+      <div class="seo-preview-grid">
+        <figure class="overview-card">
+          <img src="/images/capdent-product-screens.webp" width="600" height="800" alt="CapDent app overview showing dental clinic dashboard, patient records, payment reports, treatment workflow, owner tools and login" loading="lazy" />
+          <figcaption><strong>One connected clinic workflow</strong><span>Patients, treatments, payments, reports and staff tools use one consistent Android interface.</span></figcaption>
+        </figure>
+        <div class="preview-copy">
+          <img src="/images/capdent-social.webp" width="1000" height="525" alt="CapDent dental clinic software preview showing dashboard, payment report and clinic owner tools" loading="lazy" />
+          <div class="preview-points">
+            <article><b>01</b><span><strong>Daily dashboard</strong>Review patients, waiting flow, completed visits, collections and pending amount.</span></article>
+            <article><b>02</b><span><strong>Patient directory</strong>Search records and keep visits, follow-ups and payments connected.</span></article>
+            <article><b>03</b><span><strong>Treatment and money</strong>Track sittings, treatment value, paid amount, pending dues and reports.</span></article>
+            <article><b>04</b><span><strong>Owner control</strong>Open reports, reminders, appointments, gallery and clinic administration.</span></article>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="strip"><div class="track"><span>ALL FEATURES FREE</span><i>✦</i><span>1 GB INCLUDED</span><i>✦</i><span>PAY ONLY FOR MORE SPACE</span><i>✦</i><span>EXISTING FILES STAY ACCESSIBLE</span><i>✦</i><span>ALL FEATURES FREE</span><i>✦</i><span>1 GB INCLUDED</span><i>✦</i><span>PAY ONLY FOR MORE SPACE</span><i>✦</i><span>EXISTING FILES STAY ACCESSIBLE</span><i>✦</i></div></section>
+    <section id="features" class="section section-soft">
+      <div class="shell">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">One practical clinic system</p>
+            <h2>Everything needed for the daily dental workflow.</h2>
+          </div>
+          <p>CapDent is designed for independent clinics and growing teams that need a clear system without enterprise-level complexity.</p>
+        </div>
 
-    <section class="section shell" id="features">
-      <div class="kicker">Included for every clinic</div>
-      <div class="intro"><h2>No basic, professional or premium feature split.</h2><p>CapDent keeps the complete clinic workflow available. The only paid upgrade is additional cloud storage.</p></div>
-      <div class="grid3">
-        <article class="card"><div class="icon">◉</div><h3>Patient profiles</h3><p>Patient details, history, medications, visits and ongoing treatments.</p></article>
-        <article class="card"><div class="icon">⌁</div><h3>Appointments & queue</h3><p>Book appointments, check in patients and keep waiting flow clear.</p></article>
-        <article class="card"><div class="icon">▧</div><h3>Clinical uploads</h3><p>Prescriptions, X-rays, reports and patient photos stay connected.</p></article>
-        <article class="card"><div class="icon">₹</div><h3>Payments</h3><p>Consultation, medication and treatment payment tracking.</p></article>
-        <article class="card"><div class="icon">↻</div><h3>Follow-ups</h3><p>Upcoming reminders and ongoing treatments remain visible.</p></article>
-        <article class="card"><div class="icon">▥</div><h3>Clinic reports</h3><p>Activity, payments, treatments, follow-ups and staff reports.</p></article>
+        <div class="feature-grid">
+          <article><span>01</span><h3>Patient records</h3><p>Patient details, medical history, medications, visits and continuing treatment stay connected.</p></article>
+          <article><span>02</span><h3>Appointments and queue</h3><p>Book visits, register walk-ins, manage waiting patients and complete the daily flow.</p></article>
+          <article><span>03</span><h3>Treatment tracking</h3><p>Plan dental procedures, record sittings, track treatment value and review pending actions.</p></article>
+          <article><span>04</span><h3>Payments and dues</h3><p>Record consultation and treatment collections, review pending bills and verify daily closing.</p></article>
+          <article><span>05</span><h3>Clinical files</h3><p>Keep X-rays, prescriptions, reports, patient photos and before-and-after images organised.</p></article>
+          <article><span>06</span><h3>Owner and staff roles</h3><p>Give owners, doctors and receptionists access suited to their responsibilities.</p></article>
+        </div>
       </div>
     </section>
 
-    <section class="section shell" id="storage">
-      <div class="kicker">How the 1 GB cap works</div>
-      <div class="intro"><h2>Your clinic keeps working—even when storage is full.</h2><p>Storage controls apply to uploaded files such as X-rays, prescriptions, reports and photos. Normal clinic records remain available.</p></div>
-      <div class="storage-flow">
-        <article class="storage-step"><span>0–80%</span><strong>Normal storage</strong><p>Uploads continue normally while the clinic is comfortably inside its free allowance.</p></article>
-        <article class="storage-step warn"><span>80–99%</span><strong>Storage Saver</strong><p>New images are compressed to help the remaining space last longer while preserving practical viewing quality.</p></article>
-        <article class="storage-step stop"><span>100%</span><strong>Upload pause</strong><p>New uploads pause. Existing files remain accessible, and patients, visits, payments and appointments continue working.</p></article>
+    <section id="pricing" class="section pricing-section">
+      <div class="shell pricing-panel">
+        <div class="pricing-copy">
+          <p class="kicker kicker-light">Simple storage-only pricing</p>
+          <h2>Use every feature free. Pay only when files need more room.</h2>
+          <p>Every clinic receives 1 GB of cloud storage. Patient records, appointments, treatments, payments, staff access and reports are included without a feature subscription.</p>
+          <div class="free-price"><strong>₹0</strong><span>all features + 1 GB included</span></div>
+        </div>
+        <div class="plan-grid">
+          <article class="plan plan-featured"><small>Most practical</small><h3>Storage 5</h3><strong>₹299 <span>/month</span></strong><p>5 GB total storage for growing clinical files.</p></article>
+          <article class="plan"><h3>Storage 20</h3><strong>₹599 <span>/month</span></strong><p>20 GB total storage for established clinics.</p></article>
+          <article class="plan"><h3>Storage 50</h3><strong>₹999 <span>/month</span></strong><p>50 GB total storage for high-volume media use.</p></article>
+          <p class="plan-note">Storage upgrades are coming soon in the app. Until then, CapDent remains free.</p>
+        </div>
       </div>
     </section>
 
-    <section class="section shell plans" id="plans">
-      <div class="kicker">Storage-only pricing</div>
-      <div class="intro"><h2>Upgrade space—not the app.</h2><p>Every plan includes the full CapDent experience. Choose a larger allowance only after the free 1 GB is no longer enough.</p></div>
-      <div class="grid4">
-        <article class="card"><h3>Free Forever</h3><div class="storage">1 GB total</div><div class="price">₹0</div><p class="annual">No expiry</p><ul><li>Every CapDent feature</li><li>Patient, staff and clinic workflows</li><li>1 GB cloud-file allowance</li><li>Storage Saver near the limit</li></ul><a class="button secondary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Start free</a></article>
-        <article class="card popular"><span class="badge">Most practical</span><h3>Storage 5</h3><div class="storage">5 GB total</div><div class="price">₹299 <small>/ month</small></div><p class="annual">or ₹2,999/year</p><ul><li>Every CapDent feature</li><li>5× the free storage allowance</li><li>For growing media use</li><li>Cancel or downgrade later</li></ul><span class="button primary">Coming soon in app</span></article>
-        <article class="card"><h3>Storage 20</h3><div class="storage">20 GB total</div><div class="price">₹599 <small>/ month</small></div><p class="annual">or ₹5,999/year</p><ul><li>Every CapDent feature</li><li>For established clinics</li><li>More room for X-rays and photos</li><li>Cancel or downgrade later</li></ul><span class="button secondary">Coming soon in app</span></article>
-        <article class="card"><h3>Storage 50</h3><div class="storage">50 GB total</div><div class="price">₹999 <small>/ month</small></div><p class="annual">or ₹9,999/year</p><ul><li>Every CapDent feature</li><li>For high-volume clinics</li><li>Large long-term media allowance</li><li>Cancel or downgrade later</li></ul><span class="button secondary">Coming soon in app</span></article>
+    <section id="faq" class="section shell faq-section">
+      <div class="section-heading">
+        <div><p class="kicker">Frequently asked questions</p><h2>Clear answers before your clinic starts.</h2></div>
       </div>
-      <div class="note"><strong>Until in-app storage subscriptions are activated, CapDent remains free.</strong> When upgrades launch, they will change only the clinic’s storage allowance—not access to features or existing records.</div>
+      <div class="faq-list">
+        <details open><summary>Is CapDent really free for dental clinics?</summary><p>Yes. Core clinic-management features are available without a feature subscription, and every clinic receives 1 GB of cloud storage.</p></details>
+        <details><summary>Which clinic roles can use CapDent?</summary><p>CapDent supports owners, doctors and receptionists. The clinic owner creates the workspace, and staff can join using an invite process.</p></details>
+        <details><summary>What can a clinic manage inside CapDent?</summary><p>Clinics can manage patient records, appointments, waiting flow, treatments, follow-ups, payments, pending dues, reports and clinical uploads.</p></details>
+        <details><summary>What happens when the clinic reaches 1 GB?</summary><p>New file uploads can pause until files are removed or the clinic upgrades its storage. Existing records and already uploaded files remain accessible.</p></details>
+        <details><summary>Where can I install CapDent?</summary><p>CapDent is available on Google Play for Android. An iPhone version is planned for a later release.</p></details>
+      </div>
     </section>
 
-    <section class="section shell faq" id="faq">
-      <div class="kicker">FAQ</div>
-      <h2 style="font-size:clamp(38px,5vw,62px);letter-spacing:-.06em;color:var(--navy)">Questions about the pricing.</h2>
-      <details open><summary>Is CapDent really free?</summary><p>Yes. Every clinic-management feature is available without a feature subscription, and each clinic receives 1 GB of cloud storage.</p></details>
-      <details><summary>What counts toward the 1 GB limit?</summary><p>Uploaded files such as X-rays, prescriptions, reports, patient photographs, before-and-after images, profile pictures and clinic branding use the storage allowance.</p></details>
-      <details><summary>What happens when my clinic reaches 1 GB?</summary><p>New uploads pause until you delete files or choose a larger storage plan. Existing files remain accessible, and patient records, appointments, visits, payments, staff and reports continue working.</p></details>
-      <details><summary>Do paid storage plans unlock extra features?</summary><p>No. Free and paid clinics receive the same CapDent features. Paid plans increase only the cloud-storage allowance.</p></details>
+    <section class="cta shell">
+      <div><p class="kicker kicker-light">Start with your clinic</p><h2>Replace scattered registers and payment notes with one clear workflow.</h2><p>Install CapDent, create the clinic owner account and begin with all features included.</p></div>
+      <div class="cta-actions"><a class="button button-light" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Open Google Play <span aria-hidden="true">↗</span></a><a class="button button-ghost" href="mailto:support@micirql.com?subject=CapDent%20Demo%20Request">Request a demo</a></div>
     </section>
-
-    <section class="cta shell"><div><div class="kicker" style="color:#8ff5ee">Free clinic management</div><h2>Use the whole app. Upgrade only when files need more room.</h2><p>Start CapDent with 1 GB included. No patient-count, staff-role or premium-feature paywall.</p></div><div class="actions"><a class="button primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Open Google Play ↗</a><a class="button" style="color:#fff;border-color:rgba(255,255,255,.28)" href="mailto:support@micirql.com?subject=CapDent%20Demo%20Request">Request demo</a></div></section>
   </main>
 
-  <footer class="footer shell"><span>© CapDent by Micirql · Dental clinic management</span><div><a href="#features">Features</a><a href="#plans">Pricing</a><a href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Google Play</a></div></footer>
+  <footer class="footer shell">
+    <div><a class="brand footer-brand" href="#top"><img src="/capdent-mark.svg" alt="" width="38" height="38" /><strong>Cap<span>Dent</span></strong></a><p>Dental clinic management software by Micirql.</p></div>
+    <div class="footer-links"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="mailto:support@micirql.com">Support</a><a href="https://micirql.com/" target="_blank" rel="noreferrer">Micirql ↗</a></div>
+    <small>© 2026 Micirql. CapDent is built for practical dental clinic workflows.</small>
+  </footer>
 </body>
 </html>
