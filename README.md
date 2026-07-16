@@ -18,4 +18,4 @@ The build script copies the static CapDent site into `dist/` so Cloudflare Pages
 The main Micirql company website remains in `mkraja826/micirql-website`.
 
 Deployment trigger: 2026-07-16
-Deployment retry: 2026-07-16 attempt 2
+Deployment retry: 2026-07-16 attempt 3
