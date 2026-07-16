@@ -7,5 +7,11 @@
   },
   "assets": {
     "directory": "./dist"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "capdent.micirql.com",
+      "custom_domain": true
+    }
+  ]
 }
