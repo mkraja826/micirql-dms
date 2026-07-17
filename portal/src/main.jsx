@@ -72,7 +72,14 @@ const STAFF = [
 const money = (value) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0);
 
 function Logo({ large = false }) {
-  return <div className={large ? 'brand-mark large' : 'brand-mark'}><span>+</span></div>;
+  return (
+    <div className={large ? 'brand-mark large' : 'brand-mark'} aria-hidden="true">
+      <svg viewBox="0 0 48 48">
+        <rect width="48" height="48" rx="13" fill="#087f72" />
+        <path d="M24 10v28M13.5 16l21 16M34.5 16l-21 16" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
 }
 
 function Status({ value }) {
@@ -97,7 +104,88 @@ function Empty({ title, text }) {
   return <div className="empty"><span>—</span><strong>{title}</strong><p>{text}</p></div>;
 }
 
+function LoginScreen({ onLogin }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  function submit(event) {
+    event.preventDefault();
+    if (!email.trim() || !password) {
+      setMessage('Enter your clinic email and password.');
+      return;
+    }
+
+    setMessage('');
+    setLoading(true);
+    window.setTimeout(() => {
+      setLoading(false);
+      onLogin();
+    }, 450);
+  }
+
+  return (
+    <main className="login-page">
+      <a className="login-back" href="/">← Back to CapDent</a>
+      <div className="login-layout">
+        <section className="login-story" aria-labelledby="login-story-title">
+          <div className="login-brand"><Logo /><div><strong>CapDent</strong><span>Clinic Portal</span></div></div>
+          <div className="login-story-copy">
+            <p className="login-overline">One clear view of your clinic</p>
+            <h1 id="login-story-title">Know what is happening. Know what needs attention.</h1>
+            <p>Open your clinic workspace to review patients, appointments, payments, treatments and daily activity.</p>
+          </div>
+          <div className="login-summary" aria-label="Clinic portal highlights">
+            <div><span>Today</span><strong>Patients and waiting room</strong><small>See who has arrived, who is waiting and what is completed.</small></div>
+            <div><span>Payments</span><strong>Collections and pending amounts</strong><small>Understand what was collected and what still needs follow-up.</small></div>
+            <div><span>Clinic priorities</span><strong>Important work first</strong><small>Keep follow-ups, unfinished treatments and pending actions visible.</small></div>
+          </div>
+          <p className="login-story-note">Designed for clinic owners, doctors and reception teams.</p>
+        </section>
+
+        <section className="login-panel" aria-labelledby="login-title">
+          <div className="login-panel-inner">
+            <p className="login-kicker">Clinic Portal</p>
+            <h2 id="login-title">Sign in to your clinic</h2>
+            <p className="login-intro">Use the email and password connected to your CapDent clinic.</p>
+
+            <form className="login-form" onSubmit={submit} noValidate>
+              <label htmlFor="clinic-email">
+                Clinic email
+                <input id="clinic-email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="doctor@clinic.com" required />
+              </label>
+
+              <label htmlFor="clinic-password">
+                Password
+                <div className="password-field">
+                  <input id="clinic-password" name="password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" required />
+                  <button type="button" className="password-toggle" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? 'Hide' : 'Show'}</button>
+                </div>
+              </label>
+
+              {message ? <p className="login-error" role="alert">{message}</p> : null}
+
+              <button className="login-submit" type="submit" disabled={loading}>{loading ? 'Opening clinic…' : 'Sign in to clinic'}</button>
+            </form>
+
+            <div className="login-preview-note">
+              <strong>Portal preview</strong>
+              <p>Real clinic sign-in is not connected yet. Enter any test email and password to open the sample dashboard.</p>
+            </div>
+
+            <p className="login-help">Need help accessing your clinic? <a href="mailto:support@micirql.com?subject=CapDent%20Clinic%20Portal%20Access">Contact CapDent support</a></p>
+          </div>
+          <p className="login-footer">CapDent by Micirql · Your clinic information remains private to your authorised team.</p>
+        </section>
+      </div>
+    </main>
+  );
+}
+
 function App() {
+  const [signedIn, setSignedIn] = useState(false);
   const [section, setSection] = useState('overview');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [patients, setPatients] = useState(INITIAL_PATIENTS);
@@ -117,6 +205,17 @@ function App() {
     window.setTimeout(() => { setLastUpdated(new Date()); setRefreshing(false); }, 500);
   }
 
+  function signOut() {
+    setSignedIn(false);
+    setMobileOpen(false);
+    setSection('overview');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (!signedIn) {
+    return <LoginScreen onLogin={() => { setSignedIn(true); window.scrollTo({ top: 0 }); }} />;
+  }
+
   const contentProps = { patients, setPatients, clinic, setClinic, navigate };
 
   return (
@@ -128,7 +227,7 @@ function App() {
           <p>Clinic workspace</p>
           {NAV_ITEMS.map(([key, label, icon]) => <button type="button" key={key} className={section === key ? 'active' : ''} onClick={() => navigate(key)}><span>{icon}</span><b>{label}</b>{key === 'billing' ? <em>{DUES.length}</em> : null}</button>)}
         </nav>
-        <div className="sidebar-footer"><div><span className="live-dot" /><strong>Data status</strong></div><small>Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small><button type="button">↪ Sign out</button></div>
+        <div className="sidebar-footer"><div><span className="live-dot" /><strong>Data status</strong></div><small>Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small><button type="button" onClick={signOut}>↪ Sign out</button></div>
       </aside>
 
       {mobileOpen && <button type="button" className="backdrop" aria-label="Close menu" onClick={() => setMobileOpen(false)} />}
