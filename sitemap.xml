@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://capdent.micirql.com/</loc>
     <lastmod>2026-07-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image><image:loc>https://capdent.micirql.com/capdent-social-v3.webp</image:loc><image:title>CapDent dental clinic management app</image:title><image:caption>CapDent dental clinic management software preview.</image:caption></image:image>
-    <image:image><image:loc>https://capdent.micirql.com/capdent-dashboard-v3.webp</image:loc><image:title>CapDent daily clinic dashboard demo</image:title><image:caption>Fictional demo of collections, patients, waiting queue and completed visits.</image:caption></image:image>
-    <image:image><image:loc>https://capdent.micirql.com/capdent-product-screens-v3.webp</image:loc><image:title>CapDent app screens</image:title><image:caption>CapDent patient, treatment, payment and clinic workflow screens.</image:caption></image:image>
   </url>
 </urlset>
