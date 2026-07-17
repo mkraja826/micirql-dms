@@ -25,12 +25,13 @@ async function findHtmlFiles(directory) {
   return files.flat();
 }
 
-const [siteCss, blogCss] = await Promise.all([
+const [siteCss, blogCss, portalNavCss] = await Promise.all([
   readFile(join(projectRoot, 'styles.css'), 'utf8'),
   readFile(join(projectRoot, 'blog.css'), 'utf8'),
+  readFile(join(projectRoot, 'portal-nav.css'), 'utf8'),
 ]);
 
-const inlineCss = `${siteCss}\n${blogCss}`;
+const inlineCss = `${siteCss}\n${blogCss}\n${portalNavCss}`;
 
 await rm(outputDir, { recursive: true, force: true });
 await mkdir(outputDir, { recursive: true });
@@ -41,7 +42,15 @@ await Promise.all([
 
 const htmlFiles = await findHtmlFiles(outputDir);
 await Promise.all(htmlFiles.map(async (file) => {
-  const source = await readFile(file, 'utf8');
+  let source = await readFile(file, 'utf8');
+
+  if (file === join(outputDir, 'index.html')) {
+    source = source.replace(
+      /<a class="header-cta"([^>]*)>Get CapDent<\/a>/,
+      '<div class="header-actions"><a class="portal-cta" href="/portal/">Clinic Portal</a><a class="header-cta"$1>Get CapDent</a></div>',
+    );
+  }
+
   const withoutExternalCss = source.replace(
     /\s*<link\s+rel=["']stylesheet["']\s+href=["']\/(?:styles|blog)\.css(?:\?[^"']*)?["']\s*\/?>/gi,
     '',
@@ -53,4 +62,4 @@ await Promise.all(htmlFiles.map(async (file) => {
   await writeFile(file, optimized, 'utf8');
 }));
 
-console.log(`CapDent website built with CSS inlined into ${htmlFiles.length} HTML pages.`);
+console.log(`CapDent marketing site built with CSS inlined into ${htmlFiles.length} HTML pages.`);

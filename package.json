@@ -1,9 +1,16 @@
 {
   "name": "capdent-website",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "dev:portal": "vite --config portal/vite.config.js --host 0.0.0.0",
+    "build": "node scripts/build.mjs && vite build --config portal/vite.config.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest"
   }
 }
