@@ -1,14 +1,12 @@
-import { copyFile, cp, mkdir, rm } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = join(projectRoot, 'dist');
 
-const files = [
+const publicFiles = [
   'index.html',
-  'styles.css',
-  'blog.css',
   'capdent-mark.svg',
   'social-card.svg',
   'robots.txt',
@@ -16,11 +14,43 @@ const files = [
   '_headers',
 ];
 
+async function findHtmlFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = await Promise.all(entries.map(async (entry) => {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) return findHtmlFiles(path);
+    return entry.isFile() && entry.name.endsWith('.html') ? [path] : [];
+  }));
+
+  return files.flat();
+}
+
+const [siteCss, blogCss] = await Promise.all([
+  readFile(join(projectRoot, 'styles.css'), 'utf8'),
+  readFile(join(projectRoot, 'blog.css'), 'utf8'),
+]);
+
+const inlineCss = `${siteCss}\n${blogCss}`;
+
 await rm(outputDir, { recursive: true, force: true });
 await mkdir(outputDir, { recursive: true });
 await Promise.all([
-  ...files.map((file) => copyFile(join(projectRoot, file), join(outputDir, file))),
+  ...publicFiles.map((file) => copyFile(join(projectRoot, file), join(outputDir, file))),
   cp(join(projectRoot, 'blog'), join(outputDir, 'blog'), { recursive: true }),
 ]);
 
-console.log('CapDent website and editorial guides built into dist/.');
+const htmlFiles = await findHtmlFiles(outputDir);
+await Promise.all(htmlFiles.map(async (file) => {
+  const source = await readFile(file, 'utf8');
+  const withoutExternalCss = source.replace(
+    /\s*<link\s+rel=["']stylesheet["']\s+href=["']\/(?:styles|blog)\.css(?:\?[^"']*)?["']\s*\/?>/gi,
+    '',
+  );
+  const optimized = withoutExternalCss.replace(
+    '</head>',
+    `  <style data-capdent-critical>${inlineCss}</style>\n</head>`,
+  );
+  await writeFile(file, optimized, 'utf8');
+}));
+
+console.log(`CapDent website built with CSS inlined into ${htmlFiles.length} HTML pages.`);
