@@ -3,10 +3,23 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://capdent.micirql.com/</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-07-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image><image:loc>https://capdent.micirql.com/images/capdent-social.webp</image:loc><image:title>CapDent dental clinic management software</image:title><image:caption>CapDent dashboard, payment report and owner tools.</image:caption></image:image>
-    <image:image><image:loc>https://capdent.micirql.com/images/capdent-product-screens.webp</image:loc><image:title>CapDent app screens</image:title><image:caption>Patient records, payments, treatments and clinic workflow screens.</image:caption></image:image>
+    <image:image>
+      <image:loc>https://capdent.micirql.com/images/capdent-social-demo.webp</image:loc>
+      <image:title>CapDent dental clinic management app</image:title>
+      <image:caption>CapDent demo screens for dashboard, payments and patient records.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://capdent.micirql.com/images/capdent-dashboard-demo.webp</image:loc>
+      <image:title>CapDent daily clinic dashboard demo</image:title>
+      <image:caption>Illustrative dashboard with fictional collection, patient, queue and completed visit data.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://capdent.micirql.com/images/capdent-demo-poster-sprite.webp</image:loc>
+      <image:title>CapDent dental clinic app demo screens</image:title>
+      <image:caption>Eight high-resolution demo posters for patients, search, treatments, payments, owner tools, login and account setup.</image:caption>
+    </image:image>
   </url>
 </urlset>
