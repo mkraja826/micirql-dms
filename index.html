@@ -1,233 +1,103 @@
 <!doctype html>
 <html lang="en-IN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f4fbfc" />
-  <meta name="color-scheme" content="light" />
-
-  <title>Free Dental Clinic Software for Patient Records & Appointments | CapDent</title>
-  <meta name="description" content="CapDent is free dental clinic management software for patient records, appointments, treatments, payments, follow-ups, staff workflows and clinical files. Every clinic gets 1 GB of cloud storage." />
-  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-  <link rel="canonical" href="https://capdent.micirql.com/" />
-  <link rel="icon" type="image/svg+xml" href="/capdent-mark.svg" />
-  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="CapDent" />
-  <meta property="og:locale" content="en_IN" />
-  <meta property="og:title" content="CapDent — Free Dental Clinic Management Software" />
-  <meta property="og:description" content="Manage patients, appointments, treatments, payments and follow-ups in one clear clinic workflow. All features are free with 1 GB included." />
-  <meta property="og:url" content="https://capdent.micirql.com/" />
-  <meta property="og:image" content="https://capdent.micirql.com/images/capdent-social.webp" />
-  <meta property="og:image:type" content="image/webp" />
-  <meta property="og:image:width" content="1000" />
-  <meta property="og:image:height" content="525" />
-  <meta property="og:image:alt" content="CapDent dental clinic management software screens for dashboard, payments and owner tools" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="CapDent — Free Dental Clinic Management Software" />
-  <meta name="twitter:description" content="Patients, appointments, treatments, payments and follow-ups in one simple dental clinic app." />
-  <meta name="twitter:image" content="https://capdent.micirql.com/images/capdent-social.webp" />
-  <meta name="twitter:image:alt" content="CapDent dental clinic management software screens" />
-
-  <link rel="stylesheet" href="/styles.css" />
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://capdent.micirql.com/#website",
-        "url": "https://capdent.micirql.com/",
-        "name": "CapDent",
-        "alternateName": "CapDent Dental Clinic Software",
-        "inLanguage": "en-IN",
-        "publisher": { "@id": "https://capdent.micirql.com/#organization" }
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://capdent.micirql.com/#organization",
-        "name": "Micirql",
-        "url": "https://micirql.com/",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://capdent.micirql.com/capdent-mark.svg"
-        }
-      },
-      {
-        "@type": "SoftwareApplication",
-        "@id": "https://capdent.micirql.com/#software",
-        "name": "CapDent",
-        "url": "https://capdent.micirql.com/",
-        "downloadUrl": "https://play.google.com/store/apps/details?id=com.dms.clinic",
-        "applicationCategory": "BusinessApplication",
-        "applicationSubCategory": "Dental clinic management software",
-        "operatingSystem": "Android",
-        "description": "Dental clinic management software for patient records, appointments, treatment tracking, payments, follow-ups, staff workflows and clinical files.",
-        "image": "https://capdent.micirql.com/images/capdent-social.webp",
-        "screenshot": [
-          "https://capdent.micirql.com/images/capdent-product-screens.webp",
-          "https://capdent.micirql.com/images/capdent-social.webp"
-        ],
-        "publisher": { "@id": "https://capdent.micirql.com/#organization" },
-        "offers": {
-          "@type": "Offer",
-          "name": "Free Forever — 1 GB included",
-          "price": "0",
-          "priceCurrency": "INR",
-          "availability": "https://schema.org/InStock"
-        },
-        "featureList": [
-          "Patient records",
-          "Appointments and waiting queue",
-          "Treatment tracking",
-          "Payments and pending dues",
-          "Clinical photos and documents",
-          "Follow-up reminders",
-          "Role-based staff access",
-          "Clinic reports"
-        ]
-      }
-    ]
-  }
-  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4fbfc">
+  <title>Free Dental Clinic Management App for Patients, Treatments & Payments | CapDent</title>
+  <meta name="description" content="CapDent is a free dental clinic management app for patient records, appointments, treatments, payments, pending dues, follow-ups, staff workflows and clinical files. Includes 1 GB cloud storage.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://capdent.micirql.com/">
+  <link rel="icon" href="/capdent-mark.svg" type="image/svg+xml">
+  <link rel="sitemap" href="/sitemap.xml" type="application/xml">
+  <link rel="preload" as="image" href="/images/capdent-dashboard-demo.webp" type="image/webp">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CapDent">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="CapDent — Free Dental Clinic Management App">
+  <meta property="og:description" content="Patients, treatments, payments, appointments and clinic reports in one practical Android app.">
+  <meta property="og:url" content="https://capdent.micirql.com/">
+  <meta property="og:image" content="https://capdent.micirql.com/images/capdent-social-demo.webp">
+  <meta property="og:image:secure_url" content="https://capdent.micirql.com/images/capdent-social-demo.webp">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="CapDent dental clinic management app demo screens for dashboard, payments and patient records">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CapDent — Free Dental Clinic Management App">
+  <meta name="twitter:description" content="Run patient records, treatments, payments and daily clinic workflow from one clear app.">
+  <meta name="twitter:image" content="https://capdent.micirql.com/images/capdent-social-demo.webp">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"CapDent","url":"https://capdent.micirql.com/","downloadUrl":"https://play.google.com/store/apps/details?id=com.dms.clinic","applicationCategory":"BusinessApplication","applicationSubCategory":"Dental clinic management software","operatingSystem":"Android","isAccessibleForFree":true,"description":"Free dental clinic management software for patient records, appointments, treatments, payments, pending dues, follow-ups, staff workflows and clinical files.","image":"https://capdent.micirql.com/images/capdent-social-demo.webp","screenshot":["https://capdent.micirql.com/images/capdent-dashboard-demo.webp","https://capdent.micirql.com/images/capdent-demo-poster-sprite.webp"],"offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"Micirql","url":"https://micirql.com/"}}</script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <header class="site-header">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="header">
     <nav class="nav shell" aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="CapDent home">
-        <img src="/capdent-mark.svg" alt="" width="44" height="44" />
-        <strong>Cap<span>Dent</span></strong>
-      </a>
-      <div class="nav-links">
-        <a href="#screens">App screens</a>
-        <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
-      </div>
-      <a class="button button-small button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get the app <span aria-hidden="true">↗</span></a>
+      <a class="brand" href="#top"><img src="/capdent-mark.svg" width="42" height="42" alt=""><b>Cap<span>Dent</span></b></a>
+      <div class="links"><a href="#screens">Screens</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
+      <a class="btn btn-small" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get the app ↗</a>
     </nav>
   </header>
 
   <main id="main">
-    <section id="top" class="hero shell">
+    <section class="hero shell" id="top">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> Built for everyday dental clinic work</p>
-        <h1>Free dental clinic software for <em>records, appointments and payments.</em></h1>
-        <p class="hero-lead">CapDent keeps patients, treatments, collections, follow-ups, staff workflows and clinical files in one clear Android app—without locking essential clinic features behind a subscription.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Download on Google Play <span aria-hidden="true">↗</span></a>
-          <a class="button button-secondary" href="#screens">See how CapDent works</a>
-        </div>
-        <div class="proof-row" aria-label="CapDent plan highlights">
-          <span>All features included</span>
-          <span>1 GB free storage</span>
-          <span>No patient-count paywall</span>
-        </div>
+        <p class="eyebrow">Built for everyday dental clinic work</p>
+        <h1>One clear app for <em>patients, treatments and payments.</em></h1>
+        <p class="lead">CapDent helps independent dental clinics and growing teams manage patient records, appointments, treatment sittings, collections, pending dues, reminders, staff access and clinical files without enterprise-level complexity.</p>
+        <div class="actions"><a class="btn" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Download on Google Play ↗</a><a class="btn btn-light" href="#screens">See the app</a></div>
+        <div class="proof"><span>All clinic features included</span><span>1 GB free storage</span><span>Owner, doctor & receptionist roles</span></div>
+        <p class="notice"><strong>Demo preview:</strong> The names, patient counts and financial values shown on this page are fictional examples, not customer-usage claims.</p>
       </div>
+      <figure class="hero-card">
+        <img src="/images/capdent-dashboard-demo.webp" width="941" height="1672" fetchpriority="high" alt="CapDent dental clinic dashboard demo showing collections, patient count, waiting queue and completed visits">
+        <figcaption><b>Daily clinic dashboard</b><span>Review today’s workflow at a glance.</span></figcaption>
+      </figure>
+    </section>
 
-      <div class="hero-visual">
-        <img src="/images/capdent-product-screens.webp" width="1200" height="1600" alt="CapDent app overview showing clinic dashboard, patient directory, payment report, treatment workflow, owner tools and login screens" fetchpriority="high" />
+    <div class="workflow"><div class="shell">Patient records <i>✦</i> Appointments <i>✦</i> Treatments <i>✦</i> Payments <i>✦</i> Follow-ups <i>✦</i> Reports</div></div>
+
+    <section class="section shell" id="screens">
+      <div class="heading"><div><p class="kicker">High-resolution product previews</p><h2>See how CapDent handles a busy clinic day.</h2></div><p>Eight sharp demo posters cover the workflows dentists and clinic teams use most. Every displayed identity and metric is fictional demonstration content.</p></div>
+      <div class="gallery">
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p0" role="img" aria-label="CapDent daily clinic dashboard demo"></div><figcaption><b>Daily clinic dashboard</b><span>Collections, patients, waiting flow and completed visits.</span></figcaption></figure>
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p1" role="img" aria-label="CapDent patient records directory demo"></div><figcaption><b>Patient records</b><span>A searchable, paginated patient directory.</span></figcaption></figure>
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p2" role="img" aria-label="CapDent patient search and filters demo"></div><figcaption><b>Fast patient search</b><span>Filter registrations, visits, appointments and payments.</span></figcaption></figure>
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p3" role="img" aria-label="CapDent ongoing dental treatments demo"></div><figcaption><b>Ongoing treatments</b><span>Track value, paid amount, dues and next sittings.</span></figcaption></figure>
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p4" role="img" aria-label="CapDent dental clinic payment report demo"></div><figcaption><b>Payment reports</b><span>Revenue, payment methods, dues and recent collections.</span></figcaption></figure>
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p5" role="img" aria-label="CapDent clinic owner tools demo"></div><figcaption><b>Owner controls</b><span>Reports, appointments, reminders, gallery and settings.</span></figcaption></figure>
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p6" role="img" aria-label="CapDent dental clinic login demo"></div><figcaption><b>Simple login</b><span>Focused access for clinic owners and staff.</span></figcaption></figure>
+        <figure class="shot"><span class="tag">Demo data</span><div class="poster p7" role="img" aria-label="CapDent clinic account creation demo"></div><figcaption><b>Quick clinic setup</b><span>Create an owner workspace or join as an employee.</span></figcaption></figure>
       </div>
     </section>
 
-    <section class="trust-strip" aria-label="Core clinic workflows">
-      <div class="shell trust-track">
-        <span>Patient records</span><i>✦</i><span>Appointments</span><i>✦</i><span>Treatments</span><i>✦</i><span>Payments</span><i>✦</i><span>Follow-ups</span><i>✦</i><span>Clinic reports</span>
+    <section class="section soft" id="features"><div class="shell">
+      <div class="heading"><div><p class="kicker">Practical clinic management</p><h2>Everything needed for the daily dental workflow.</h2></div><p>Built for clinics that need a clear system without unnecessary complexity.</p></div>
+      <div class="features">
+        <article><b>01</b><h3>Patient records</h3><p>Details, history, medications, visits and continuing treatment stay connected.</p></article>
+        <article><b>02</b><h3>Appointments & queue</h3><p>Book visits, register walk-ins, manage waiting patients and complete the daily flow.</p></article>
+        <article><b>03</b><h3>Treatment tracking</h3><p>Plan procedures, record sittings, track treatment value and pending actions.</p></article>
+        <article><b>04</b><h3>Payments & dues</h3><p>Record collections, review pending bills and verify daily closing.</p></article>
+        <article><b>05</b><h3>Clinical files</h3><p>Organise X-rays, prescriptions, reports and patient photos.</p></article>
+        <article><b>06</b><h3>Staff roles</h3><p>Give owners, doctors and receptionists suitable access.</p></article>
       </div>
+    </div></section>
+
+    <section class="section shell" id="pricing"><div class="pricing">
+      <div><p class="kicker light">Storage-only pricing</p><h2>Use every feature free.</h2><p>Every clinic receives 1 GB of cloud storage. Upgrade only when clinical files need more room.</p><strong class="free">₹0 <small>all features + 1 GB</small></strong></div>
+      <div class="plans"><article><small>Popular</small><h3>Storage 5</h3><b>₹299 /month</b><p>5 GB total storage.</p></article><article><h3>Storage 20</h3><b>₹599 /month</b><p>20 GB total storage.</p></article><article><h3>Storage 50</h3><b>₹999 /month</b><p>50 GB total storage.</p></article><p>Storage upgrades are coming soon. Until then, CapDent remains free.</p></div>
+    </div></section>
+
+    <section class="section shell faq" id="faq"><p class="kicker">Frequently asked questions</p><h2>Clear answers before your clinic starts.</h2>
+      <details open><summary>Is CapDent free for dental clinics?</summary><p>Yes. Core clinic-management features are available without a feature subscription, with 1 GB of cloud storage included.</p></details>
+      <details><summary>Are the counts and payment values shown real?</summary><p>No. They are fictional demo values used to illustrate a populated clinic workflow. They are not adoption or customer-usage claims.</p></details>
+      <details><summary>Which roles can use CapDent?</summary><p>CapDent supports clinic owners, doctors and receptionists through role-based access.</p></details>
     </section>
 
-    <section id="screens" class="section shell">
-      <div class="section-heading">
-        <div>
-          <p class="kicker">Real CapDent screens</p>
-          <h2>See the clinic workflow before you install.</h2>
-        </div>
-        <p>These privacy-safe previews use demo information and show the actual CapDent visual system for clinic dashboards, payments, patients, treatments, owner tools and access.</p>
-      </div>
-
-      <div class="seo-preview-grid">
-        <figure class="overview-card">
-          <img src="/images/capdent-product-screens.webp" width="600" height="800" alt="CapDent app overview showing dental clinic dashboard, patient records, payment reports, treatment workflow, owner tools and login" loading="lazy" />
-          <figcaption><strong>One connected clinic workflow</strong><span>Patients, treatments, payments, reports and staff tools use one consistent Android interface.</span></figcaption>
-        </figure>
-        <div class="preview-copy">
-          <img src="/images/capdent-social.webp" width="1000" height="525" alt="CapDent dental clinic software preview showing dashboard, payment report and clinic owner tools" loading="lazy" />
-          <div class="preview-points">
-            <article><b>01</b><span><strong>Daily dashboard</strong>Review patients, waiting flow, completed visits, collections and pending amount.</span></article>
-            <article><b>02</b><span><strong>Patient directory</strong>Search records and keep visits, follow-ups and payments connected.</span></article>
-            <article><b>03</b><span><strong>Treatment and money</strong>Track sittings, treatment value, paid amount, pending dues and reports.</span></article>
-            <article><b>04</b><span><strong>Owner control</strong>Open reports, reminders, appointments, gallery and clinic administration.</span></article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="section section-soft">
-      <div class="shell">
-        <div class="section-heading">
-          <div>
-            <p class="kicker">One practical clinic system</p>
-            <h2>Everything needed for the daily dental workflow.</h2>
-          </div>
-          <p>CapDent is designed for independent clinics and growing teams that need a clear system without enterprise-level complexity.</p>
-        </div>
-
-        <div class="feature-grid">
-          <article><span>01</span><h3>Patient records</h3><p>Patient details, medical history, medications, visits and continuing treatment stay connected.</p></article>
-          <article><span>02</span><h3>Appointments and queue</h3><p>Book visits, register walk-ins, manage waiting patients and complete the daily flow.</p></article>
-          <article><span>03</span><h3>Treatment tracking</h3><p>Plan dental procedures, record sittings, track treatment value and review pending actions.</p></article>
-          <article><span>04</span><h3>Payments and dues</h3><p>Record consultation and treatment collections, review pending bills and verify daily closing.</p></article>
-          <article><span>05</span><h3>Clinical files</h3><p>Keep X-rays, prescriptions, reports, patient photos and before-and-after images organised.</p></article>
-          <article><span>06</span><h3>Owner and staff roles</h3><p>Give owners, doctors and receptionists access suited to their responsibilities.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section id="pricing" class="section pricing-section">
-      <div class="shell pricing-panel">
-        <div class="pricing-copy">
-          <p class="kicker kicker-light">Simple storage-only pricing</p>
-          <h2>Use every feature free. Pay only when files need more room.</h2>
-          <p>Every clinic receives 1 GB of cloud storage. Patient records, appointments, treatments, payments, staff access and reports are included without a feature subscription.</p>
-          <div class="free-price"><strong>₹0</strong><span>all features + 1 GB included</span></div>
-        </div>
-        <div class="plan-grid">
-          <article class="plan plan-featured"><small>Most practical</small><h3>Storage 5</h3><strong>₹299 <span>/month</span></strong><p>5 GB total storage for growing clinical files.</p></article>
-          <article class="plan"><h3>Storage 20</h3><strong>₹599 <span>/month</span></strong><p>20 GB total storage for established clinics.</p></article>
-          <article class="plan"><h3>Storage 50</h3><strong>₹999 <span>/month</span></strong><p>50 GB total storage for high-volume media use.</p></article>
-          <p class="plan-note">Storage upgrades are coming soon in the app. Until then, CapDent remains free.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="faq" class="section shell faq-section">
-      <div class="section-heading">
-        <div><p class="kicker">Frequently asked questions</p><h2>Clear answers before your clinic starts.</h2></div>
-      </div>
-      <div class="faq-list">
-        <details open><summary>Is CapDent really free for dental clinics?</summary><p>Yes. Core clinic-management features are available without a feature subscription, and every clinic receives 1 GB of cloud storage.</p></details>
-        <details><summary>Which clinic roles can use CapDent?</summary><p>CapDent supports owners, doctors and receptionists. The clinic owner creates the workspace, and staff can join using an invite process.</p></details>
-        <details><summary>What can a clinic manage inside CapDent?</summary><p>Clinics can manage patient records, appointments, waiting flow, treatments, follow-ups, payments, pending dues, reports and clinical uploads.</p></details>
-        <details><summary>What happens when the clinic reaches 1 GB?</summary><p>New file uploads can pause until files are removed or the clinic upgrades its storage. Existing records and already uploaded files remain accessible.</p></details>
-        <details><summary>Where can I install CapDent?</summary><p>CapDent is available on Google Play for Android. An iPhone version is planned for a later release.</p></details>
-      </div>
-    </section>
-
-    <section class="cta shell">
-      <div><p class="kicker kicker-light">Start with your clinic</p><h2>Replace scattered registers and payment notes with one clear workflow.</h2><p>Install CapDent, create the clinic owner account and begin with all features included.</p></div>
-      <div class="cta-actions"><a class="button button-light" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Open Google Play <span aria-hidden="true">↗</span></a><a class="button button-ghost" href="mailto:support@micirql.com?subject=CapDent%20Demo%20Request">Request a demo</a></div>
-    </section>
+    <section class="cta shell"><div><p class="kicker light">Start with your clinic</p><h2>Replace scattered registers and payment notes with one clear workflow.</h2></div><a class="btn btn-white" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Open Google Play ↗</a></section>
   </main>
 
-  <footer class="footer shell">
-    <div><a class="brand footer-brand" href="#top"><img src="/capdent-mark.svg" alt="" width="38" height="38" /><strong>Cap<span>Dent</span></strong></a><p>Dental clinic management software by Micirql.</p></div>
-    <div class="footer-links"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="mailto:support@micirql.com">Support</a><a href="https://micirql.com/" target="_blank" rel="noreferrer">Micirql ↗</a></div>
-    <small>© 2026 Micirql. CapDent is built for practical dental clinic workflows.</small>
-  </footer>
+  <footer class="footer shell"><div class="brand"><img src="/capdent-mark.svg" width="36" height="36" alt=""><b>Cap<span>Dent</span></b></div><p>Dental clinic management software by Micirql.</p><small>© 2026 Micirql · Demo screens contain fictional data.</small></footer>
 </body>
 </html>
