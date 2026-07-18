@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = join(projectRoot, 'dist');
+const marketingOrigin = 'https://capdent.in';
+const appOrigin = 'https://app.capdent.in';
 
 const publicFiles = [
   'index.html',
@@ -44,9 +46,17 @@ const htmlFiles = await findHtmlFiles(outputDir);
 await Promise.all(htmlFiles.map(async (file) => {
   let source = await readFile(file, 'utf8');
 
+  source = source.replaceAll('https://capdent.micirql.com', marketingOrigin);
+
+  // Remove the earlier app URL that was incorrectly labelled as Clinic Login.
+  source = source.replace(
+    /<a\s+href=["']https:\/\/app\.capdent\.in\/?["'][^>]*>\s*Clinic Login\s*<\/a>/gi,
+    '',
+  );
+
   source = source.replace(
     /<a class="header-cta"([^>]*)>Get CapDent<\/a>/,
-    '<div class="header-actions"><a class="portal-cta" href="https://app.capdent.in/">Clinic Login</a><a class="header-cta"$1>Get CapDent</a></div>',
+    `<div class="header-actions"><a class="portal-cta" href="/portal/">Clinic Login</a><a class="app-cta" href="${appOrigin}/">App Login</a><a class="header-cta"$1>Get CapDent</a></div>`,
   );
 
   const withoutExternalCss = source.replace(
@@ -60,4 +70,10 @@ await Promise.all(htmlFiles.map(async (file) => {
   await writeFile(file, optimized, 'utf8');
 }));
 
-console.log(`CapDent marketing site built with CSS inlined into ${htmlFiles.length} HTML pages.`);
+await Promise.all(['robots.txt', 'sitemap.xml'].map(async (file) => {
+  const path = join(outputDir, file);
+  const source = await readFile(path, 'utf8');
+  await writeFile(path, source.replaceAll('https://capdent.micirql.com', marketingOrigin), 'utf8');
+}));
+
+console.log(`CapDent marketing site built for ${marketingOrigin} with separate clinic and app login links across ${htmlFiles.length} HTML pages.`);
