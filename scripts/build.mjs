@@ -6,6 +6,7 @@ const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outputDir = join(projectRoot, 'dist');
 const marketingOrigin = 'https://capdent.in';
 const appOrigin = 'https://app.capdent.in';
+const brandAsset = '/capdent-mark.svg?v=20260719';
 
 const publicFiles = [
   'index.html',
@@ -22,6 +23,9 @@ const releaseNotice = `<aside class="release-notice" role="status" aria-label="C
     <span aria-hidden="true"><strong>Release update</strong><i>•</i>Android app has 13 days remaining in its testing phase<i>•</i>iOS will be released based on customer demand</span>
   </div>
 </aside>`;
+
+const brandImage = `<img class="brand-mark" src="${brandAsset}" alt="" width="40" height="40">`;
+const faviconLink = `<link rel="icon" href="${brandAsset}" type="image/svg+xml">`;
 
 async function findHtmlFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -41,6 +45,19 @@ const [siteCss, blogCss, portalNavCss] = await Promise.all([
 ]);
 
 const inlineCss = `${siteCss}\n${blogCss}\n${portalNavCss}`;
+
+// The portal is compiled after this script. Give it the same favicon and logo
+// without changing its application logic or dashboard layout.
+const portalIndexPath = join(projectRoot, 'portal', 'index.html');
+let portalIndex = await readFile(portalIndexPath, 'utf8');
+portalIndex = portalIndex.replace(/<link\s+rel=["']icon["'][^>]*>/i, faviconLink);
+if (!portalIndex.includes('data-capdent-brand')) {
+  portalIndex = portalIndex.replace(
+    '</head>',
+    `  <style data-capdent-brand>html body .brand-mark{overflow:hidden;background:#fff url('${brandAsset}') center/contain no-repeat!important;box-shadow:none!important}html body .brand-mark svg{display:none!important}</style>\n  </head>`,
+  );
+}
+await writeFile(portalIndexPath, portalIndex, 'utf8');
 
 await rm(outputDir, { recursive: true, force: true });
 await mkdir(outputDir, { recursive: true });
@@ -66,6 +83,19 @@ await Promise.all(htmlFiles.map(async (file) => {
     `<div class="header-actions"><a class="portal-cta" href="/portal/">Clinic Login</a><a class="app-cta" href="${appOrigin}/">App Login</a><a class="header-cta"$1>Get CapDent</a></div>`,
   );
 
+  // Replace every legacy inline mark and add the mark to text-only blog headers.
+  source = source.replace(/<svg class="brand-mark"[\s\S]*?<\/svg>/g, brandImage);
+  source = source.replace(
+    /(<a class="brand(?: footer-brand)?"[^>]*>)(?!\s*<img class="brand-mark")/g,
+    `$1${brandImage}`,
+  );
+
+  if (/<link\s+rel=["']icon["'][^>]*>/i.test(source)) {
+    source = source.replace(/<link\s+rel=["']icon["'][^>]*>/i, faviconLink);
+  } else {
+    source = source.replace('</head>', `  ${faviconLink}\n</head>`);
+  }
+
   source = source.replace('</header>', `</header>\n${releaseNotice}`);
 
   const withoutExternalCss = source.replace(
@@ -85,4 +115,4 @@ await Promise.all(['robots.txt', 'sitemap.xml'].map(async (file) => {
   await writeFile(path, source.replaceAll('https://capdent.micirql.com', marketingOrigin), 'utf8');
 }));
 
-console.log(`CapDent marketing site built for ${marketingOrigin} with separate clinic and app login links plus a release notice across ${htmlFiles.length} HTML pages.`);
+console.log(`CapDent marketing site built for ${marketingOrigin} with the new logo, favicon, separate login links and release notice across ${htmlFiles.length} HTML pages.`);
