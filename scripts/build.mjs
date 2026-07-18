@@ -16,6 +16,13 @@ const publicFiles = [
   '_headers',
 ];
 
+const releaseNotice = `<aside class="release-notice" role="status" aria-label="CapDent release update">
+  <div class="release-notice-track">
+    <span><strong>Release update</strong><i aria-hidden="true">•</i>Android app has 13 days remaining in its testing phase<i aria-hidden="true">•</i>iOS will be released based on customer demand</span>
+    <span aria-hidden="true"><strong>Release update</strong><i>•</i>Android app has 13 days remaining in its testing phase<i>•</i>iOS will be released based on customer demand</span>
+  </div>
+</aside>`;
+
 async function findHtmlFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = await Promise.all(entries.map(async (entry) => {
@@ -59,6 +66,8 @@ await Promise.all(htmlFiles.map(async (file) => {
     `<div class="header-actions"><a class="portal-cta" href="/portal/">Clinic Login</a><a class="app-cta" href="${appOrigin}/">App Login</a><a class="header-cta"$1>Get CapDent</a></div>`,
   );
 
+  source = source.replace('</header>', `</header>\n${releaseNotice}`);
+
   const withoutExternalCss = source.replace(
     /\s*<link\s+rel=["']stylesheet["']\s+href=["']\/(?:styles|blog)\.css(?:\?[^"']*)?["']\s*\/?>/gi,
     '',
@@ -76,4 +85,4 @@ await Promise.all(['robots.txt', 'sitemap.xml'].map(async (file) => {
   await writeFile(path, source.replaceAll('https://capdent.micirql.com', marketingOrigin), 'utf8');
 }));
 
-console.log(`CapDent marketing site built for ${marketingOrigin} with separate clinic and app login links across ${htmlFiles.length} HTML pages.`);
+console.log(`CapDent marketing site built for ${marketingOrigin} with separate clinic and app login links plus a release notice across ${htmlFiles.length} HTML pages.`);
