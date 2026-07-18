@@ -44,12 +44,10 @@ const htmlFiles = await findHtmlFiles(outputDir);
 await Promise.all(htmlFiles.map(async (file) => {
   let source = await readFile(file, 'utf8');
 
-  if (file === join(outputDir, 'index.html')) {
-    source = source.replace(
-      /<a class="header-cta"([^>]*)>Get CapDent<\/a>/,
-      '<div class="header-actions"><a class="portal-cta" href="/portal/">Clinic Portal</a><a class="header-cta"$1>Get CapDent</a></div>',
-    );
-  }
+  source = source.replace(
+    /<a class="header-cta"([^>]*)>Get CapDent<\/a>/,
+    '<div class="header-actions"><a class="portal-cta" href="https://app.capdent.in/">Clinic Login</a><a class="header-cta"$1>Get CapDent</a></div>',
+  );
 
   const withoutExternalCss = source.replace(
     /\s*<link\s+rel=["']stylesheet["']\s+href=["']\/(?:styles|blog)\.css(?:\?[^"']*)?["']\s*\/?>/gi,
