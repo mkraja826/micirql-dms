@@ -81,7 +81,8 @@ async function assertNoSeriousAccessibilityIssues(page, label) {
 }
 
 const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+const page = await context.newPage();
 const pageErrors = [];
 page.on('pageerror', (error) => pageErrors.push(error.message));
 
@@ -125,5 +126,6 @@ try {
   if (pageErrors.length) throw new Error(`Authenticated page errors: ${pageErrors.join(' | ')}`);
   console.log('Clinic Admin authenticated navigation and accessibility test passed.');
 } finally {
+  await context.close();
   await browser.close();
 }
