@@ -6,6 +6,7 @@ import AppointmentAdmin from './appointment-admin';
 import ClinicalAdmin from './clinical-admin';
 import FinanceAdmin from './finance-admin';
 import ManagementAdmin from './management-admin';
+import ReportAdmin from './report-admin';
 import { loadAdminContext, loadAdminMonth, signInAdmin, supabase } from './admin-supabase';
 
 const NAV = [
@@ -88,8 +89,8 @@ function Section({ section, data, clinic, profile, month, onRefresh }) {
   if (section === 'finance') return <FinanceAdmin profile={profile} monthStart={data.period?.start} monthEnd={data.period?.end} currency={clinic.currency_code} onChanged={onRefresh} />;
   if (section === 'staff') return <ManagementAdmin profile={profile} clinic={clinic} monthStart={data.period?.start} mode="staff" onChanged={onRefresh} />;
   if (section === 'settings') return <ManagementAdmin profile={profile} clinic={clinic} monthStart={data.period?.start} mode="settings" onChanged={onRefresh} />;
-  if (section === 'reports') return <><div className="admin-section-title"><h2>Reports and exports</h2><p>Monthly PDF, Excel and CSV reporting is the next milestone.</p></div><section className="admin-panel"><div className="admin-empty">Reporting workflows are not enabled yet.</div></section></>;
-  return <><div className="admin-section-title"><h2>Audit and archived records</h2><p>Each administration module exposes its own detailed history.</p></div><section className="admin-panel"><div className="admin-finance-note">Patient, appointment, clinical, financial and management audit ledgers are active. A unified audit search will be added with reporting.</div></section></>;
+  if (section === 'reports') return <ReportAdmin key="reports" data={data} clinic={clinic} profile={profile} month={month} initialTab="summary" onChanged={onRefresh} />;
+  return <ReportAdmin key="audit" data={data} clinic={clinic} profile={profile} month={month} initialTab="audit" onChanged={onRefresh} />;
 }
 
 function App() {
