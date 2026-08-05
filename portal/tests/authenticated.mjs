@@ -118,7 +118,7 @@ try {
 
   const sections = ['Patients', 'Appointments', 'Visits & treatments', 'Payments & invoices', 'Doctors & staff', 'Reports & exports', 'Audit & archived', 'Clinic settings'];
   for (const section of sections) {
-    await page.getByRole('button', { name: section, exact: true }).click();
+    await page.locator('.admin-nav button').filter({ hasText: section }).click();
     await page.getByRole('heading', { name: section, level: 1, exact: true }).waitFor({ state: 'visible' });
     if (await page.getByText('Admin access needs attention').count()) throw new Error(`${section} entered the global error screen.`);
   }
