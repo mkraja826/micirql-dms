@@ -1,0 +1,48 @@
+name: Clinic Portal Build
+
+on:
+  push:
+    branches:
+      - feature/clinic-portal-supabase
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package.json
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build CapDent website and clinic portal
+        run: npm run build
+
+      - name: Verify clinic portal output
+        run: |
+          test -f dist/portal/index.html
+          test -d dist/portal/assets
+          grep -q "CapDent Clinic Portal" dist/portal/index.html
+
+      - name: Upload static build
+        uses: actions/upload-artifact@v4
+        with:
+          name: capdent-clinic-portal-build
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
