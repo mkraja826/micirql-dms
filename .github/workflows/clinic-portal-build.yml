@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/clinic-portal-supabase
+      - feature/clinic-admin-dashboard-v1
   pull_request:
     branches:
       - main
@@ -37,7 +38,7 @@ jobs:
         run: |
           test -f dist/portal/index.html
           test -d dist/portal/assets
-          grep -q "CapDent Clinic Portal" dist/portal/index.html
+          grep -q "CapDent Clinic Admin" dist/portal/index.html
 
       - name: Install browser smoke-test runtime
         run: |
@@ -68,7 +69,7 @@ jobs:
       - name: Upload static build
         uses: actions/upload-artifact@v4
         with:
-          name: capdent-clinic-portal-build
+          name: capdent-clinic-admin-build
           path: dist
           if-no-files-found: error
           retention-days: 7
