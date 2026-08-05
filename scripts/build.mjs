@@ -12,6 +12,7 @@ const publicFiles = [
   'index.html',
   'capdent-mark.svg',
   'social-card.svg',
+  'pricing-v2.css',
   'robots.txt',
   'sitemap.xml',
   '_headers',
@@ -38,13 +39,14 @@ async function findHtmlFiles(directory) {
   return files.flat();
 }
 
-const [siteCss, blogCss, portalNavCss] = await Promise.all([
+const [siteCss, blogCss, portalNavCss, pricingV2Css] = await Promise.all([
   readFile(join(projectRoot, 'styles.css'), 'utf8'),
   readFile(join(projectRoot, 'blog.css'), 'utf8'),
   readFile(join(projectRoot, 'portal-nav.css'), 'utf8'),
+  readFile(join(projectRoot, 'pricing-v2.css'), 'utf8'),
 ]);
 
-const inlineCss = `${siteCss}\n${blogCss}\n${portalNavCss}`;
+const inlineCss = `${siteCss}\n${blogCss}\n${portalNavCss}\n${pricingV2Css}`;
 
 // The portal is compiled after this script. Give it the same favicon and logo
 // without changing its application logic or dashboard layout.
@@ -99,7 +101,7 @@ await Promise.all(htmlFiles.map(async (file) => {
   source = source.replace('</header>', `</header>\n${releaseNotice}`);
 
   const withoutExternalCss = source.replace(
-    /\s*<link\s+rel=["']stylesheet["']\s+href=["']\/(?:styles|blog)\.css(?:\?[^"']*)?["']\s*\/?>/gi,
+    /\s*<link\s+rel=["']stylesheet["']\s+href=["']\/(?:styles|blog|pricing-v2)\.css(?:\?[^"']*)?["']\s*\/?>/gi,
     '',
   );
   const optimized = withoutExternalCss.replace(
@@ -115,4 +117,4 @@ await Promise.all(['robots.txt', 'sitemap.xml'].map(async (file) => {
   await writeFile(path, source.replaceAll('https://capdent.micirql.com', marketingOrigin), 'utf8');
 }));
 
-console.log(`CapDent marketing site built for ${marketingOrigin} with the new logo, favicon, separate login links and release notice across ${htmlFiles.length} HTML pages.`);
+console.log(`CapDent marketing site built for ${marketingOrigin} with the new logo, favicon, separate login links, release notice and pricing V2 styles across ${htmlFiles.length} HTML pages.`);
