@@ -284,7 +284,7 @@ begin
   from public.staff_invites invite
   left join public.profiles actor on actor.id = invite.cancelled_by
   where invite.clinic_id = v_clinic_id and invite.cancelled_at is not null
-  order by occurred_at desc nulls last;
+  order by 6 desc nulls last;
 end;
 $$;
 
