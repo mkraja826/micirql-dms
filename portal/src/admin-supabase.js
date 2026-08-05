@@ -61,7 +61,7 @@ export async function loadAdminMonth(profile, monthDate) {
     supabase.from('appointments').select('id, appointment_time, status, patient_id, patients(name, phone)').eq('clinic_id', clinicId).gte('appointment_time', start).lte('appointment_time', end).order('appointment_time'),
     supabase.from('patient_visits').select('id, patient_id, doctor_id, visit_date, visit_status, patients(name), profiles!patient_visits_doctor_id_fkey(name)').eq('clinic_id', clinicId).gte('visit_date', start).lte('visit_date', end).order('visit_date'),
     supabase.from('treatments').select('id, patient_id, treatment_name, status, cost, created_at').eq('clinic_id', clinicId).gte('created_at', start).lte('created_at', end).order('created_at'),
-    supabase.from('payments').select('id, patient_id, amount, payment_method, payment_category, notes, created_at, recorded_by, patients(name, phone), profiles!payments_recorded_by_fkey(name)').eq('clinic_id', clinicId).gte('created_at', start).lte('created_at', end).order('created_at'),
+    supabase.from('payments').select('id, patient_id, amount, payment_method, payment_category, notes, created_at, collected_by, patients(name, phone), profiles!payments_collected_by_fkey(name)').eq('clinic_id', clinicId).gte('created_at', start).lte('created_at', end).order('created_at'),
     supabase.from('invoices').select('id, patient_id, total_amount, paid_amount, due_amount, status, created_at, patients(name, phone)').eq('clinic_id', clinicId).lte('created_at', end).order('created_at'),
     supabase.from('profiles').select('id, name, email, role, active, created_at').eq('clinic_id', clinicId).order('name'),
     supabase.from('payments').select('id, amount, created_at').eq('clinic_id', clinicId).gte('created_at', previous.start).lte('created_at', previous.end),
@@ -73,7 +73,7 @@ export async function loadAdminMonth(profile, monthDate) {
   const appointments = requireResult(results[1], 'Unable to load appointments').map((row) => ({ ...row, patient: relation(row.patients) }));
   const visits = requireResult(results[2], 'Unable to load visits').map((row) => ({ ...row, patient: relation(row.patients), doctor: relation(row.profiles) }));
   const treatments = requireResult(results[3], 'Unable to load treatments');
-  const payments = requireResult(results[4], 'Unable to load payments').map((row) => ({ ...row, patient: relation(row.patients), recorder: relation(row.profiles) }));
+  const payments = requireResult(results[4], 'Unable to load payments').map((row) => ({ ...row, patient: relation(row.patients), collector: relation(row.profiles) }));
   const invoices = requireResult(results[5], 'Unable to load invoices').map((row) => ({ ...row, patient: relation(row.patients) }));
   const staff = requireResult(results[6], 'Unable to load staff');
   const previousPayments = requireResult(results[7], 'Unable to load previous payments');
