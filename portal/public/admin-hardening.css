@@ -1,0 +1,43 @@
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #0b6f65;
+  outline-offset: 3px;
+}
+
+.admin-skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10000;
+  transform: translateY(-160%);
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #073b36;
+  box-shadow: 0 6px 24px rgba(5, 55, 50, 0.25);
+  font-weight: 700;
+}
+
+.admin-skip-link:focus {
+  transform: translateY(0);
+}
+
+#root:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  :where(button, input, select, textarea) {
+    border: 1px solid ButtonText;
+  }
+}
