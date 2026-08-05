@@ -20,34 +20,31 @@ try {
   await page.goto(baseUrl, { waitUntil: 'networkidle' });
 
   const title = await page.title();
-  if (!title.includes('CapDent Clinic Portal')) {
+  if (!title.includes('CapDent Clinic Admin')) {
     throw new Error(`Unexpected page title: ${title}`);
   }
 
-  const email = page.locator('#clinic-email');
-  const password = page.locator('#clinic-password');
-  const submit = page.getByRole('button', { name: 'Sign in to clinic' });
+  const email = page.getByLabel('Account email');
+  const password = page.getByLabel('Password');
+  const submit = page.getByRole('button', { name: 'Sign in as owner / head doctor' });
 
   await email.waitFor({ state: 'visible' });
   await password.waitFor({ state: 'visible' });
   await submit.waitFor({ state: 'visible' });
 
   await submit.click();
-  await page.getByRole('alert').filter({
-    hasText: 'Enter the email and password connected to your CapDent account.',
-  }).waitFor({ state: 'visible' });
+  await page.getByText('Enter your CapDent account email and password.').waitFor({ state: 'visible' });
 
   await email.fill('invalid@example.com');
   await password.fill('incorrect-password');
   await submit.click();
-  await page.getByRole('alert').filter({ hasText: 'Incorrect email or password.' }).waitFor({ state: 'visible' });
+  await page.getByText('Incorrect email or password.').waitFor({ state: 'visible' });
 
-  const dashboardHeading = page.getByRole('heading', { name: 'Clinic dashboard' });
-  if (await dashboardHeading.count()) {
-    throw new Error('Unauthenticated smoke test unexpectedly reached the clinic dashboard.');
+  if (await page.getByRole('heading', { name: 'Clinic performance' }).count()) {
+    throw new Error('Unauthenticated smoke test unexpectedly reached Clinic Admin.');
   }
 
-  console.log('Clinic Portal browser smoke test passed.');
+  console.log('Clinic Admin browser smoke test passed.');
 } finally {
   await browser.close();
 }
