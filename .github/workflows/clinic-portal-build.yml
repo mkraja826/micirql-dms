@@ -1,0 +1,74 @@
+name: Clinic Portal Build
+
+on:
+  push:
+    branches:
+      - feature/clinic-portal-supabase
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package.json
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build CapDent website and clinic portal
+        run: npm run build
+
+      - name: Verify clinic portal output
+        run: |
+          test -f dist/portal/index.html
+          test -d dist/portal/assets
+          grep -q "CapDent Clinic Portal" dist/portal/index.html
+
+      - name: Install browser smoke-test runtime
+        run: |
+          npm install --no-save --no-audit --no-fund playwright
+          npx playwright install --with-deps chromium
+
+      - name: Run Clinic Portal browser smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx vite preview --config portal/vite.config.js --host 127.0.0.1 --port 4173 > /tmp/capdent-portal-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error http://127.0.0.1:4173/portal/ > /dev/null; then
+              break
+            fi
+            if [[ "$attempt" == "30" ]]; then
+              cat /tmp/capdent-portal-preview.log
+              exit 1
+            fi
+            sleep 1
+          done
+
+          node portal/tests/smoke.mjs
+
+      - name: Upload static build
+        uses: actions/upload-artifact@v4
+        with:
+          name: capdent-clinic-portal-build
+          path: dist
+          if-no-files-found: error
+          retention-days: 7

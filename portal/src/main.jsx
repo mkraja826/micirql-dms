@@ -1,7 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 import './intelligence.css';
+import './live.css';
+import {
+  createPortalPatient,
+  isSupabaseConfigured,
+  loadPortalContext,
+  loadPortalData,
+  signInToClinic,
+  supabase,
+  updatePortalClinic,
+} from './supabase';
 
 const NAV_ITEMS = [
   ['overview', 'Dashboard', '⌂'],
@@ -16,138 +26,79 @@ const NAV_ITEMS = [
 ];
 
 const SECTION_COPY = {
-  overview: ['Clinic dashboard', 'A simple view of today, payments and work that needs attention.'],
-  patients: ['Patient directory', 'Create, search and manage patient records.'],
-  appointments: ['Appointments', 'Manage today’s schedule and patient status.'],
-  billing: ['Payments & dues', 'Review collections and patients with pending amounts.'],
-  files: ['Clinical files', 'Review prescriptions, X-rays and patient uploads.'],
-  visits: ['Treatments & visits', 'See recent treatments and doctor activity.'],
-  staff: ['Staff activity', 'Review clinic work completed by the team.'],
-  reports: ['Reports & backup', 'Download clinic information in readable formats.'],
-  settings: ['Clinic settings', 'Update clinic and owner contact information.'],
+  overview: ['Clinic dashboard', 'Live patients, appointments, payments and clinic priorities.'],
+  patients: ['Patient directory', 'Create and search patient records in your clinic.'],
+  appointments: ['Appointments', 'Today’s live schedule and patient status.'],
+  billing: ['Payments & dues', 'Collections and outstanding patient balances.'],
+  files: ['Clinical files', 'Recent prescriptions, X-rays and clinical uploads.'],
+  visits: ['Treatments & visits', 'Recent clinic visits and treatment activity.'],
+  staff: ['Clinic staff', 'Authorised clinic accounts and roles.'],
+  reports: ['Reports & backup', 'Download the clinic data currently visible to your account.'],
+  settings: ['Clinic settings', 'Review or update your clinic information.'],
 };
 
-const INITIAL_PATIENTS = [
-  { id: 1, name: 'Ananya Rao', phone: '98765 43210', code: 'CD-1048', age: 34, gender: 'Female', added: '16 Jul 2026' },
-  { id: 2, name: 'Vikram Reddy', phone: '98480 11223', code: 'CD-1047', age: 41, gender: 'Male', added: '16 Jul 2026' },
-  { id: 3, name: 'Meera Sharma', phone: '99887 66110', code: 'CD-1046', age: 27, gender: 'Female', added: '15 Jul 2026' },
-  { id: 4, name: 'Rohan Kumar', phone: '97001 24567', code: 'CD-1045', age: 52, gender: 'Male', added: '15 Jul 2026' },
-  { id: 5, name: 'Sana Begum', phone: '98850 44002', code: 'CD-1044', age: 30, gender: 'Female', added: '14 Jul 2026' },
-];
-
-const APPOINTMENTS = [
-  { time: '09:30 AM', patient: 'Ananya Rao', treatment: 'Root canal review', status: 'waiting' },
-  { time: '10:15 AM', patient: 'Vikram Reddy', treatment: 'Scaling', status: 'scheduled' },
-  { time: '11:00 AM', patient: 'Meera Sharma', treatment: 'Consultation', status: 'completed' },
-  { time: '12:30 PM', patient: 'Rohan Kumar', treatment: 'Crown fitting', status: 'scheduled' },
-  { time: '04:00 PM', patient: 'Sana Begum', treatment: 'Follow-up', status: 'scheduled' },
-];
-
-const DUES = [
-  { patient: 'Rohan Kumar', phone: '97001 24567', total: 12500, paid: 8000, due: 4500 },
-  { patient: 'Ananya Rao', phone: '98765 43210', total: 9000, paid: 6500, due: 2500 },
-  { patient: 'Vikram Reddy', phone: '98480 11223', total: 3200, paid: 2000, due: 1200 },
-  { patient: 'Sana Begum', phone: '98850 44002', total: 5000, paid: 4500, due: 500 },
-];
-
-const FILES = [
-  { patient: 'Ananya Rao', type: 'X-ray', name: 'Pre-treatment OPG', date: 'Today, 10:04 AM' },
-  { patient: 'Rohan Kumar', type: 'Prescription', name: 'Post procedure medicines', date: 'Yesterday, 5:22 PM' },
-  { patient: 'Meera Sharma', type: 'Photo', name: 'Before treatment', date: 'Yesterday, 11:36 AM' },
-  { patient: 'Vikram Reddy', type: 'X-ray', name: 'Bitewing image', date: '14 Jul, 3:15 PM' },
-];
-
-const VISITS = [
-  { patient: 'Meera Sharma', doctor: 'Dr. Clinic Owner', treatment: 'Consultation', amount: 500, date: 'Today, 11:22 AM' },
-  { patient: 'Ananya Rao', doctor: 'Dr. Clinic Owner', treatment: 'Root canal', amount: 6500, date: 'Today, 10:10 AM' },
-  { patient: 'Sana Begum', doctor: 'Dr. Priya', treatment: 'Follow-up', amount: 300, date: 'Yesterday, 4:45 PM' },
-  { patient: 'Rohan Kumar', doctor: 'Dr. Clinic Owner', treatment: 'Crown preparation', amount: 8000, date: 'Yesterday, 12:40 PM' },
-];
-
-const STAFF = [
-  { name: 'Dr. Clinic Owner', email: 'owner@clinic.com', role: 'Owner', status: 'active' },
-  { name: 'Dr. Priya', email: 'doctor@clinic.com', role: 'Doctor', status: 'active' },
-  { name: 'Reception Desk', email: 'reception@clinic.com', role: 'Receptionist', status: 'active' },
-];
-
-const RANGE_DATA = {
-  today: {
-    title: 'Today', comparison: 'compared with yesterday',
-    kpis: [
-      { label: 'Patients today', value: '18', note: '3 more than yesterday', trend: '+20%', tone: 'teal', icon: '👥' },
-      { label: 'Waiting now', value: '4', note: 'Longest wait: 28 min', trend: 'Live', tone: 'amber', icon: '◷' },
-      { label: 'Completed visits', value: '14', note: '78% of today’s list', trend: '+9%', tone: 'green', icon: '✓' },
-      { label: 'Amount collected', value: '₹42,600', note: 'Across 16 payments', trend: '+8%', tone: 'blue', icon: '₹' },
-      { label: 'Payment still pending', value: '₹18,400', note: 'Across 4 patients', trend: 'Needs action', tone: 'red', icon: '!' },
-      { label: 'Follow-ups due', value: '7', note: '3 are already overdue', trend: 'Today', tone: 'violet', icon: '↻' },
-    ],
-    revenue: [6200, 9100, 5400, 11200, 7600, 13800, 12600],
-    patients: [12, 16, 11, 19, 15, 22, 18],
-    newPatients: 7,
-    returningPatients: 11,
-  },
-  week: {
-    title: 'Last 7 days', comparison: 'compared with the previous 7 days',
-    kpis: [
-      { label: 'Patients treated', value: '112', note: '14 new patients', trend: '+11%', tone: 'teal', icon: '👥' },
-      { label: 'Average waiting time', value: '19 min', note: '4 minutes faster', trend: 'Improved', tone: 'amber', icon: '◷' },
-      { label: 'Completed visits', value: '96', note: '86% completion rate', trend: '+6%', tone: 'green', icon: '✓' },
-      { label: 'Amount collected', value: '₹2.84L', note: 'From 102 payments', trend: '+13%', tone: 'blue', icon: '₹' },
-      { label: 'Payment still pending', value: '₹46,800', note: 'Across 13 patients', trend: '-7%', tone: 'red', icon: '!' },
-      { label: 'Follow-ups completed', value: '31', note: '8 remain overdue', trend: '+18%', tone: 'violet', icon: '↻' },
-    ],
-    revenue: [6200, 9100, 5400, 11200, 7600, 13800, 12600],
-    patients: [12, 16, 11, 19, 15, 21, 18],
-    newPatients: 38,
-    returningPatients: 74,
-  },
-  month: {
-    title: 'This month', comparison: 'compared with last month',
-    kpis: [
-      { label: 'Patients treated', value: '438', note: '62 new patients', trend: '+14%', tone: 'teal', icon: '👥' },
-      { label: 'Average waiting time', value: '21 min', note: '2 minutes faster', trend: 'Improved', tone: 'amber', icon: '◷' },
-      { label: 'Completed visits', value: '391', note: '89% completion rate', trend: '+10%', tone: 'green', icon: '✓' },
-      { label: 'Amount collected', value: '₹11.8L', note: 'Average ₹2,694 per patient', trend: '+17%', tone: 'blue', icon: '₹' },
-      { label: 'Payment still pending', value: '₹1.24L', note: 'Across 29 patients', trend: '-5%', tone: 'red', icon: '!' },
-      { label: 'Follow-ups completed', value: '126', note: '19 remain overdue', trend: '+12%', tone: 'violet', icon: '↻' },
-    ],
-    revenue: [210000, 236000, 249000, 278000, 302000, 287000, 318000],
-    patients: [68, 74, 77, 82, 91, 88, 96],
-    newPatients: 136,
-    returningPatients: 302,
+const EMPTY_DATA = {
+  patientCount: 0,
+  patients: [],
+  appointments: [],
+  payments: [],
+  todayPayments: [],
+  dueInvoices: [],
+  recentVisits: [],
+  visitsSeries: [],
+  files: [],
+  staff: [],
+  treatments: [],
+  metrics: {
+    patientsToday: 0,
+    newPatientsToday: 0,
+    waitingNow: 0,
+    completedToday: 0,
+    bookedToday: 0,
+    missedToday: 0,
+    cancelledToday: 0,
+    followupsToday: 0,
+    collectedToday: 0,
+    pendingTotal: 0,
   },
 };
 
-const TREATMENTS = [
-  { label: 'Root canal', value: 28, colour: '#087f72' },
-  { label: 'Cleaning', value: 22, colour: '#2f6f89' },
-  { label: 'Filling', value: 18, colour: '#c58a22' },
-  { label: 'Extraction', value: 14, colour: '#8b6cb8' },
-  { label: 'Crowns', value: 10, colour: '#d05b4c' },
-  { label: 'Other', value: 8, colour: '#9aabad' },
-];
+const money = (value, currency = 'INR') =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: currency || 'INR',
+    maximumFractionDigits: 0,
+  }).format(Number(value || 0));
 
-const PRIORITIES = [
-  { level: 'urgent', icon: '₹', title: '₹18,400 is still pending', text: 'Four patients have unpaid balances.', action: 'View pending payments', target: 'billing' },
-  { level: 'warning', icon: '◷', title: 'One patient has waited 28 minutes', text: 'The usual wait is around 18 minutes.', action: 'Open waiting list', target: 'appointments' },
-  { level: 'warning', icon: '↻', title: 'Three follow-ups are overdue', text: 'These patients were expected earlier this week.', action: 'Review follow-ups', target: 'patients' },
-  { level: 'info', icon: '▧', title: 'Storage is 78% used', text: 'About 220 MB remains in the free clinic storage.', action: 'View storage', target: 'settings' },
-];
+const dateText = (value, options = {}) =>
+  value
+    ? new Intl.DateTimeFormat('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        ...options,
+      }).format(new Date(value))
+    : '—';
 
-const PAYMENT_METHODS = [
-  { label: 'UPI', value: 48, amount: '₹20,450' },
-  { label: 'Cash', value: 31, amount: '₹13,200' },
-  { label: 'Card', value: 14, amount: '₹5,950' },
-  { label: 'Bank transfer', value: 7, amount: '₹3,000' },
-];
+const timeText = (value) =>
+  value
+    ? new Intl.DateTimeFormat('en-IN', { hour: '2-digit', minute: '2-digit' }).format(new Date(value))
+    : '—';
 
-const STAFF_ACTIVITY = [
-  { name: 'Reception Desk', role: 'Reception', value: '18 patients checked in', meta: '12 appointments · 6 walk-ins', initials: 'RD' },
-  { name: 'Dr. Clinic Owner', role: 'Doctor', value: '9 visits completed', meta: '6 treatments updated', initials: 'CO' },
-  { name: 'Dr. Priya', role: 'Doctor', value: '5 visits completed', meta: '4 treatments updated', initials: 'DP' },
-];
+function roleLabel(role) {
+  if (role === 'owner' || role === 'head_doctor') return 'Owner / Head doctor';
+  if (role === 'doctor' || role === 'working_doctor') return 'Doctor';
+  return 'Receptionist';
+}
 
-const money = (value) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0);
+function initials(name = '') {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('') || 'CD';
+}
 
 function Logo({ large = false }) {
   return (
@@ -160,43 +111,88 @@ function Logo({ large = false }) {
   );
 }
 
-function Status({ value }) {
-  const tone = value === 'completed' || value === 'active' ? 'green' : value === 'waiting' ? 'amber' : 'blue';
-  return <span className={`status ${tone}`}>{value}</span>;
-}
-
 function Card({ title, subtitle, action, className = '', children }) {
   return (
     <section className={`card ${className}`}>
-      {(title || action) && <div className="card-head"><div><h3>{title}</h3>{subtitle && <p>{subtitle}</p>}</div>{action}</div>}
+      {(title || action) && (
+        <div className="card-head">
+          <div><h3>{title}</h3>{subtitle && <p>{subtitle}</p>}</div>
+          {action}
+        </div>
+      )}
       {children}
     </section>
   );
 }
 
 function Empty({ title, text }) {
-  return <div className="empty"><span>—</span><strong>{title}</strong><p>{text}</p></div>;
+  return <div className="live-empty"><strong>{title}</strong><p>{text}</p></div>;
 }
 
-function LoginScreen({ onLogin }) {
+function Status({ value }) {
+  const normalized = String(value || 'unknown').toLowerCase();
+  const tone = ['completed', 'done', 'active', 'paid'].includes(normalized)
+    ? 'green'
+    : ['waiting', 'checked_in', 'partial'].includes(normalized)
+      ? 'amber'
+      : 'blue';
+  return <span className={`status ${tone}`}>{normalized.replaceAll('_', ' ')}</span>;
+}
+
+function PortalLoading({ text = 'Opening your clinic securely…' }) {
+  return (
+    <main className="portal-loading">
+      <section className="portal-loading-card">
+        <Logo large />
+        <h1>CapDent Clinic Portal</h1>
+        <p>{text}</p>
+        <div className="portal-spinner" aria-label="Loading" />
+      </section>
+    </main>
+  );
+}
+
+function PortalError({ message, onSignOut }) {
+  return (
+    <main className="portal-loading">
+      <section className="portal-loading-card">
+        <Logo large />
+        <h1>Clinic access needs attention</h1>
+        <p>{message}</p>
+        <div className="portal-error-actions">
+          <button type="button" onClick={onSignOut}>Return to sign in</button>
+          <a href="mailto:support@micirql.com?subject=CapDent%20Clinic%20Portal%20Access">Contact support</a>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function LoginScreen({ onSignedIn }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  function submit(event) {
+  async function submit(event) {
     event.preventDefault();
     if (!email.trim() || !password) {
-      setMessage('Enter your clinic email and password.');
+      setMessage('Enter the email and password connected to your CapDent account.');
       return;
     }
-    setMessage('');
+
     setLoading(true);
-    window.setTimeout(() => {
+    setMessage('');
+    try {
+      const result = await signInToClinic(email, password);
+      await onSignedIn(result.session);
+    } catch (error) {
+      const text = error?.message || 'Unable to sign in. Check your email and password.';
+      setMessage(text.toLowerCase().includes('invalid login') ? 'Incorrect email or password.' : text);
+    } finally {
       setLoading(false);
-      onLogin();
-    }, 450);
+    }
   }
 
   return (
@@ -206,46 +202,38 @@ function LoginScreen({ onLogin }) {
         <section className="login-story" aria-labelledby="login-story-title">
           <div className="login-brand"><Logo /><div><strong>CapDent</strong><span>Clinic Portal</span></div></div>
           <div className="login-story-copy">
-            <p className="login-overline">One clear view of your clinic</p>
+            <p className="login-overline">Live clinic workspace</p>
             <h1 id="login-story-title">Know what is happening. Know what needs attention.</h1>
-            <p>Open your clinic workspace to review patients, appointments, payments, treatments and daily activity.</p>
+            <p>Sign in with the same CapDent account used by your clinic team. Your portal is protected by clinic-level access policies.</p>
           </div>
           <div className="login-summary" aria-label="Clinic portal highlights">
-            <div><span>Today</span><strong>Patients and waiting room</strong><small>See who has arrived, who is waiting and what is completed.</small></div>
-            <div><span>Payments</span><strong>Collections and pending amounts</strong><small>Understand what was collected and what still needs follow-up.</small></div>
-            <div><span>Clinic priorities</span><strong>Important work first</strong><small>Keep follow-ups, unfinished treatments and pending actions visible.</small></div>
+            <div><span>Today</span><strong>Patients and waiting room</strong><small>Review current appointments, arrivals and completed work.</small></div>
+            <div><span>Payments</span><strong>Collections and pending amounts</strong><small>See live payments and outstanding patient balances.</small></div>
+            <div><span>Security</span><strong>Only your clinic data</strong><small>Supabase RLS keeps each clinic workspace isolated.</small></div>
           </div>
-          <p className="login-story-note">Designed for clinic owners, doctors and reception teams.</p>
+          <p className="login-story-note">Connected to the same CapDent backend used by the Android app.</p>
         </section>
+
         <section className="login-panel" aria-labelledby="login-title">
           <div className="login-panel-inner">
             <p className="login-kicker">Clinic Portal</p>
             <h2 id="login-title">Sign in to your clinic</h2>
-            <p className="login-intro">Use the email and password connected to your CapDent clinic.</p>
+            <p className="login-intro">Use your CapDent owner, doctor or receptionist account.</p>
+
             <form className="login-form" onSubmit={submit} noValidate>
-              <label htmlFor="clinic-email">Clinic email<input id="clinic-email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="doctor@clinic.com" required /></label>
+              <label htmlFor="clinic-email">Account email<input id="clinic-email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="doctor@clinic.com" required /></label>
               <label htmlFor="clinic-password">Password<div className="password-field"><input id="clinic-password" name="password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" required /><button type="button" className="password-toggle" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? 'Hide' : 'Show'}</button></div></label>
               {message ? <p className="login-error" role="alert">{message}</p> : null}
-              <button className="login-submit" type="submit" disabled={loading}>{loading ? 'Opening clinic…' : 'Sign in to clinic'}</button>
+              <button className="login-submit" type="submit" disabled={loading || !isSupabaseConfigured}>{loading ? 'Signing in securely…' : 'Sign in to clinic'}</button>
             </form>
-            <div className="login-preview-note"><strong>Portal preview</strong><p>Real clinic sign-in is not connected yet. Enter any test email and password to open the sample dashboard.</p></div>
+
+            {!isSupabaseConfigured ? <div className="login-config-error">The portal is missing its Supabase browser configuration.</div> : null}
             <p className="login-help">Need help accessing your clinic? <a href="mailto:support@micirql.com?subject=CapDent%20Clinic%20Portal%20Access">Contact CapDent support</a></p>
           </div>
-          <p className="login-footer">CapDent by Micirql · Your clinic information remains private to your authorised team.</p>
+          <p className="login-footer">CapDent by Micirql · Authentication and clinic access are enforced by Supabase.</p>
         </section>
       </div>
     </main>
-  );
-}
-
-function KpiCard({ item }) {
-  return (
-    <article className={`intel-kpi ${item.tone}`}>
-      <div className="intel-kpi-top"><span className="intel-kpi-icon">{item.icon}</span><span className="intel-trend">{item.trend}</span></div>
-      <p>{item.label}</p>
-      <strong>{item.value}</strong>
-      <small>{item.note}</small>
-    </article>
   );
 }
 
@@ -254,11 +242,12 @@ function LineChart({ values, labels, format = (value) => value }) {
   const height = 220;
   const paddingX = 26;
   const paddingY = 24;
-  const max = Math.max(...values, 1);
-  const min = Math.min(...values, 0);
+  const safeValues = values.length ? values : [0];
+  const max = Math.max(...safeValues, 1);
+  const min = Math.min(...safeValues, 0);
   const range = Math.max(max - min, 1);
-  const points = values.map((value, index) => {
-    const x = paddingX + (index * (width - paddingX * 2)) / Math.max(values.length - 1, 1);
+  const points = safeValues.map((value, index) => {
+    const x = paddingX + (index * (width - paddingX * 2)) / Math.max(safeValues.length - 1, 1);
     const y = height - paddingY - ((value - min) / range) * (height - paddingY * 2);
     return { x, y, value };
   });
@@ -271,7 +260,7 @@ function LineChart({ values, labels, format = (value) => value }) {
         {[0, 1, 2, 3].map((row) => <line key={row} x1={paddingX} x2={width - paddingX} y1={paddingY + row * 51} y2={paddingY + row * 51} className="chart-grid-line" />)}
         <path d={area} className="chart-area" />
         <path d={path} className="chart-line" />
-        {points.map((point, index) => <circle key={index} cx={point.x} cy={point.y} r="4.5" className="chart-point"><title>{`${labels[index]}: ${format(point.value)}`}</title></circle>)}
+        {points.map((point, index) => <circle key={index} cx={point.x} cy={point.y} r="4.5" className="chart-point"><title>{`${labels[index] || ''}: ${format(point.value)}`}</title></circle>)}
       </svg>
       <div className="chart-labels">{labels.map((label) => <span key={label}>{label}</span>)}</div>
     </div>
@@ -280,212 +269,153 @@ function LineChart({ values, labels, format = (value) => value }) {
 
 function PatientBars({ values, labels }) {
   const max = Math.max(...values, 1);
-  return (
-    <div className="patient-bars" aria-label="Patient visits by day">
-      {values.map((value, index) => <div className="patient-bar-column" key={`${labels[index]}-${value}`}><div className="patient-bar-track"><span style={{ height: `${Math.max((value / max) * 100, 8)}%` }}><b>{value}</b></span></div><small>{labels[index]}</small></div>)}
-    </div>
-  );
+  return <div className="patient-bars" aria-label="Patient visits by day">{values.map((value, index) => <div className="patient-bar-column" key={`${labels[index]}-${value}`}><div className="patient-bar-track"><span style={{ height: `${Math.max((value / max) * 100, value ? 8 : 0)}%` }}><b>{value}</b></span></div><small>{labels[index]}</small></div>)}</div>;
 }
 
 function DonutChart({ items }) {
+  const total = items.reduce((sum, item) => sum + item.count, 0);
   let start = 0;
   const stops = items.map((item) => {
-    const end = start + item.value;
+    const size = total ? (item.count / total) * 100 : 0;
+    const end = start + size;
     const stop = `${item.colour} ${start}% ${end}%`;
     start = end;
     return stop;
   }).join(', ');
-  return (
-    <div className="donut-layout">
-      <div className="donut" style={{ background: `conic-gradient(${stops})` }}><div><strong>100</strong><span>Treatments</span></div></div>
-      <div className="donut-legend">{items.map((item) => <div key={item.label}><span style={{ background: item.colour }} /><p><strong>{item.label}</strong><small>{item.value}%</small></p></div>)}</div>
-    </div>
-  );
+
+  if (!items.length) return <Empty title="No treatment activity yet" text="Treatment trends will appear after visits are recorded." />;
+
+  return <div className="donut-layout"><div className="donut" style={{ background: `conic-gradient(${stops})` }}><div><strong>{total}</strong><span>Treatments</span></div></div><div className="donut-legend">{items.map((item) => <div key={item.label}><span style={{ background: item.colour }} /><p><strong>{item.label}</strong><small>{item.count}</small></p></div>)}</div></div>;
 }
 
-function PriorityItem({ item, navigate }) {
-  return (
-    <article className={`priority-item ${item.level}`}>
-      <span className="priority-icon">{item.icon}</span>
-      <div><strong>{item.title}</strong><p>{item.text}</p></div>
-      <button type="button" onClick={() => navigate(item.target)}>{item.action} →</button>
-    </article>
-  );
+function dateKey(value) {
+  const date = new Date(value);
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
 
-function Overview({ navigate }) {
-  const [range, setRange] = useState('today');
-  const data = RANGE_DATA[range];
-  const labels = range === 'month' ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'];
-  const totalPatients = data.newPatients + data.returningPatients;
-  const newWidth = `${Math.round((data.newPatients / totalPatients) * 100)}%`;
+function buildSevenDaySeries(rows, dateField, valueField) {
+  const dates = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (6 - index));
+    date.setHours(0, 0, 0, 0);
+    return date;
+  });
+  const values = dates.map((date) => rows.filter((row) => dateKey(row[dateField]) === dateKey(date)).reduce((sum, row) => sum + (valueField ? Number(row[valueField] || 0) : 1), 0));
+  const labels = dates.map((date, index) => index === 6 ? 'Today' : new Intl.DateTimeFormat('en-IN', { weekday: 'short' }).format(date));
+  return { labels, values };
+}
+
+function Overview({ data, clinic, profile, navigate }) {
+  const metrics = data.metrics;
+  const revenue = buildSevenDaySeries(data.payments, 'created_at', 'amount');
+  const patientFlow = buildSevenDaySeries(data.visitsSeries, 'visit_date');
+  const treatmentColours = ['#087f72', '#2f6f89', '#c58a22', '#8b6cb8', '#d05b4c', '#9aabad'];
+  const treatmentCounts = Object.entries(data.treatments.reduce((result, item) => {
+    const name = item.treatment_name || 'Other';
+    result[name] = (result[name] || 0) + 1;
+    return result;
+  }, {})).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([label, count], index) => ({ label, count, colour: treatmentColours[index] }));
+  const paymentMethods = Object.entries(data.todayPayments.reduce((result, item) => {
+    const method = item.payment_method || 'Other';
+    result[method] = (result[method] || 0) + Number(item.amount || 0);
+    return result;
+  }, {})).sort((a, b) => b[1] - a[1]);
+  const totalMethodAmount = paymentMethods.reduce((sum, [, amount]) => sum + amount, 0);
+  const priorities = [];
+  if (metrics.pendingTotal > 0) priorities.push({ level: 'urgent', icon: '₹', title: `${money(metrics.pendingTotal, clinic.currency_code)} is still pending`, text: `${data.dueInvoices.length} patient invoices need follow-up.`, action: 'View pending payments', target: 'billing' });
+  if (metrics.waitingNow > 0) priorities.push({ level: 'warning', icon: '◷', title: `${metrics.waitingNow} patient${metrics.waitingNow === 1 ? '' : 's'} waiting now`, text: 'Open today’s schedule to review the waiting room.', action: 'Open appointments', target: 'appointments' });
+  if (metrics.followupsToday > 0) priorities.push({ level: 'warning', icon: '↻', title: `${metrics.followupsToday} follow-up${metrics.followupsToday === 1 ? '' : 's'} due today`, text: 'Review follow-up appointments before the clinic closes.', action: 'Review follow-ups', target: 'appointments' });
+
+  const kpis = [
+    { label: 'Total patients', value: data.patientCount, note: `${metrics.newPatientsToday} added today`, trend: 'Live', tone: 'teal', icon: '👥' },
+    { label: 'Patients today', value: metrics.patientsToday, note: `${data.appointments.length} appointments today`, trend: 'Today', tone: 'blue', icon: '▣' },
+    { label: 'Waiting now', value: metrics.waitingNow, note: 'Checked-in and waiting patients', trend: 'Live', tone: 'amber', icon: '◷' },
+    { label: 'Completed visits', value: metrics.completedToday, note: 'Completed appointments today', trend: 'Today', tone: 'green', icon: '✓' },
+    { label: 'Amount collected', value: money(metrics.collectedToday, clinic.currency_code), note: `${data.todayPayments.length} payments today`, trend: 'Today', tone: 'blue', icon: '₹' },
+    { label: 'Payment pending', value: money(metrics.pendingTotal, clinic.currency_code), note: `${data.dueInvoices.length} invoices with balance`, trend: metrics.pendingTotal ? 'Needs action' : 'Clear', tone: 'red', icon: '!' },
+  ];
 
   return (
     <div className="intelligence-dashboard">
-      <section className="dashboard-intro">
-        <div><p className="dashboard-eyebrow">Clinic intelligence</p><h2>Good evening. Here is your clinic at a glance.</h2><p>Important numbers, simple comparisons and the work that needs your attention.</p></div>
-        <div className="range-control" aria-label="Choose report period">{[['today', 'Today'], ['week', '7 days'], ['month', 'This month']].map(([key, label]) => <button key={key} type="button" className={range === key ? 'active' : ''} aria-pressed={range === key} onClick={() => setRange(key)}>{label}</button>)}</div>
-      </section>
+      <section className="dashboard-intro"><div><p className="dashboard-eyebrow">Live clinic intelligence</p><h2>Welcome, {profile.name || 'Clinic team'}.</h2><p>These figures come directly from {clinic.name} in Supabase.</p></div><span className="live-status">Live clinic data</span></section>
+      <div className="dashboard-period"><strong>Today</strong><span>{dateText(new Date())}</span></div>
+      <section className="intel-kpi-grid" aria-label="Important clinic numbers">{kpis.map((item) => <article className={`intel-kpi ${item.tone}`} key={item.label}><div className="intel-kpi-top"><span className="intel-kpi-icon">{item.icon}</span><span className="intel-trend">{item.trend}</span></div><p>{item.label}</p><strong>{item.value}</strong><small>{item.note}</small></article>)}</section>
 
-      <div className="dashboard-period"><strong>{data.title}</strong><span>{data.comparison}</span></div>
-      <section className="intel-kpi-grid" aria-label="Important clinic numbers">{data.kpis.map((item) => <KpiCard key={item.label} item={item} />)}</section>
-
-      <section className="intelligence-card priorities-card">
-        <div className="intelligence-card-head"><div><span className="section-kicker">Clinic priorities</span><h3>What needs attention now</h3><p>Start with these items before checking the detailed reports.</p></div><span className="priority-count">4 items</span></div>
-        <div className="priority-list">{PRIORITIES.map((item) => <PriorityItem key={item.title} item={item} navigate={navigate} />)}</div>
-      </section>
+      <section className="intelligence-card priorities-card"><div className="intelligence-card-head"><div><span className="section-kicker">Clinic priorities</span><h3>What needs attention now</h3><p>Calculated from today’s appointments and pending invoices.</p></div><span className="priority-count">{priorities.length} items</span></div><div className="priority-list">{priorities.length ? priorities.map((item) => <article className={`priority-item ${item.level}`} key={item.title}><span className="priority-icon">{item.icon}</span><div><strong>{item.title}</strong><p>{item.text}</p></div><button type="button" onClick={() => navigate(item.target)}>{item.action} →</button></article>) : <div className="all-clear"><strong>No urgent clinic priorities</strong><p>There are no waiting patients, follow-ups or outstanding balances needing immediate attention.</p></div>}</div></section>
 
       <div className="dashboard-grid-main">
-        <section className="intelligence-card revenue-trend-card">
-          <div className="intelligence-card-head"><div><span className="section-kicker">Collections</span><h3>Money collected over time</h3><p>See whether the clinic is collecting more or less than before.</p></div><div className="headline-metric"><strong>{range === 'month' ? '₹11.8L' : range === 'week' ? '₹2.84L' : '₹42,600'}</strong><span>+13% improvement</span></div></div>
-          <LineChart values={data.revenue} labels={labels} format={(value) => money(value)} />
-        </section>
-
-        <section className="intelligence-card patient-mix-card">
-          <div className="intelligence-card-head"><div><span className="section-kicker">Patients</span><h3>New and returning patients</h3><p>Returning patients show how well the clinic keeps relationships.</p></div></div>
-          <div className="patient-mix-total"><strong>{totalPatients}</strong><span>Total patients</span></div>
-          <div className="mix-bar"><span className="new" style={{ width: newWidth }} /><span className="returning" /></div>
-          <div className="mix-legend"><div><span className="new-dot" /><p><strong>{data.newPatients}</strong><small>New patients</small></p></div><div><span className="return-dot" /><p><strong>{data.returningPatients}</strong><small>Returning patients</small></p></div></div>
-          <PatientBars values={data.patients} labels={labels} />
-        </section>
+        <section className="intelligence-card revenue-trend-card"><div className="intelligence-card-head"><div><span className="section-kicker">Collections</span><h3>Money collected over 7 days</h3><p>Payments recorded by the clinic team.</p></div><div className="headline-metric"><strong>{money(revenue.values.reduce((sum, value) => sum + value, 0), clinic.currency_code)}</strong><span>Last 7 days</span></div></div><LineChart values={revenue.values} labels={revenue.labels} format={(value) => money(value, clinic.currency_code)} /></section>
+        <section className="intelligence-card patient-mix-card"><div className="intelligence-card-head"><div><span className="section-kicker">Patients</span><h3>Patient visits over 7 days</h3><p>Completed and recorded clinic visits.</p></div></div><div className="patient-mix-total"><strong>{patientFlow.values.reduce((sum, value) => sum + value, 0)}</strong><span>Recorded visits</span></div><PatientBars values={patientFlow.values} labels={patientFlow.labels} /></section>
       </div>
 
       <div className="dashboard-grid-secondary">
-        <section className="intelligence-card treatment-card">
-          <div className="intelligence-card-head"><div><span className="section-kicker">Treatments</span><h3>Most common treatments</h3><p>A clear view of the clinic’s treatment workload.</p></div><button className="card-link" type="button" onClick={() => navigate('visits')}>View treatments →</button></div>
-          <DonutChart items={TREATMENTS} />
-        </section>
-
-        <section className="intelligence-card appointments-card">
-          <div className="intelligence-card-head"><div><span className="section-kicker">Appointments</span><h3>Today’s patient flow</h3><p>From booked appointments to completed visits.</p></div><button className="card-link" type="button" onClick={() => navigate('appointments')}>Open schedule →</button></div>
-          <div className="flow-list">
-            {[['Booked', 24, 100, '24 patients'], ['Arrived', 18, 75, '18 patients'], ['Completed', 14, 58, '14 patients'], ['Rescheduled', 3, 13, '3 patients'], ['Missed', 1, 4, '1 patient']].map(([label, value, percent, text]) => <div className="flow-row" key={label}><div><strong>{label}</strong><span>{text}</span></div><div className="flow-track"><span style={{ width: `${percent}%` }} /></div><b>{value}</b></div>)}
-          </div>
-          <div className="waiting-summary"><div><span>Average waiting time</span><strong>18 min</strong><small>4 min faster than last week</small></div><div><span>Busiest time today</span><strong>5–7 PM</strong><small>Plan one extra staff member</small></div></div>
-        </section>
+        <section className="intelligence-card treatment-card"><div className="intelligence-card-head"><div><span className="section-kicker">Treatments</span><h3>Recent treatment mix</h3><p>Grouped from the latest treatment records.</p></div><button className="card-link" type="button" onClick={() => navigate('visits')}>View visits →</button></div><DonutChart items={treatmentCounts} /></section>
+        <section className="intelligence-card appointments-card"><div className="intelligence-card-head"><div><span className="section-kicker">Appointments</span><h3>Today’s patient flow</h3><p>Current appointment status from the shared CapDent database.</p></div><button className="card-link" type="button" onClick={() => navigate('appointments')}>Open schedule →</button></div><div className="flow-list">{[['Booked', metrics.bookedToday], ['Waiting', metrics.waitingNow], ['Completed', metrics.completedToday], ['Cancelled', metrics.cancelledToday], ['Missed', metrics.missedToday]].map(([label, value]) => { const base = Math.max(data.appointments.length, 1); const percent = Math.round((value / base) * 100); return <div className="flow-row" key={label}><div><strong>{label}</strong><span>{value} patients</span></div><div className="flow-track"><span style={{ width: `${percent}%` }} /></div><b>{value}</b></div>; })}</div></section>
       </div>
 
       <div className="dashboard-grid-secondary">
-        <section className="intelligence-card payments-card">
-          <div className="intelligence-card-head"><div><span className="section-kicker">Payments</span><h3>How patients paid today</h3><p>Simple payment split and pending balance review.</p></div><button className="card-link" type="button" onClick={() => navigate('billing')}>View payments →</button></div>
-          <div className="payment-summary"><div><span>Collected</span><strong>₹42,600</strong></div><div><span>Still pending</span><strong className="negative">₹18,400</strong></div><div><span>Collection rate</span><strong>70%</strong></div></div>
-          <div className="payment-methods">{PAYMENT_METHODS.map((method) => <div className="payment-method" key={method.label}><div><strong>{method.label}</strong><span>{method.amount}</span></div><div className="method-track"><span style={{ width: `${method.value}%` }} /></div><b>{method.value}%</b></div>)}</div>
-          <div className="highest-due"><span>Highest pending balance</span><strong>Rohan Kumar · ₹4,500</strong><button type="button" onClick={() => navigate('billing')}>Review patient</button></div>
-        </section>
-
-        <section className="intelligence-card staff-activity-card">
-          <div className="intelligence-card-head"><div><span className="section-kicker">Team activity</span><h3>Work completed today</h3><p>A simple summary of clinic activity by role.</p></div><button className="card-link" type="button" onClick={() => navigate('staff')}>View staff →</button></div>
-          <div className="staff-activity-list">{STAFF_ACTIVITY.map((item) => <article key={item.name}><span>{item.initials}</span><div><strong>{item.name}</strong><small>{item.role}</small></div><p><b>{item.value}</b><small>{item.meta}</small></p></article>)}</div>
-          <div className="clinic-note"><span>Helpful note</span><p>Patient visits are strongest between 5 PM and 7 PM. Keeping reception support during this time may reduce waiting.</p></div>
-        </section>
+        <section className="intelligence-card payments-card"><div className="intelligence-card-head"><div><span className="section-kicker">Payments</span><h3>How patients paid today</h3><p>Payment methods recorded in CapDent.</p></div><button className="card-link" type="button" onClick={() => navigate('billing')}>View payments →</button></div><div className="payment-summary"><div><span>Collected</span><strong>{money(metrics.collectedToday, clinic.currency_code)}</strong></div><div><span>Still pending</span><strong className="negative">{money(metrics.pendingTotal, clinic.currency_code)}</strong></div><div><span>Payments</span><strong>{data.todayPayments.length}</strong></div></div>{paymentMethods.length ? <div className="payment-methods">{paymentMethods.map(([method, amount]) => { const percent = totalMethodAmount ? Math.round((amount / totalMethodAmount) * 100) : 0; return <div className="payment-method" key={method}><div><strong>{method}</strong><span>{money(amount, clinic.currency_code)}</span></div><div className="method-track"><span style={{ width: `${percent}%` }} /></div><b>{percent}%</b></div>; })}</div> : <Empty title="No payments recorded today" text="Payment method details will appear after a payment is added." />}</section>
+        <section className="intelligence-card staff-activity-card"><div className="intelligence-card-head"><div><span className="section-kicker">Clinic team</span><h3>Authorised staff</h3><p>Active accounts linked to this clinic.</p></div><button className="card-link" type="button" onClick={() => navigate('staff')}>View staff →</button></div><div className="staff-activity-list">{data.staff.filter((item) => item.active).slice(0, 6).map((item) => <article key={item.id}><span>{initials(item.name)}</span><div><strong>{item.name}</strong><small>{roleLabel(item.role)}</small></div><p><b>Active</b><small>{item.email || 'No email'}</small></p></article>)}</div></section>
       </div>
-
-      <p className="demo-data-note">Dashboard preview uses fictional clinic data. Live figures will appear after Supabase reports and real clinic authentication are connected.</p>
+      <p className="data-footnote">Live data is filtered by your signed-in clinic profile and Supabase Row Level Security.</p>
     </div>
   );
 }
 
-function App() {
-  const [signedIn, setSignedIn] = useState(false);
-  const [section, setSection] = useState('overview');
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [patients, setPatients] = useState(INITIAL_PATIENTS);
-  const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [refreshing, setRefreshing] = useState(false);
-  const [clinic, setClinic] = useState({ name: 'Sri B.G. Reddy Dental Clinic', phone: '+91 98765 43210', email: 'clinic@example.com', address: 'Hyderabad, Telangana' });
-  const title = SECTION_COPY[section];
-
-  function navigate(next) {
-    setSection(next);
-    setMobileOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function refresh() {
-    setRefreshing(true);
-    window.setTimeout(() => { setLastUpdated(new Date()); setRefreshing(false); }, 500);
-  }
-
-  function signOut() {
-    setSignedIn(false);
-    setMobileOpen(false);
-    setSection('overview');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  if (!signedIn) return <LoginScreen onLogin={() => { setSignedIn(true); window.scrollTo({ top: 0 }); }} />;
-
-  return (
-    <div className="app-shell">
-      <aside className={mobileOpen ? 'sidebar open' : 'sidebar'}>
-        <div className="brand"><Logo /><div><strong>CapDent</strong><span>Clinic intelligence</span></div><button className="mobile-close" type="button" aria-label="Close navigation" onClick={() => setMobileOpen(false)}>×</button></div>
-        <div className="clinic-pill"><span className="live-dot" /><div><strong>Clinic connected</strong><small>{clinic.name}</small></div></div>
-        <nav className="nav"><p>Clinic workspace</p>{NAV_ITEMS.map(([key, label, icon]) => <button type="button" key={key} className={section === key ? 'active' : ''} onClick={() => navigate(key)}><span>{icon}</span><b>{label}</b>{key === 'billing' ? <em>{DUES.length}</em> : null}</button>)}</nav>
-        <div className="sidebar-footer"><div><span className="live-dot" /><strong>Sample data ready</strong></div><small>Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small><button type="button" onClick={signOut}>↪ Sign out</button></div>
-      </aside>
-      {mobileOpen && <button type="button" className="backdrop" aria-label="Close menu" onClick={() => setMobileOpen(false)} />}
-      <div className="workspace">
-        <header className="topbar">
-          <div className="topbar-title"><button type="button" className="menu-button" aria-label="Open navigation" onClick={() => setMobileOpen(true)}>☰</button><div><span>CapDent clinic portal</span><h1>{title[0]}</h1><p>{title[1]}</p></div></div>
-          <div className="topbar-actions"><button type="button" className="secondary" onClick={refresh} disabled={refreshing}>{refreshing ? 'Refreshing…' : '↻ Refresh'}</button><div className="owner-chip"><div>K</div><span><strong>Clinic Owner</strong><small>Owner / Head doctor</small></span></div></div>
-        </header>
-        <main className="content">
-          {section === 'overview' && <Overview navigate={navigate} />}
-          {section === 'patients' && <Patients patients={patients} setPatients={setPatients} />}
-          {section === 'appointments' && <Appointments />}
-          {section === 'billing' && <Billing />}
-          {section === 'files' && <ClinicalFiles />}
-          {section === 'visits' && <Visits />}
-          {section === 'staff' && <Staff />}
-          {section === 'reports' && <Reports patients={patients} />}
-          {section === 'settings' && <Settings clinic={clinic} setClinic={setClinic} />}
-        </main>
-      </div>
-    </div>
-  );
-}
-
-function Patients({ patients, setPatients }) {
+function Patients({ patients, profile, onCreated }) {
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({ name: '', phone: '', age: '', gender: '' });
-  const rows = useMemo(() => patients.filter((patient) => [patient.name, patient.phone, patient.code].join(' ').toLowerCase().includes(search.toLowerCase())), [patients, search]);
-  function submit(event) {
-    event.preventDefault();
-    const next = { id: Date.now(), ...form, code: `CD-${1048 + patients.length}`, added: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) };
-    setPatients([next, ...patients]);
-    setForm({ name: '', phone: '', age: '', gender: '' });
-  }
-  return <div className="section-grid"><Card title="Add new patient" subtitle="Keep the patient directory clean and searchable." className="form-card"><form className="form" onSubmit={submit}><label>Patient name<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label><label>Phone number<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label><div className="form-split"><label>Age<input value={form.age} onChange={(event) => setForm({ ...form, age: event.target.value })} /></label><label>Gender<select value={form.gender} onChange={(event) => setForm({ ...form, gender: event.target.value })}><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></label></div><button className="primary" type="submit">Add patient</button></form></Card><Card title="Patient directory" subtitle={`${rows.length} matching records`} className="table-card"><div className="toolbar"><label>⌕<input placeholder="Search name, phone or patient ID" value={search} onChange={(event) => setSearch(event.target.value)} /></label></div><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Age</th><th>Added</th><th>Actions</th></tr></thead><tbody>{rows.map((patient) => <tr key={patient.id}><td data-label="Patient"><strong>{patient.name}</strong><small>{patient.phone || 'No phone'} • {patient.code}</small></td><td data-label="Age">{patient.age || '—'}<small>{patient.gender}</small></td><td data-label="Added">{patient.added}</td><td data-label="Actions"><div className="row-actions"><button type="button">Open</button><button type="button">Edit</button><button type="button" className="danger" onClick={() => setPatients(patients.filter((item) => item.id !== patient.id))}>Delete</button></div></td></tr>)}</tbody></table>{!rows.length && <Empty title="No patients found" text="Try another search or add a new patient." />}</div></Card></div>;
-}
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState(null);
+  const rows = useMemo(() => patients.filter((patient) => [patient.name, patient.phone, patient.patient_code].join(' ').toLowerCase().includes(search.toLowerCase())), [patients, search]);
 
-function Appointments() {
-  return <><div className="stat-grid compact"><LegacyStat icon="▣" label="Booked" value="24" meta="Today" tone="blue" /><LegacyStat icon="◷" label="Waiting" value="4" meta="Currently at clinic" tone="amber" /><LegacyStat icon="✓" label="Completed" value="14" meta="Finished today" tone="green" /><LegacyStat icon="↗" label="Follow-ups" value="7" meta="Due today" tone="violet" /></div><Card title="Today’s schedule" subtitle="Appointment status and patient details"><div className="table-wrap"><table><thead><tr><th>Time</th><th>Patient</th><th>Treatment</th><th>Status</th><th>Actions</th></tr></thead><tbody>{APPOINTMENTS.map((item) => <tr key={`${item.time}-${item.patient}`}><td data-label="Time"><strong>{item.time}</strong></td><td data-label="Patient">{item.patient}</td><td data-label="Treatment">{item.treatment}</td><td data-label="Status"><Status value={item.status} /></td><td data-label="Actions"><div className="row-actions"><button type="button">Reschedule</button><button type="button">Complete</button></div></td></tr>)}</tbody></table></div></Card></>;
+  async function submit(event) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage(null);
+    try {
+      await createPortalPatient(profile, form);
+      setForm({ name: '', phone: '', age: '', gender: '' });
+      setMessage({ tone: 'success', text: 'Patient added to the shared CapDent database.' });
+      await onCreated();
+    } catch (error) {
+      setMessage({ tone: 'error', text: error?.message || 'Unable to add patient.' });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return <div className="section-grid"><Card title="Add new patient" subtitle="This patient will also appear in the Android app." className="form-card"><form className="form" onSubmit={submit}><label>Patient name<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label><label>Phone number<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label><div className="form-split"><label>Age<input type="number" min="0" max="130" value={form.age} onChange={(event) => setForm({ ...form, age: event.target.value })} /></label><label>Gender<select value={form.gender} onChange={(event) => setForm({ ...form, gender: event.target.value })}><option value="">Select</option><option value="Female">Female</option><option value="Male">Male</option><option value="Other">Other</option></select></label></div>{message ? <p className={`form-message ${message.tone}`}>{message.text}</p> : null}<button className="primary" type="submit" disabled={saving}>{saving ? 'Adding patient…' : 'Add patient'}</button></form></Card><Card title="Patient directory" subtitle={`${rows.length} matching records`} className="table-card"><div className="toolbar"><label>⌕<input placeholder="Search name, phone or patient ID" value={search} onChange={(event) => setSearch(event.target.value)} /></label></div><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Age</th><th>Added</th><th>Patient ID</th></tr></thead><tbody>{rows.map((patient) => <tr key={patient.id}><td data-label="Patient"><strong>{patient.name}</strong><small>{patient.phone || 'No phone'}</small></td><td data-label="Age">{patient.age ?? '—'}<small>{patient.gender || 'Not specified'}</small></td><td data-label="Added">{dateText(patient.created_at)}</td><td data-label="Patient ID">{patient.patient_code || patient.id.slice(0, 8).toUpperCase()}</td></tr>)}</tbody></table>{!rows.length && <Empty title="No patients found" text="Try another search or add a new patient." />}</div></Card></div>;
 }
 
 function LegacyStat({ icon, label, value, meta, tone }) {
   return <article className={`stat ${tone}`}><div className="stat-icon">{icon}</div><small>{label}</small><strong>{value}</strong><p>{meta}</p></article>;
 }
 
-function Billing() {
-  const totalDue = DUES.reduce((sum, item) => sum + item.due, 0);
-  return <><div className="stat-grid compact"><LegacyStat icon="₹" label="Collected today" value={money(42600)} meta="16 payments" tone="green" /><LegacyStat icon="!" label="Still pending" value={money(totalDue)} meta={`${DUES.length} patients`} tone="amber" /><LegacyStat icon="▧" label="Bills made" value="18" meta="Today" tone="blue" /><LegacyStat icon="↗" label="Collection rate" value="70%" meta="Today" tone="violet" /></div><Card title="Pending patient payments" subtitle="Amounts that need follow-up"><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Total</th><th>Paid</th><th>Pending</th><th>Actions</th></tr></thead><tbody>{DUES.map((item) => <tr key={item.patient}><td data-label="Patient"><strong>{item.patient}</strong><small>{item.phone}</small></td><td data-label="Total">{money(item.total)}</td><td data-label="Paid">{money(item.paid)}</td><td data-label="Pending"><strong className="due-text">{money(item.due)}</strong></td><td data-label="Actions"><div className="row-actions"><button type="button">Record payment</button><button type="button">WhatsApp</button></div></td></tr>)}</tbody></table></div></Card></>;
+function Appointments({ rows, metrics }) {
+  return <><div className="stat-grid compact"><LegacyStat icon="▣" label="Booked" value={metrics.bookedToday} meta="Today" tone="blue" /><LegacyStat icon="◷" label="Waiting" value={metrics.waitingNow} meta="Currently at clinic" tone="amber" /><LegacyStat icon="✓" label="Completed" value={metrics.completedToday} meta="Finished today" tone="green" /><LegacyStat icon="↗" label="Follow-ups" value={metrics.followupsToday} meta="Due today" tone="violet" /></div><Card title="Today’s schedule" subtitle={`${rows.length} appointments`}><div className="section-note">This first connected version is read-only for appointment actions. Reschedule and completion controls will be added after workflow validation.</div><div className="table-wrap"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Notes</th><th>Status</th></tr></thead><tbody>{rows.map((item) => <tr key={item.id}><td data-label="Time"><strong>{timeText(item.appointment_time)}</strong></td><td data-label="Patient">{item.patient?.name || 'Unknown patient'}<small>{item.patient?.phone || ''}</small></td><td data-label="Doctor">{item.doctor?.name || 'Unassigned'}</td><td data-label="Notes">{item.notes || '—'}</td><td data-label="Status"><Status value={item.status} /></td></tr>)}</tbody></table>{!rows.length && <Empty title="No appointments today" text="Today’s schedule is currently empty." />}</div></Card></>;
 }
 
-function ClinicalFiles() {
-  return <Card title="Clinical files" subtitle="Recent prescriptions, X-rays and photos" action={<button type="button" className="primary small">+ Upload file</button>}><div className="file-grid">{FILES.map((file) => <article className="file-card" key={`${file.patient}-${file.name}`}><div>{file.type === 'X-ray' ? '◫' : file.type === 'Photo' ? '▧' : '≡'}</div><span>{file.type}</span><strong>{file.name}</strong><p>{file.patient}</p><small>{file.date}</small><button type="button">Open file →</button></article>)}</div></Card>;
+function Billing({ invoices, todayPayments, metrics, currency }) {
+  return <><div className="stat-grid compact"><LegacyStat icon="₹" label="Collected today" value={money(metrics.collectedToday, currency)} meta={`${todayPayments.length} payments`} tone="green" /><LegacyStat icon="!" label="Still pending" value={money(metrics.pendingTotal, currency)} meta={`${invoices.length} invoices`} tone="amber" /><LegacyStat icon="▧" label="Payments today" value={todayPayments.length} meta="Recorded in CapDent" tone="blue" /><LegacyStat icon="↗" label="Waiting patients" value={metrics.waitingNow} meta="Current clinic queue" tone="violet" /></div><Card title="Pending patient payments" subtitle="Outstanding balances from live invoices"><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Total</th><th>Paid</th><th>Pending</th><th>Status</th></tr></thead><tbody>{invoices.map((item) => <tr key={item.id}><td data-label="Patient"><strong>{item.patient?.name || 'Unknown patient'}</strong><small>{item.patient?.phone || ''}</small></td><td data-label="Total">{money(item.total_amount, currency)}</td><td data-label="Paid">{money(item.paid_amount, currency)}</td><td data-label="Pending"><strong className="due-text">{money(item.due_amount, currency)}</strong></td><td data-label="Status"><Status value={item.status} /></td></tr>)}</tbody></table>{!invoices.length && <Empty title="No pending balances" text="All visible invoices are fully paid." />}</div></Card></>;
 }
 
-function Visits() {
-  return <Card title="Treatments and visits" subtitle="Recent clinic activity"><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Doctor</th><th>Treatment</th><th>Amount</th><th>Date</th></tr></thead><tbody>{VISITS.map((visit) => <tr key={`${visit.patient}-${visit.date}`}><td data-label="Patient"><strong>{visit.patient}</strong></td><td data-label="Doctor">{visit.doctor}</td><td data-label="Treatment">{visit.treatment}</td><td data-label="Amount">{money(visit.amount)}</td><td data-label="Date">{visit.date}</td></tr>)}</tbody></table></div></Card>;
+function ClinicalFiles({ rows }) {
+  return <Card title="Clinical files" subtitle="Recent prescriptions, X-rays and photos"><div className="section-note">File viewing and uploads will be enabled after storage bucket permissions are validated for browsers.</div><div className="file-grid">{rows.map((file) => <article className="file-card" key={file.id}><div>{file.file_type === 'xray' ? '◫' : ['before_photo', 'after_photo'].includes(file.file_type) ? '▧' : '≡'}</div><span>{String(file.file_type || 'other').replaceAll('_', ' ')}</span><strong>{file.file_name}</strong><p>{file.patient?.name || 'Unknown patient'}</p><small>{dateText(file.created_at, { hour: '2-digit', minute: '2-digit' })}</small></article>)}</div>{!rows.length && <Empty title="No clinical files" text="No files are visible for this clinic yet." />}</Card>;
 }
 
-function Staff() {
-  return <><section className="welcome slim"><div><span className="eyebrow">Team access</span><h2>Clinic staff</h2><p>Control who can access the clinic workspace.</p></div><button type="button" className="primary">+ Invite staff</button></section><Card title="Staff accounts" subtitle={`${STAFF.length} active team members`}><div className="staff-grid">{STAFF.map((member) => <article className="staff-card" key={member.email}><div>{member.name.slice(0, 1)}</div><span><strong>{member.name}</strong><small>{member.email}</small></span><b>{member.role}</b><Status value={member.status} /><button type="button">Manage</button></article>)}</div></Card></>;
+function Visits({ rows }) {
+  return <Card title="Treatments and visits" subtitle="Recent clinic activity"><div className="table-wrap"><table><thead><tr><th>Patient</th><th>Doctor</th><th>Complaint</th><th>Diagnosis</th><th>Date</th></tr></thead><tbody>{rows.map((visit) => <tr key={visit.id}><td data-label="Patient"><strong>{visit.patient?.name || 'Unknown patient'}</strong></td><td data-label="Doctor">{visit.doctor?.name || 'Unassigned'}</td><td data-label="Complaint">{visit.chief_complaint || '—'}</td><td data-label="Diagnosis">{visit.diagnosis || '—'}</td><td data-label="Date">{dateText(visit.visit_date, { hour: '2-digit', minute: '2-digit' })}</td></tr>)}</tbody></table>{!rows.length && <Empty title="No recent visits" text="Visit activity will appear here after it is recorded." />}</div></Card>;
 }
 
-function Reports({ patients }) {
+function Staff({ rows }) {
+  return <><section className="welcome slim"><div><span className="eyebrow">Team access</span><h2>Clinic staff</h2><p>Accounts currently linked to this clinic.</p></div></section><Card title="Staff accounts" subtitle={`${rows.filter((item) => item.active).length} active team members`}><div className="staff-grid">{rows.map((member) => <article className="staff-card" key={member.id}><div>{initials(member.name)}</div><span><strong>{member.name}</strong><small>{member.email || 'No email'}</small></span><b>{roleLabel(member.role)}</b><Status value={member.active ? 'active' : 'inactive'} /></article>)}</div>{!rows.length && <Empty title="No staff accounts" text="No clinic profiles are visible to this account." />}</Card></>;
+}
+
+function Reports({ data }) {
   function download(name, rows) {
-    const columns = Object.keys(rows[0] || {});
+    if (!rows.length) return;
+    const columns = Object.keys(rows[0]);
     const csv = [columns.join(','), ...rows.map((row) => columns.map((column) => `"${String(row[column] ?? '').replaceAll('"', '""')}"`).join(','))].join('\n');
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     const link = document.createElement('a');
@@ -494,14 +424,159 @@ function Reports({ patients }) {
     link.click();
     URL.revokeObjectURL(url);
   }
-  const reports = [['Patients report', 'Complete patient directory', patients], ['Appointments report', 'Schedule and appointment status', APPOINTMENTS], ['Payments report', 'Collections and pending payments', DUES], ['Treatment report', 'Treatments and doctor activity', VISITS]];
-  return <div className="report-grid">{reports.map(([title, text, rows]) => <Card key={title} title={title} subtitle={text}><div className="report-card-body"><div>⇩</div><p>{rows.length} records ready to download.</p><button type="button" className="primary" onClick={() => download(title.toLowerCase().replaceAll(' ', '-'), rows)}>Download CSV</button></div></Card>)}</div>;
+
+  const reports = [
+    ['Patients report', 'Patient directory visible to this clinic', data.patients.map(({ id, patient_code, name, phone, email, age, gender, created_at }) => ({ id, patient_code, name, phone, email, age, gender, created_at }))],
+    ['Appointments report', 'Today’s appointment list', data.appointments.map(({ id, appointment_time, status, notes, patient, doctor }) => ({ id, appointment_time, patient: patient?.name || '', doctor: doctor?.name || '', status, notes }))],
+    ['Pending payments report', 'Invoices with outstanding balances', data.dueInvoices.map(({ id, total_amount, paid_amount, due_amount, status, patient }) => ({ id, patient: patient?.name || '', total_amount, paid_amount, due_amount, status }))],
+    ['Recent visits report', 'Latest clinic visit records', data.recentVisits.map(({ id, visit_date, chief_complaint, diagnosis, visit_status, patient, doctor }) => ({ id, visit_date, patient: patient?.name || '', doctor: doctor?.name || '', chief_complaint, diagnosis, visit_status }))],
+  ];
+
+  return <div className="report-grid">{reports.map(([title, text, rows]) => <Card key={title} title={title} subtitle={text}><div className="report-card-body"><div>⇩</div><p>{rows.length} records ready to download.</p><button type="button" className="primary" disabled={!rows.length} onClick={() => download(title.toLowerCase().replaceAll(' ', '-'), rows)}>Download CSV</button></div></Card>)}</div>;
 }
 
-function Settings({ clinic, setClinic }) {
+function Settings({ clinic, profile, onSaved }) {
   const [form, setForm] = useState(clinic);
-  function save(event) { event.preventDefault(); setClinic(form); }
-  return <div className="settings-grid"><Card title="Clinic information" subtitle="Used throughout the clinic portal"><form className="form" onSubmit={save}><label>Clinic name<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label><div className="form-split"><label>Phone<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label><label>Email<input value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label></div><label>Address<textarea rows="4" value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} /></label><button className="primary" type="submit">Save clinic details</button></form></Card><Card title="Portal status" subtitle="Dashboard setup information"><div className="status-list"><div><span className="live-dot" /><p><strong>Clinic Intelligence design installed</strong><small>Clear KPIs, charts and clinic priorities</small></p></div><div><span className="status-symbol">◇</span><p><strong>Live data not connected</strong><small>Supabase reports and secure sign-in are the next step</small></p></div><div><span className="status-symbol">✓</span><p><strong>Works on every screen</strong><small>Desktop, tablet and mobile layouts included</small></p></div></div></Card></div>;
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState(null);
+  const canEdit = ['owner', 'head_doctor'].includes(profile.role);
+
+  useEffect(() => setForm(clinic), [clinic]);
+
+  async function save(event) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage(null);
+    try {
+      const updated = await updatePortalClinic(profile, form);
+      setMessage({ tone: 'success', text: 'Clinic information updated successfully.' });
+      onSaved(updated);
+    } catch (error) {
+      setMessage({ tone: 'error', text: error?.message || 'Unable to update clinic information.' });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return <div className="settings-grid"><Card title="Clinic information" subtitle={canEdit ? 'Changes are shared with the Android app.' : 'Only the clinic owner can edit these details.'}><form className="form" onSubmit={save}><label>Clinic name<input disabled={!canEdit} value={form.name || ''} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label><div className="form-split"><label>Phone<input disabled={!canEdit} value={form.phone || ''} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label><label>Email<input disabled={!canEdit} value={form.email || ''} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label></div><label>Address<textarea disabled={!canEdit} rows="4" value={form.address || ''} onChange={(event) => setForm({ ...form, address: event.target.value })} /></label>{message ? <p className={`form-message ${message.tone}`}>{message.text}</p> : null}{canEdit ? <button className="primary" type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save clinic details'}</button> : null}</form></Card><Card title="Portal status" subtitle="Live backend connection"><div className="status-list"><div><span className="live-dot" /><p><strong>Supabase connected</strong><small>Authentication and clinic data are live</small></p></div><div><span className="connected-symbol">✓</span><p><strong>Clinic isolation active</strong><small>Queries are protected by Row Level Security</small></p></div><div><span className="connected-symbol">✓</span><p><strong>Shared CapDent data</strong><small>Updates use the same backend as the Android app</small></p></div></div></Card></div>;
+}
+
+function App() {
+  const [phase, setPhase] = useState('checking');
+  const [session, setSession] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [clinic, setClinic] = useState(null);
+  const [data, setData] = useState(EMPTY_DATA);
+  const [section, setSection] = useState('overview');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState('');
+
+  async function hydrate(nextSession, options = {}) {
+    if (!nextSession?.user) {
+      setSession(null);
+      setProfile(null);
+      setClinic(null);
+      setData(EMPTY_DATA);
+      setPhase('signed-out');
+      return;
+    }
+
+    if (!options.silent) setPhase('loading');
+    setError('');
+    try {
+      const context = await loadPortalContext(nextSession.user.id);
+      const portalData = await loadPortalData(context.profile);
+      setSession(nextSession);
+      setProfile(context.profile);
+      setClinic(context.clinic);
+      setData(portalData);
+      setLastUpdated(new Date());
+      setPhase('ready');
+    } catch (loadError) {
+      setError(loadError?.message || 'Unable to open the clinic portal.');
+      setPhase('error');
+    }
+  }
+
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(({ data: authData }) => {
+      if (active) hydrate(authData.session);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      if (!active) return;
+      if (event === 'SIGNED_OUT') window.setTimeout(() => hydrate(null), 0);
+      if (event === 'SIGNED_IN' && nextSession) window.setTimeout(() => hydrate(nextSession), 0);
+    });
+    return () => {
+      active = false;
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  async function refresh() {
+    if (!profile || !session) return;
+    setRefreshing(true);
+    setError('');
+    try {
+      const portalData = await loadPortalData(profile);
+      setData(portalData);
+      setLastUpdated(new Date());
+    } catch (refreshError) {
+      setError(refreshError?.message || 'Unable to refresh clinic data.');
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    setSection('overview');
+    setMobileOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function navigate(next) {
+    setSection(next);
+    setMobileOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (phase === 'checking' || phase === 'loading') return <PortalLoading />;
+  if (phase === 'error') return <PortalError message={error} onSignOut={signOut} />;
+  if (phase === 'signed-out') return <LoginScreen onSignedIn={(nextSession) => hydrate(nextSession)} />;
+  if (!profile || !clinic) return <PortalLoading text="Resolving your clinic…" />;
+
+  const title = SECTION_COPY[section];
+
+  return (
+    <div className="app-shell">
+      <aside className={mobileOpen ? 'sidebar open' : 'sidebar'}>
+        <div className="brand"><Logo /><div><strong>CapDent</strong><span>Clinic intelligence</span></div><button className="mobile-close" type="button" aria-label="Close navigation" onClick={() => setMobileOpen(false)}>×</button></div>
+        <div className="clinic-pill"><span className="live-dot" /><div><strong>Clinic connected</strong><small>{clinic.name}</small></div></div>
+        <nav className="nav"><p>Clinic workspace</p>{NAV_ITEMS.map(([key, label, icon]) => <button type="button" key={key} className={section === key ? 'active' : ''} onClick={() => navigate(key)}><span>{icon}</span><b>{label}</b>{key === 'billing' && data.dueInvoices.length ? <em>{data.dueInvoices.length}</em> : null}</button>)}</nav>
+        <div className="sidebar-footer"><div><span className="live-dot" /><strong>Supabase live</strong></div><small>Updated {lastUpdated ? lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</small><button type="button" onClick={signOut}>↪ Sign out</button></div>
+      </aside>
+      {mobileOpen && <button type="button" className="backdrop" aria-label="Close menu" onClick={() => setMobileOpen(false)} />}
+      <div className="workspace">
+        <header className="topbar"><div className="topbar-title"><button type="button" className="menu-button" aria-label="Open navigation" onClick={() => setMobileOpen(true)}>☰</button><div><span>CapDent clinic portal</span><h1>{title[0]}</h1><p>{title[1]}</p></div></div><div className="topbar-actions"><button type="button" className="secondary" onClick={refresh} disabled={refreshing}>{refreshing ? 'Refreshing…' : '↻ Refresh'}</button><div className="owner-chip"><div>{initials(profile.name)}</div><span><strong>{profile.name}</strong><small>{roleLabel(profile.role)}</small></span></div></div></header>
+        <main className="content">
+          {error ? <div className="portal-banner" role="alert"><div><strong>Some clinic data could not be refreshed.</strong><p>{error}</p></div><button type="button" onClick={() => setError('')}>Dismiss</button></div> : null}
+          {section === 'overview' && <Overview data={data} clinic={clinic} profile={profile} navigate={navigate} />}
+          {section === 'patients' && <Patients patients={data.patients} profile={profile} onCreated={refresh} />}
+          {section === 'appointments' && <Appointments rows={data.appointments} metrics={data.metrics} />}
+          {section === 'billing' && <Billing invoices={data.dueInvoices} todayPayments={data.todayPayments} metrics={data.metrics} currency={clinic.currency_code} />}
+          {section === 'files' && <ClinicalFiles rows={data.files} />}
+          {section === 'visits' && <Visits rows={data.recentVisits} />}
+          {section === 'staff' && <Staff rows={data.staff} />}
+          {section === 'reports' && <Reports data={data} />}
+          {section === 'settings' && <Settings clinic={clinic} profile={profile} onSaved={setClinic} />}
+        </main>
+      </div>
+    </div>
+  );
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
