@@ -15,7 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -38,14 +38,20 @@ jobs:
         run: |
           test -f dist/portal/index.html
           test -d dist/portal/assets
+          test -f dist/portal/admin-error-monitor.js
+          test -f dist/portal/admin-hardening.css
           grep -q "CapDent Clinic Admin" dist/portal/index.html
+          grep -q "clinic-admin-v1-hardening" dist/portal/index.html
 
-      - name: Install browser smoke-test runtime
+      - name: Enforce Clinic Admin bundle budget
+        run: node portal/tests/bundle-budget.mjs
+
+      - name: Install browser test runtime
         run: |
-          npm install --no-save --no-audit --no-fund playwright
+          npm install --no-save --no-audit --no-fund playwright @axe-core/playwright
           npx playwright install chromium
 
-      - name: Run Clinic Portal browser smoke test
+      - name: Run Clinic Admin browser release tests
         shell: bash
         run: |
           set -euo pipefail
@@ -65,6 +71,7 @@ jobs:
           done
 
           node portal/tests/smoke.mjs
+          node portal/tests/authenticated.mjs
 
       - name: Upload static build
         uses: actions/upload-artifact@v4
