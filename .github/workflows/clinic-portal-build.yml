@@ -43,7 +43,7 @@ jobs:
       - name: Install browser smoke-test runtime
         run: |
           npm install --no-save --no-audit --no-fund playwright
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
 
       - name: Run Clinic Portal browser smoke test
         shell: bash
