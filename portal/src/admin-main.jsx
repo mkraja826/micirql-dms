@@ -4,6 +4,7 @@ import './admin.css';
 import PatientAdmin from './patient-admin';
 import AppointmentAdmin from './appointment-admin';
 import ClinicalAdmin from './clinical-admin';
+import GalleryAdmin from './gallery-admin';
 import FinanceAdmin from './finance-admin';
 import ManagementAdmin from './management-admin';
 import ReportAdmin from './report-admin';
@@ -11,8 +12,9 @@ import { loadAdminContext, loadAdminMonth, signInAdmin, supabase } from './admin
 
 const NAV = [
   ['dashboard', 'Dashboard', '⌂'], ['patients', 'Patients', '👥'], ['appointments', 'Appointments', '▣'],
-  ['clinical', 'Visits & treatments', '🦷'], ['finance', 'Payments & invoices', '₹'], ['staff', 'Doctors & staff', '♟'],
-  ['reports', 'Reports & exports', '⇩'], ['audit', 'Audit & archived', '↺'], ['settings', 'Clinic settings', '⚙'],
+  ['clinical', 'Visits & treatments', '🦷'], ['gallery', 'Gallery', '▧'], ['finance', 'Payments & invoices', '₹'],
+  ['staff', 'Doctors & staff', '♟'], ['reports', 'Reports & exports', '⇩'],
+  ['audit', 'Audit & archived', '↺'], ['settings', 'Clinic settings', '⚙'],
 ];
 const EMPTY = { patients: [], monthPatients: [], appointments: [], visits: [], treatments: [], payments: [], invoices: [], staff: [], metrics: {} };
 const money = (value, currency = 'INR') => new Intl.NumberFormat('en-IN', { style: 'currency', currency, maximumFractionDigits: 0 }).format(Number(value || 0));
@@ -33,7 +35,7 @@ function Login({ onSignedIn }) {
     catch (err) { setError((err?.message || '').toLowerCase().includes('invalid login') ? 'Incorrect email or password.' : err?.message || 'Unable to sign in.'); }
     finally { setLoading(false); }
   }
-  return <main className="admin-login"><section className="admin-card admin-login-card"><div className="admin-brand"><span className="admin-brand-mark">CD</span><div><strong>CapDent</strong><small>Clinic Admin</small></div></div><h1>Owner administration</h1><p>Manage clinic records, appointments, clinical history, finances, staff and monthly performance.</p><form onSubmit={submit}><label>Account email<input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /></label>{error ? <div className="admin-error" role="alert">{error}</div> : null}<button disabled={loading}>{loading ? 'Opening admin panel…' : 'Sign in as owner / head doctor'}</button></form></section></main>;
+  return <main className="admin-login"><section className="admin-card admin-login-card"><div className="admin-brand"><span className="admin-brand-mark">CD</span><div><strong>CapDent</strong><small>Clinic Admin</small></div></div><h1>Owner administration</h1><p>Manage clinic records, appointments, clinical history, gallery files, finances, staff and monthly performance.</p><form onSubmit={submit}><label>Account email<input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label><label>Password<input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} /></label>{error ? <div className="admin-error" role="alert">{error}</div> : null}<button disabled={loading}>{loading ? 'Opening admin panel…' : 'Sign in as owner / head doctor'}</button></form></section></main>;
 }
 
 function Table({ headers, rows }) {
@@ -77,7 +79,7 @@ function Dashboard({ data, clinic, month, setMonth }) {
     <section className="admin-period"><div><strong>{monthLabel(month)}</strong><small>Monthly owner report and clinic controls</small></div><div className="admin-month-controls"><button onClick={() => shift(-1)} aria-label="Show previous month">←</button><input type="month" aria-label="Select reporting month" value={`${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, '0')}`} max={new Date().toISOString().slice(0, 7)} onChange={(event) => { const [year, selectedMonth] = event.target.value.split('-').map(Number); setMonth(new Date(year, selectedMonth - 1, 1)); }} /><button onClick={() => shift(1)} aria-label="Show next month" disabled={month.getFullYear() === new Date().getFullYear() && month.getMonth() === new Date().getMonth()}>→</button></div></section>
     <section className="admin-kpis">{kpis.map(([label, value, note]) => <article className="admin-kpi" key={label}><span>{label}</span><strong>{value}</strong><small>{note}</small></article>)}</section>
     <div className="admin-grid"><section className="admin-panel"><div className="admin-panel-head"><div><h2>Daily net collections</h2><p>Refunds appear below zero</p></div><strong>{money(metrics.collected, clinic.currency_code)}</strong></div><LineChart payments={data.payments || []} month={month} currency={clinic.currency_code} /></section><section className="admin-panel"><div className="admin-panel-head"><div><h2>Treatment distribution</h2><p>Top procedures this month</p></div></div><Bars items={treatments.length ? treatments : [{ label: 'No treatments', value: 0 }]} /></section></div>
-    <div className="admin-grid"><section className="admin-panel"><div className="admin-panel-head"><div><h2>Appointment outcomes</h2><p>Monthly patient flow</p></div></div><Bars items={outcomes} /></section><section className="admin-panel"><div className="admin-panel-head"><div><h2>Administrative safety</h2><p>Owner-controlled and audited</p></div></div><div className="admin-finance-note"><strong>Patient, appointment, clinical, financial, staff and clinic-setting changes are audited.</strong><br />Dental charts remain append-only, invoice versions preserve financial history, and staff deactivation disables active push tokens.</div></section></div>
+    <div className="admin-grid"><section className="admin-panel"><div className="admin-panel-head"><div><h2>Appointment outcomes</h2><p>Monthly patient flow</p></div></div><Bars items={outcomes} /></section><section className="admin-panel"><div className="admin-panel-head"><div><h2>Administrative safety</h2><p>Owner-controlled and audited</p></div></div><div className="admin-finance-note"><strong>Patient, appointment, clinical, gallery, financial, staff and clinic-setting changes are audited.</strong><br />Dental charts remain append-only, gallery files are recoverably archived, invoice versions preserve financial history, and staff deactivation disables active push tokens.</div></section></div>
     <section className="admin-panel" style={{ marginTop: 16 }}><div className="admin-panel-head"><div><h2>Outstanding balances</h2><p>Highest pending invoices</p></div></div><Table headers={['Patient', 'Total', 'Paid', 'Due', 'Status']} rows={(data.invoices || []).filter((row) => Number(row.due_amount || 0) > 0).sort((a, b) => Number(b.due_amount) - Number(a.due_amount)).slice(0, 10).map((row) => [row.patient?.name || 'Unknown', money(row.total_amount, clinic.currency_code), money(row.paid_amount, clinic.currency_code), money(row.due_amount, clinic.currency_code), row.status])} /></section>
   </>;
 }
@@ -86,6 +88,7 @@ function Section({ section, data, clinic, profile, month, onRefresh }) {
   if (section === 'patients') return <PatientAdmin patients={data.patients || []} profile={profile} onChanged={onRefresh} />;
   if (section === 'appointments') return <AppointmentAdmin profile={profile} monthStart={data.period?.start} monthEnd={data.period?.end} onChanged={onRefresh} />;
   if (section === 'clinical') return <ClinicalAdmin profile={profile} monthStart={data.period?.start} monthEnd={data.period?.end} currency={clinic.currency_code} onChanged={onRefresh} />;
+  if (section === 'gallery') return <GalleryAdmin profile={profile} onChanged={onRefresh} />;
   if (section === 'finance') return <FinanceAdmin profile={profile} monthStart={data.period?.start} monthEnd={data.period?.end} currency={clinic.currency_code} onChanged={onRefresh} />;
   if (section === 'staff') return <ManagementAdmin profile={profile} clinic={clinic} monthStart={data.period?.start} mode="staff" onChanged={onRefresh} />;
   if (section === 'settings') return <ManagementAdmin profile={profile} clinic={clinic} monthStart={data.period?.start} mode="settings" onChanged={onRefresh} />;
