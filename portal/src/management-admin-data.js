@@ -1,11 +1,13 @@
 import { supabase } from './admin-supabase';
 
+let selectedActivityPeriod = { start: null, end: null };
+export function setManagementActivityPeriod(start, end) { selectedActivityPeriod = { start: start || null, end: end || null }; }
 function throwIfError(error) { if (error) throw error; }
 const rows = (result, label) => { if (result.error) throw new Error(`${label}: ${result.error.message}`); return result.data || []; };
 
 export async function loadManagementOverview(periodStart, periodEnd) {
-  const start = periodStart || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
-  const end = periodEnd || new Date().toISOString();
+  const start = selectedActivityPeriod.start || periodStart || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+  const end = selectedActivityPeriod.end || periodEnd || new Date().toISOString();
   const monthDate = new Date(start);
   const monthStart = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, '0')}-01`;
   const results = await Promise.all([
