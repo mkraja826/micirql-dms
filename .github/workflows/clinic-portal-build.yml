@@ -5,6 +5,7 @@ on:
     branches:
       - feature/clinic-portal-supabase
       - feature/clinic-admin-dashboard-v1
+      - feature/global-owner-period-filter
   pull_request:
     branches:
       - main
@@ -40,8 +41,9 @@ jobs:
           test -d dist/portal/assets
           test -f dist/portal/admin-error-monitor.js
           test -f dist/portal/admin-hardening.css
+          test -f dist/portal/admin-period.css
           grep -q "CapDent Clinic Admin" dist/portal/index.html
-          grep -q "clinic-admin-v1-hardening" dist/portal/index.html
+          grep -q "clinic-admin-period-v1" dist/portal/index.html
 
       - name: Enforce Clinic Admin bundle budget
         run: node portal/tests/bundle-budget.mjs
