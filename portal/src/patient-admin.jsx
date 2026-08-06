@@ -8,9 +8,10 @@ const dateText = (value) => value ? new Intl.DateTimeFormat('en-IN', { day: '2-d
 function normalisePhone(value = '') { return value.replace(/\D/g, '').slice(-10); }
 function normaliseName(value = '') { return value.toLowerCase().replace(/[^a-z0-9]/g, ''); }
 
-export default function PatientAdmin({ patients, profile, onChanged }) {
+export default function PatientAdmin({ patients, profile, periodStart, periodEnd, periodLabel, onChanged }) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('active');
+  const [timeScope, setTimeScope] = useState('period');
   const [selected, setSelected] = useState(null);
   const [history, setHistory] = useState(emptyHistory);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -39,9 +40,10 @@ export default function PatientAdmin({ patients, profile, onChanged }) {
     const archived = Boolean(patient.archived_at);
     if (status === 'active' && archived) return false;
     if (status === 'archived' && !archived) return false;
+    if (timeScope === 'period' && periodStart && periodEnd && (patient.created_at < periodStart || patient.created_at > periodEnd)) return false;
     const haystack = [patient.name, patient.phone, patient.email, patient.patient_code].join(' ').toLowerCase();
     return haystack.includes(query.trim().toLowerCase());
-  }), [patients, query, status]);
+  }), [patients, query, status, timeScope, periodStart, periodEnd]);
 
   async function openPatient(patient) {
     setSelected(patient);
@@ -88,8 +90,8 @@ export default function PatientAdmin({ patients, profile, onChanged }) {
 
   return <div className="patient-admin-layout">
     <section className="patient-directory admin-panel">
-      <div className="patient-toolbar"><div><h2>Patient database</h2><p>{rows.length} records shown · {duplicateIds.size} possible duplicates</p></div><div className="patient-filters"><input placeholder="Search name, phone, email or ID" value={query} onChange={(e) => setQuery(e.target.value)} /><select value={status} onChange={(e) => setStatus(e.target.value)}><option value="active">Active</option><option value="archived">Archived</option><option value="all">All records</option></select></div></div>
-      <div className="patient-list">{rows.map((patient) => <button type="button" className={`patient-row ${selected?.id === patient.id ? 'selected' : ''}`} key={patient.id} onClick={() => openPatient(patient)}><span className="patient-avatar">{patient.name?.slice(0,2).toUpperCase()}</span><span><strong>{patient.name}</strong><small>{patient.phone || 'No phone'} · {patient.patient_code || patient.id.slice(0,8)}</small></span>{duplicateIds.has(patient.id) ? <em>Possible duplicate</em> : null}{patient.archived_at ? <b>Archived</b> : <b>Active</b>}</button>)}</div>
+      <div className="patient-toolbar"><div><h2>Patient database</h2><p>{rows.length} records shown · {timeScope === 'period' ? `added during ${periodLabel || 'selected period'}` : 'all records'} · {duplicateIds.size} possible duplicates</p></div><div className="patient-filters"><input placeholder="Search name, phone, email or ID" value={query} onChange={(e) => setQuery(e.target.value)} /><select aria-label="Patient time range" value={timeScope} onChange={(e) => setTimeScope(e.target.value)}><option value="period">Selected period</option><option value="all">All time</option></select><select value={status} onChange={(e) => setStatus(e.target.value)}><option value="active">Active</option><option value="archived">Archived</option><option value="all">All records</option></select></div></div>
+      <div className="patient-list">{rows.map((patient) => <button type="button" className={`patient-row ${selected?.id === patient.id ? 'selected' : ''}`} key={patient.id} onClick={() => openPatient(patient)}><span className="patient-avatar">{patient.name?.slice(0,2).toUpperCase()}</span><span><strong>{patient.name}</strong><small>{patient.phone || 'No phone'} · {patient.patient_code || patient.id.slice(0,8)}</small></span>{duplicateIds.has(patient.id) ? <em>Possible duplicate</em> : null}{patient.archived_at ? <b>Archived</b> : <b>Active</b>}</button>)}{!rows.length ? <div className="admin-empty">No patients match this period and filter.</div> : null}</div>
     </section>
 
     <section className="patient-detail admin-panel">
