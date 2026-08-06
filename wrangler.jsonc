@@ -10,7 +10,7 @@
   },
   "routes": [
     {
-      "pattern": "capdent.micirql.com",
+      "pattern": "capdent.in",
       "custom_domain": true
     }
   ]
