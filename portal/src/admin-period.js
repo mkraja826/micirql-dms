@@ -49,7 +49,7 @@ export function periodBounds(mode = 'monthly', anchorValue = new Date()) {
     label = formatDate(start, { month: 'long', year: 'numeric' });
   }
 
-  return {
+  const result = {
     mode,
     label,
     start: start.toISOString(),
@@ -57,6 +57,8 @@ export function periodBounds(mode = 'monthly', anchorValue = new Date()) {
     previousStart: previousStart.toISOString(),
     previousEnd: previousEnd.toISOString(),
   };
+  if (typeof globalThis !== 'undefined') globalThis.__capdentOwnerPeriod = result;
+  return result;
 }
 
 export function shiftPeriod(mode, anchorValue, direction) {
