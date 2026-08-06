@@ -6,8 +6,9 @@ function throwIfError(error) { if (error) throw error; }
 const rows = (result, label) => { if (result.error) throw new Error(`${label}: ${result.error.message}`); return result.data || []; };
 
 export async function loadManagementOverview(periodStart, periodEnd) {
-  const start = selectedActivityPeriod.start || periodStart || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
-  const end = selectedActivityPeriod.end || periodEnd || new Date().toISOString();
+  const globalPeriod = typeof globalThis !== 'undefined' ? globalThis.__capdentOwnerPeriod : null;
+  const start = selectedActivityPeriod.start || globalPeriod?.start || periodStart || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+  const end = selectedActivityPeriod.end || globalPeriod?.end || periodEnd || new Date().toISOString();
   const monthDate = new Date(start);
   const monthStart = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, '0')}-01`;
   const results = await Promise.all([
