@@ -81,6 +81,35 @@ export async function setAdminPatientArchived(patientId, archived, reason) {
   return result.data;
 }
 
+export async function loadAdminTodaySummary(profile) {
+  const clinicId = profile.clinic_id;
+  const { start, end } = periodBounds('daily', new Date());
+  const results = await Promise.all([
+    supabase.from('patients').select('id, archived_at').eq('clinic_id', clinicId).gte('created_at', start).lte('created_at', end),
+    supabase.from('appointments').select('id, status').eq('clinic_id', clinicId).gte('appointment_time', start).lte('appointment_time', end),
+    supabase.from('patient_visits').select('id, visit_status').eq('clinic_id', clinicId).gte('visit_date', start).lte('visit_date', end),
+    supabase.from('payments').select('id, amount, status').eq('clinic_id', clinicId).gte('created_at', start).lte('created_at', end),
+    supabase.from('files').select('id, archived_at').eq('clinic_id', clinicId).gte('created_at', start).lte('created_at', end),
+    supabase.from('invoices').select('id, due_amount, status').eq('clinic_id', clinicId).lte('created_at', end),
+  ]);
+  const patients = requireResult(results[0], 'Unable to load today patients').filter((row) => !row.archived_at);
+  const appointments = requireResult(results[1], 'Unable to load today appointments');
+  const visits = requireResult(results[2], 'Unable to load today visits');
+  const payments = requireResult(results[3], 'Unable to load today collections');
+  const files = requireResult(results[4], 'Unable to load today gallery activity');
+  const invoices = requireResult(results[5], 'Unable to load today dues');
+  return {
+    label: periodBounds('daily', new Date()).label,
+    newPatients: patients.length,
+    appointments: appointments.length,
+    waiting: appointments.filter((row) => row.status === 'waiting').length,
+    completedVisits: visits.filter((row) => ['completed', 'done'].includes(row.visit_status)).length,
+    collected: payments.reduce((sum, row) => sum + Number(row.amount || 0), 0),
+    galleryFiles: files.length,
+    outstanding: invoices.reduce((sum, row) => sum + Number(row.due_amount || 0), 0),
+  };
+}
+
 export async function loadAdminPeriod(profile, anchorDate, mode = 'monthly') {
   const clinicId = profile.clinic_id;
   const period = periodBounds(mode, anchorDate);

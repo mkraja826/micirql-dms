@@ -8,7 +8,7 @@ import GalleryAdmin from './gallery-admin';
 import FinanceAdmin from './finance-admin';
 import ManagementAdmin from './management-admin';
 import ReportAdmin from './report-admin';
-import { loadAdminContext, loadAdminPeriod, signInAdmin, supabase } from './admin-supabase';
+import { loadAdminContext, loadAdminPeriod, loadAdminTodaySummary, signInAdmin, supabase } from './admin-supabase';
 import {
   PERIOD_MODES,
   isCurrentOrFuturePeriod,
@@ -26,6 +26,7 @@ const NAV = [
   ['audit', 'Audit & archived', '↺'], ['settings', 'Clinic settings', '⚙'],
 ];
 const EMPTY = { patients: [], periodPatients: [], appointments: [], visits: [], treatments: [], payments: [], invoices: [], allInvoices: [], files: [], staff: [], metrics: {} };
+const TODAY_EMPTY = { label: '', newPatients: 0, appointments: 0, waiting: 0, completedVisits: 0, collected: 0, galleryFiles: 0, outstanding: 0 };
 const money = (value, currency = 'INR') => new Intl.NumberFormat('en-IN', { style: 'currency', currency, maximumFractionDigits: 0 }).format(Number(value || 0));
 const initials = (name = '') => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'CD';
 const percentChange = (current, previous) => previous ? Math.round(((current - previous) / previous) * 100) : current ? 100 : 0;
@@ -51,10 +52,25 @@ function Table({ headers, rows }) {
   return <div className="admin-table-wrap"><table className="admin-table"><thead><tr>{headers.map((header) => <th key={header}>{header}</th>)}</tr></thead><tbody>{rows.map((row, index) => <tr key={index}>{row.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}</tr>)}</tbody></table></div>;
 }
 
-function PeriodSelector({ mode, anchor, period, onMode, onAnchor }) {
+function TodayStrip({ summary, currency, onViewToday }) {
+  const items = [
+    ['Patients', summary.newPatients || 0, 'new today'],
+    ['Appointments', summary.appointments || 0, `${summary.waiting || 0} waiting`],
+    ['Completed visits', summary.completedVisits || 0, 'today'],
+    ['Collections', money(summary.collected, currency), 'net today'],
+    ['Gallery', summary.galleryFiles || 0, 'uploads today'],
+    ['Dues', money(summary.outstanding, currency), 'lifetime outstanding'],
+  ];
+  return <section className="admin-today" aria-label="Today at a glance">
+    <div className="admin-today-head"><div><span>Today at a glance</span><strong>{summary.label || 'Current clinic day'}</strong></div><button onClick={onViewToday}>Open today</button></div>
+    <div className="admin-today-grid">{items.map(([label, value, note]) => <article key={label}><span>{label}</span><strong>{value}</strong><small>{note}</small></article>)}</div>
+  </section>;
+}
+
+function PeriodSelector({ mode, anchor, period, onMode, onAnchor, loading }) {
   const shift = (direction) => onAnchor(shiftPeriod(mode, anchor, direction));
-  return <section className="admin-global-period" aria-label="Owner reporting period">
-    <div className="admin-period-copy"><span>Viewing</span><strong>{period.label}</strong><small>All period-sensitive sections follow this selection.</small></div>
+  return <section className="admin-global-period" aria-label="Owner reporting period" aria-busy={loading ? 'true' : 'false'}>
+    <div className="admin-period-copy"><span>Viewing</span><strong>{period.label}</strong><small>{loading ? 'Refreshing selected period…' : 'All period-sensitive sections follow this selection.'}</small></div>
     <div className="admin-period-segments" role="group" aria-label="Reporting frequency">
       {PERIOD_MODES.map((item) => <button key={item.key} className={mode === item.key ? 'active' : ''} onClick={() => onMode(item.key)}>{item.label}</button>)}
     </div>
@@ -73,6 +89,22 @@ function PeriodSelector({ mode, anchor, period, onMode, onAnchor }) {
   </section>;
 }
 
+function PeriodSnapshot({ data, clinic }) {
+  const metrics = data.metrics || {};
+  const items = [
+    ['Patients', metrics.newPatients || 0],
+    ['Appointments', metrics.appointments || 0],
+    ['Visits', metrics.visits || 0],
+    ['Gallery', metrics.galleryFiles || 0],
+    ['Net collection', money(metrics.collected, clinic.currency_code)],
+    ['Billed', money(metrics.billed, clinic.currency_code)],
+  ];
+  return <section className="admin-period-snapshot" aria-label={`Summary for ${data.period?.label || 'selected period'}`}>
+    <div><span>Selected period</span><strong>{data.period?.label || '—'}</strong></div>
+    {items.map(([label, value]) => <article key={label}><span>{label}</span><strong>{value}</strong></article>)}
+  </section>;
+}
+
 function CollectionChart({ payments, period, currency }) {
   const start = new Date(period.start);
   let labels = [];
@@ -82,9 +114,7 @@ function CollectionChart({ payments, period, currency }) {
     labels = Array.from({ length: 24 }, (_, hour) => hour);
     values = labels.map((hour) => payments.filter((row) => new Date(row.created_at).getHours() === hour).reduce((sum, row) => sum + Number(row.amount || 0), 0));
   } else if (period.mode === 'weekly') {
-    labels = Array.from({ length: 7 }, (_, index) => {
-      const date = new Date(start); date.setDate(start.getDate() + index); return date;
-    });
+    labels = Array.from({ length: 7 }, (_, index) => { const date = new Date(start); date.setDate(start.getDate() + index); return date; });
     values = labels.map((date) => payments.filter((row) => {
       const item = new Date(row.created_at);
       return item.getFullYear() === date.getFullYear() && item.getMonth() === date.getMonth() && item.getDate() === date.getDate();
@@ -98,13 +128,18 @@ function CollectionChart({ payments, period, currency }) {
   const width = 720, height = 240, pad = 24;
   const max = Math.max(...values, 0), min = Math.min(...values, 0), range = Math.max(max - min, 1);
   const y = (value) => pad + ((max - value) / range) * (height - pad * 2);
-  const points = values.map((value, index) => ({ x: pad + index * (width - pad * 2) / Math.max(values.length - 1, 1), y: y(value) }));
+  const points = values.map((value, index) => ({ x: pad + index * (width - pad * 2) / Math.max(values.length - 1, 1), y: y(value), value, label: labels[index] }));
   const path = points.map((point, index) => `${index ? 'L' : 'M'} ${point.x} ${point.y}`).join(' ');
   const zero = y(0);
+  const labelText = (point) => {
+    if (period.mode === 'daily') return `${String(point.label).padStart(2, '0')}:00`;
+    if (period.mode === 'weekly') return new Intl.DateTimeFormat('en-IN', { weekday: 'short', day: '2-digit', month: 'short' }).format(point.label);
+    return `${point.label} ${new Intl.DateTimeFormat('en-IN', { month: 'short' }).format(start)}`;
+  };
   const firstLabel = period.mode === 'daily' ? '12 AM' : period.mode === 'weekly' ? new Intl.DateTimeFormat('en-IN', { weekday: 'short' }).format(labels[0]) : '1';
   const middleLabel = period.mode === 'daily' ? '12 PM' : period.mode === 'weekly' ? new Intl.DateTimeFormat('en-IN', { weekday: 'short' }).format(labels[3]) : String(Math.ceil(labels.length / 2));
   const lastLabel = period.mode === 'daily' ? '11 PM' : period.mode === 'weekly' ? new Intl.DateTimeFormat('en-IN', { weekday: 'short' }).format(labels[6]) : String(labels.length);
-  return <><svg className="admin-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Net collections ${money(values.reduce((sum, value) => sum + value, 0), currency)}`}><line x1={pad} x2={width - pad} y1={zero} y2={zero} className="admin-chart-grid" /><path d={`${path} L ${points.at(-1)?.x || pad} ${zero} L ${points[0]?.x || pad} ${zero} Z`} className="admin-chart-area" /><path d={path} className="admin-chart-line" /></svg><div className="admin-chart-labels"><span>{firstLabel}</span><span>{middleLabel}</span><span>{lastLabel}</span></div></>;
+  return <><svg className="admin-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Net collections ${money(values.reduce((sum, value) => sum + value, 0), currency)}`}><line x1={pad} x2={width - pad} y1={zero} y2={zero} className="admin-chart-grid" /><path d={`${path} L ${points.at(-1)?.x || pad} ${zero} L ${points[0]?.x || pad} ${zero} Z`} className="admin-chart-area" /><path d={path} className="admin-chart-line" />{points.map((point, index) => <circle className="admin-chart-point" key={index} cx={point.x} cy={point.y} r="5" tabIndex="0"><title>{labelText(point)} · {money(point.value, currency)}</title></circle>)}</svg><div className="admin-chart-labels"><span>{firstLabel}</span><span>{middleLabel}</span><span>{lastLabel}</span></div><p className="admin-chart-hint">Hover or focus a point to see its collection value.</p></>;
 }
 
 function Bars({ items }) {
@@ -155,8 +190,10 @@ function App() {
   const [profile, setProfile] = useState(null);
   const [clinic, setClinic] = useState(null);
   const [data, setData] = useState(EMPTY);
+  const [today, setToday] = useState(TODAY_EMPTY);
   const [periodMode, setPeriodMode] = useState('monthly');
   const [anchor, setAnchor] = useState(new Date());
+  const [periodLoading, setPeriodLoading] = useState(false);
   const [section, setSection] = useState('dashboard');
   const [error, setError] = useState('');
   const selectedPeriod = useMemo(() => periodBounds(periodMode, anchor), [periodMode, anchor]);
@@ -168,13 +205,20 @@ function App() {
     return rows;
   }
 
+  async function loadToday(currentProfile = profile) {
+    if (!currentProfile) return TODAY_EMPTY;
+    const rows = await loadAdminTodaySummary(currentProfile);
+    setToday(rows);
+    return rows;
+  }
+
   async function open(nextSession) {
-    if (!nextSession?.user) { setPhase('signed-out'); setProfile(null); setClinic(null); setData(EMPTY); return; }
+    if (!nextSession?.user) { setPhase('signed-out'); setProfile(null); setClinic(null); setData(EMPTY); setToday(TODAY_EMPTY); return; }
     setPhase('loading'); setError('');
     try {
       const context = await loadAdminContext(nextSession.user.id);
       setProfile(context.profile); setClinic(context.clinic);
-      await loadPeriod(context.profile, anchor, periodMode);
+      await Promise.all([loadPeriod(context.profile, anchor, periodMode), loadToday(context.profile)]);
       setPhase('ready');
     } catch (err) { setError(err?.message || 'Unable to open Clinic Admin.'); setPhase('error'); }
   }
@@ -191,9 +235,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!profile) return;
-    setPhase('loading');
-    loadPeriod(profile, anchor, periodMode).then(() => setPhase('ready')).catch((err) => { setError(err?.message || 'Unable to load this reporting period.'); setPhase('error'); });
+    if (!profile || phase !== 'ready') return;
+    let active = true;
+    setPeriodLoading(true); setError('');
+    loadAdminPeriod(profile, anchor, periodMode).then((rows) => { if (active) setData(rows); }).catch((err) => { if (active) setError(err?.message || 'Unable to load this reporting period.'); }).finally(() => { if (active) setPeriodLoading(false); });
+    return () => { active = false; };
   }, [anchor, periodMode]);
 
   async function refresh() {
@@ -201,18 +247,19 @@ function App() {
     try {
       const context = await loadAdminContext(profile.id);
       setProfile(context.profile); setClinic(context.clinic);
-      await loadPeriod(context.profile, anchor, periodMode);
+      await Promise.all([loadPeriod(context.profile, anchor, periodMode), loadToday(context.profile)]);
       return context;
     } catch (err) { setError(err?.message || 'Unable to refresh Clinic Admin.'); throw err; }
   }
   async function signOut() { await supabase.auth.signOut(); }
+  function openToday() { setSection('dashboard'); setPeriodMode('daily'); setAnchor(new Date()); }
 
   if (phase === 'checking' || phase === 'loading') return <main className="admin-loading"><section className="admin-card admin-login-card"><h1>CapDent Clinic Admin</h1><p>Loading secure clinic analytics…</p></section></main>;
   if (phase === 'signed-out') return <Login onSignedIn={open} />;
   if (phase === 'error') return <main className="admin-loading"><section className="admin-card admin-access-denied"><h1>Admin access needs attention</h1><p>{error}</p><button className="admin-primary" onClick={signOut}>Return to sign in</button></section></main>;
 
   const title = section === 'dashboard' ? 'Clinic performance' : NAV.find(([key]) => key === section)?.[1];
-  return <div className="admin-shell"><aside className="admin-sidebar"><div className="admin-brand"><span className="admin-brand-mark" style={{ background: clinic.brand_color || undefined }}>CD</span><div><strong>CapDent</strong><small>Clinic Admin</small></div></div><div className="admin-clinic"><strong>{clinic.name}</strong><small>Owner-controlled database</small></div><nav className="admin-nav"><p>Administration</p>{NAV.map(([key, label, icon]) => <button key={key} className={section === key ? 'active' : ''} onClick={() => setSection(key)}><span>{icon}</span>{label}</button>)}</nav><div className="admin-sidebar-footer"><button onClick={signOut}>Sign out</button></div></aside><div className="admin-workspace"><header className="admin-topbar"><div><h1>{title}</h1><p>{selectedPeriod.label} · Owner and head-doctor administration</p></div><div className="admin-user"><span className="admin-avatar">{initials(profile.name)}</span><div><strong>{profile.name}</strong><small>{profile.role === 'owner' ? 'Clinic owner' : 'Head doctor'}</small></div></div></header><main className="admin-content">{error ? <div className="admin-error" role="alert">{error}</div> : null}<PeriodSelector mode={periodMode} anchor={anchor} period={data.period || selectedPeriod} onMode={setPeriodMode} onAnchor={setAnchor} />{section === 'dashboard' ? <Dashboard data={data} clinic={clinic} /> : <Section section={section} data={data} clinic={clinic} profile={profile} anchor={anchor} onRefresh={refresh} />}</main></div></div>;
+  return <div className="admin-shell"><aside className="admin-sidebar"><div className="admin-brand"><span className="admin-brand-mark" style={{ background: clinic.brand_color || undefined }}>CD</span><div><strong>CapDent</strong><small>Clinic Admin</small></div></div><div className="admin-clinic"><strong>{clinic.name}</strong><small>Owner-controlled database</small></div><nav className="admin-nav"><p>Administration</p>{NAV.map(([key, label, icon]) => <button key={key} className={section === key ? 'active' : ''} onClick={() => setSection(key)}><span>{icon}</span>{label}</button>)}</nav><div className="admin-sidebar-footer"><button onClick={signOut}>Sign out</button></div></aside><div className="admin-workspace"><header className="admin-topbar"><div><h1>{title}</h1><p>{selectedPeriod.label} · Owner and head-doctor administration</p></div><div className="admin-user"><span className="admin-avatar">{initials(profile.name)}</span><div><strong>{profile.name}</strong><small>{profile.role === 'owner' ? 'Clinic owner' : 'Head doctor'}</small></div></div></header><main className="admin-content">{error ? <div className="admin-error" role="alert">{error}</div> : null}<TodayStrip summary={today} currency={clinic.currency_code} onViewToday={openToday} /><PeriodSelector mode={periodMode} anchor={anchor} period={data.period || selectedPeriod} onMode={setPeriodMode} onAnchor={setAnchor} loading={periodLoading} />{section !== 'dashboard' ? <PeriodSnapshot data={data} clinic={clinic} /> : null}<div className={periodLoading ? 'admin-period-body refreshing' : 'admin-period-body'}>{section === 'dashboard' ? <Dashboard data={data} clinic={clinic} /> : <Section section={section} data={data} clinic={clinic} profile={profile} anchor={anchor} onRefresh={refresh} />}</div></main></div></div>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
