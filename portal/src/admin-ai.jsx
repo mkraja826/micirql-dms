@@ -141,7 +141,7 @@ function CapDentAdminAi() {
               <div className="admin-ai-mark" aria-hidden="true">✦</div>
               <div>
                 <h2 id="admin-ai-title">{title}</h2>
-                <p>Grok · Read-only clinic intelligence</p>
+                <p>Read-only clinic intelligence</p>
               </div>
               <button type="button" className="admin-ai-close" aria-label="Close CapDent AI" onClick={() => setOpen(false)}>×</button>
             </header>
