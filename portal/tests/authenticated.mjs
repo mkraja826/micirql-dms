@@ -76,6 +76,8 @@ try {
   await page.getByLabel('Password').fill('mock-password');
   await page.getByRole('button', { name: 'Sign in as owner / head doctor' }).click();
   await waitForDashboard(page);
+  await page.getByText('Today at a glance', { exact: true }).waitFor({ state: 'visible' });
+  if (!(await page.locator('.admin-chart-point').count())) throw new Error('Collection chart tooltip points were not rendered.');
   await assertNoSeriousAccessibilityIssues(page, 'Authenticated dashboard');
 
   for (const mode of ['Daily', 'Weekly', 'Monthly']) {
@@ -89,10 +91,18 @@ try {
   for (const section of sections) {
     await page.locator('.admin-nav button').filter({ hasText: section }).click();
     await page.getByRole('heading', { name: section, level: 1, exact: true }).waitFor({ state: 'visible' });
+    await page.locator('.admin-period-snapshot').waitFor({ state: 'visible' });
     if (await page.getByText('Admin access needs attention').count()) throw new Error(`${section} entered the global error screen.`);
   }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('.admin-nav').waitFor({ state: 'visible' });
+  const horizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 2);
+  if (horizontalOverflow) throw new Error('Clinic Admin caused document-level horizontal overflow on mobile.');
+  await assertNoSeriousAccessibilityIssues(page, 'Mobile Clinic Admin');
+
   if (pageErrors.length) throw new Error(`Authenticated page errors: ${pageErrors.join(' | ')}`);
-  console.log('Clinic Admin daily, weekly, monthly navigation and accessibility test passed.');
+  console.log('Clinic Admin owner polish, period navigation, mobile layout and accessibility test passed.');
 } finally {
   await context.close();
   await browser.close();
