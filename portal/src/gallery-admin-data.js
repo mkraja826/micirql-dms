@@ -21,24 +21,44 @@ function storageReference(row) {
   return null;
 }
 
-async function attachSignedUrls(rows) {
+function prepareRows(rows) {
+  return rows.map((row) => {
+    const reference = storageReference(row);
+    return {
+      ...row,
+      patient: relation(row.patients),
+      uploader: relation(row.profiles),
+      visit: relation(row.patient_visits),
+      storage_reference: reference,
+      resolved_url: reference ? null : row.file_url,
+    };
+  });
+}
+
+export async function hydrateGalleryUrls(rows) {
   const groups = new Map();
   rows.forEach((row) => {
-    const reference = storageReference(row);
+    const reference = row.storage_reference || storageReference(row);
     if (!reference?.bucket || !reference?.path) return;
     const paths = groups.get(reference.bucket) || new Set();
     paths.add(reference.path);
     groups.set(reference.bucket, paths);
   });
+  if (!groups.size) return rows;
+
   const signed = new Map();
   await Promise.all(Array.from(groups.entries()).map(async ([bucket, pathSet]) => {
     const result = await supabase.storage.from(bucket).createSignedUrls(Array.from(pathSet), 30 * 60);
     if (result.error) return;
-    (result.data || []).forEach((item) => { if (item?.path && item?.signedUrl) signed.set(`${bucket}:${item.path}`, item.signedUrl); });
+    (result.data || []).forEach((item) => {
+      if (item?.path && item?.signedUrl) signed.set(`${bucket}:${item.path}`, item.signedUrl);
+    });
   }));
+
   return rows.map((row) => {
-    const reference = storageReference(row);
-    return { ...row, resolved_url: reference ? signed.get(`${reference.bucket}:${reference.path}`) || row.file_url : row.file_url, storage_reference: reference };
+    const reference = row.storage_reference || storageReference(row);
+    const secureUrl = reference ? signed.get(`${reference.bucket}:${reference.path}`) : null;
+    return { ...row, resolved_url: secureUrl || row.resolved_url || (!reference ? row.file_url : null) };
   });
 }
 
@@ -61,8 +81,7 @@ export async function loadGalleryFiles(profile, periodStart = null, periodEnd = 
   if (periodEnd) query = query.lte('created_at', periodEnd);
   const result = await query;
   if (result.error) throw result.error;
-  const rows = (result.data || []).map((row) => ({ ...row, patient: relation(row.patients), uploader: relation(row.profiles), visit: relation(row.patient_visits) }));
-  return attachSignedUrls(rows);
+  return prepareRows(result.data || []);
 }
 
 export async function setGalleryFileArchived(fileId, archived, reason) {
