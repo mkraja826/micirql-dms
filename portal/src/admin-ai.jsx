@@ -6,7 +6,7 @@ import { loadAdminContext, supabase } from './admin-supabase';
 const QUICK_PROMPTS = [
   'How is my clinic doing today?',
   'How are we doing this week?',
-  'Compare this month with last month.',
+  'Compare this month with the same days last month.',
   'How many appointments are tomorrow?',
   "What are today's collections?",
   'How much is currently outstanding?',
@@ -14,6 +14,35 @@ const QUICK_PROMPTS = [
 
 function id() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function formatAiText(value) {
+  const lines = String(value || '')
+    .replace(/\*\*/g, '')
+    .split(/\r?\n/)
+    .map((line) => line.trim());
+
+  const output = [];
+  for (const line of lines) {
+    if (!line) {
+      if (output.length && output[output.length - 1] !== '') output.push('');
+      continue;
+    }
+
+    if (/^\|?\s*:?-{3,}/.test(line) && !/[A-Za-z0-9₹$]/.test(line)) continue;
+
+    if (line.includes('|')) {
+      const cells = line.split('|').map((cell) => cell.trim()).filter(Boolean);
+      if (cells.length) {
+        output.push(`• ${cells.join(' · ')}`);
+        continue;
+      }
+    }
+
+    output.push(line.replace(/^[-*]\s+/, '• '));
+  }
+
+  return output.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 
 async function invokeCapDentAi(question) {
@@ -103,7 +132,7 @@ function CapDentAdminAi() {
 
     try {
       const result = await invokeCapDentAi(cleaned);
-      setMessages((current) => [...current, { id: id(), role: 'assistant', text: result.answer }]);
+      setMessages((current) => [...current, { id: id(), role: 'assistant', text: formatAiText(result.answer) }]);
     } catch (error) {
       setMessages((current) => [
         ...current,
@@ -161,7 +190,7 @@ function CapDentAdminAi() {
 
               {messages.map((message) => (
                 <div key={message.id} className={`admin-ai-message ${message.role}`}>
-                  <p>{message.text}</p>
+                  <p style={message.role === 'assistant' ? { whiteSpace: 'pre-wrap' } : undefined}>{message.text}</p>
                 </div>
               ))}
 
