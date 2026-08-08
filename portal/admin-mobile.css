@@ -1,253 +1,238 @@
-/* CapDent Clinic Admin — dedicated mobile/tablet responsive layer.
-   Desktop remains controlled by src/admin.css. */
-
-@media (max-width: 1024px) {
-  html, body { overflow-x: hidden; }
-  .admin-workspace, .admin-content, .admin-period-body { min-width: 0; }
-
-  .admin-topbar { gap: 12px; }
-  .admin-topbar > div:first-child { min-width: 0; }
-  .admin-topbar h1,
-  .admin-topbar p,
-  .admin-clinic strong,
-  .admin-clinic small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  .admin-grid { grid-template-columns: 1fr; }
-  .admin-panel { overflow: hidden; }
-  .admin-chart { min-width: 0; }
-
-  .admin-table-wrap {
-    width: 100%;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 12px;
-  }
-}
+/* CapDent Clinic Admin — MOBILE-ONLY presentation layer.
+   IMPORTANT: desktop/laptop remains entirely controlled by src/admin.css and section CSS files.
+   This file intentionally applies only at <= 760px and does not change application architecture. */
 
 @media (max-width: 760px) {
-  :root { font-size: 16px; }
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
   body { background: #f4f7f6; }
+  button, input, select, textarea { font-size: 16px; }
+  .admin-workspace, .admin-content, .admin-period-body, .admin-panel { min-width: 0; }
 
-  /* Mobile shell: compact app header + swipeable navigation. */
+  /* App shell */
   .admin-shell { display: block; min-height: 100dvh; }
   .admin-sidebar {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    height: auto;
-    padding: 10px 12px 8px;
-    gap: 8px;
-    box-shadow: 0 3px 16px rgba(16,49,59,.18);
+    position: sticky; top: 0; z-index: 30; height: auto;
+    padding: 9px 10px 8px; gap: 8px;
+    box-shadow: 0 3px 16px rgba(16,49,59,.16);
   }
-  .admin-sidebar .admin-brand { min-height: 42px; }
-  .admin-sidebar .admin-brand-mark { width: 38px; height: 38px; border-radius: 11px; }
-  .admin-sidebar .admin-brand strong { font-size: 17px; }
+  .admin-sidebar .admin-brand { min-height: 40px; padding: 0 2px; }
+  .admin-sidebar .admin-brand-mark { width: 36px; height: 36px; border-radius: 10px; }
+  .admin-sidebar .admin-brand strong { font-size: 16px; }
   .admin-sidebar .admin-brand small,
   .admin-clinic,
   .admin-nav p,
   .admin-sidebar-footer { display: none !important; }
 
+  /* Mobile navigation: swipeable, compact, visible labels */
   .admin-nav {
-    display: flex;
-    gap: 7px;
-    overflow-x: auto;
-    padding: 2px 0 4px;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
+    display: flex; gap: 6px; overflow-x: auto; overscroll-behavior-inline: contain;
+    padding: 2px 0 3px; scroll-snap-type: x proximity; scrollbar-width: none;
   }
   .admin-nav::-webkit-scrollbar { display: none; }
   .admin-nav button {
-    flex: 0 0 auto;
-    min-height: 42px;
-    width: auto;
-    padding: 9px 13px;
-    border-radius: 11px;
-    scroll-snap-align: start;
-    font-size: 13px;
-    font-weight: 750;
-    white-space: nowrap;
+    flex: 0 0 auto; width: auto; min-height: 40px; padding: 8px 11px;
+    border-radius: 10px; scroll-snap-align: start; white-space: nowrap;
+    font-size: 12px; font-weight: 750;
   }
-  .admin-nav button span { display: inline !important; font-size: 15px; opacity: .88; }
+  .admin-nav button span { display: inline !important; font-size: 14px; }
 
-  /* Page heading should read like an app screen, not a desktop toolbar. */
+  /* Screen header */
   .admin-topbar {
-    position: relative;
-    top: auto;
-    z-index: 4;
-    padding: 15px 16px 13px;
-    align-items: flex-start;
-    background: #fff;
+    position: static; padding: 13px 12px 11px; gap: 10px;
+    align-items: flex-start; background: #fff;
   }
-  .admin-topbar h1 { font-size: 20px; line-height: 1.2; }
+  .admin-topbar > div:first-child { min-width: 0; }
+  .admin-topbar h1 { margin: 0; font-size: 19px; line-height: 1.2; letter-spacing: -.01em; }
   .admin-topbar p {
-    max-width: calc(100vw - 100px);
-    margin-top: 5px;
-    font-size: 12px;
-    line-height: 1.35;
-    white-space: normal;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    max-width: calc(100vw - 80px); margin-top: 4px; font-size: 11px; line-height: 1.35;
+    white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .admin-user { flex: 0 0 auto; }
   .admin-user > div:not(.admin-avatar) { display: none; }
-  .admin-avatar { width: 38px; height: 38px; }
+  .admin-avatar { width: 36px; height: 36px; border-radius: 10px; }
+  .admin-content { padding: 10px 10px 32px; }
 
-  .admin-content { padding: 12px 12px 34px; }
+  /* Today */
+  .admin-today { margin-bottom: 10px; padding: 12px; gap: 9px; border-radius: 15px; }
+  .admin-today-head { align-items: flex-start; gap: 8px; }
+  .admin-today-head strong { font-size: 15px; line-height: 1.25; }
+  .admin-today-head button { min-height: 38px; padding: 0 10px; white-space: nowrap; }
+  .admin-today-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  .admin-today-grid article { min-width: 0; min-height: 72px; padding: 10px; border-radius: 11px; }
+  .admin-today-grid article span { font-size: 9px; }
+  .admin-today-grid article strong { margin: 4px 0 2px; font-size: 18px; line-height: 1.1; overflow-wrap: anywhere; }
+  .admin-today-grid article small { font-size: 8.5px; line-height: 1.25; }
 
-  /* Today at a glance becomes a compact 2-column mobile dashboard. */
-  .admin-today {
-    gap: 10px;
-    margin-bottom: 12px;
-    padding: 13px;
-    border-radius: 16px;
-  }
-  .admin-today-head { align-items: flex-start; }
-  .admin-today-head strong { font-size: 16px; line-height: 1.25; }
-  .admin-today-head button { min-height: 38px; padding: 0 11px; white-space: nowrap; }
-  .admin-today-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .admin-today-grid article { min-height: 76px; padding: 11px; border-radius: 12px; }
-  .admin-today-grid article span { font-size: 10px; }
-  .admin-today-grid article strong { font-size: 19px; line-height: 1.15; overflow-wrap: anywhere; }
-  .admin-today-grid article small { font-size: 9px; line-height: 1.25; }
-
-  /* Reporting period becomes stacked and touch friendly. */
+  /* Period selector */
   .admin-global-period {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 11px;
-    margin-bottom: 12px;
-    padding: 13px;
-    border-radius: 16px;
+    display: flex; flex-direction: column; align-items: stretch; gap: 9px;
+    margin-bottom: 10px; padding: 12px; border-radius: 15px;
   }
-  .admin-period-copy strong { font-size: 17px; }
-  .admin-period-copy small { font-size: 10px; line-height: 1.4; }
-  .admin-period-segments { width: 100%; padding: 4px; }
-  .admin-period-segments button { flex: 1; min-height: 40px; padding: 8px 6px; font-size: 12px; }
-  .admin-period-navigation {
-    display: grid;
-    grid-template-columns: 42px minmax(0, 1fr) 42px;
-    gap: 7px;
-    width: 100%;
-  }
+  .admin-period-copy strong { font-size: 16px; }
+  .admin-period-copy small { font-size: 9.5px; line-height: 1.35; }
+  .admin-period-segments { width: 100%; padding: 3px; }
+  .admin-period-segments button { flex: 1; min-height: 38px; padding: 7px 5px; font-size: 11px; }
+  .admin-period-navigation { display: grid; grid-template-columns: 40px minmax(0,1fr) 40px; gap: 6px; width: 100%; }
   .admin-period-navigation button,
-  .admin-period-navigation input { height: 42px; min-width: 0; }
-  .admin-period-navigation input { width: 100%; padding: 0 9px; }
-  .admin-period-navigation .today { grid-column: 1 / -1; width: 100%; }
+  .admin-period-navigation input { height: 40px; min-width: 0; }
+  .admin-period-navigation input { width: 100%; padding: 0 8px; }
+  .admin-period-navigation .today { grid-column: 1/-1; width: 100%; }
 
-  /* Selected-period snapshot: readable cards instead of cramped strip. */
+  /* Selected period snapshot */
   .admin-period-snapshot {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    overflow: visible;
-    padding: 9px;
-    margin-bottom: 12px;
-    border-radius: 14px;
+    grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px;
+    overflow: visible; margin-bottom: 10px; padding: 8px; border-radius: 13px;
   }
-  .admin-period-snapshot > div { grid-column: 1 / -1; }
+  .admin-period-snapshot > div { grid-column: 1/-1; }
   .admin-period-snapshot > div,
-  .admin-period-snapshot article { min-width: 0; padding: 10px; }
-  .admin-period-snapshot strong { font-size: 15px; overflow-wrap: anywhere; }
+  .admin-period-snapshot article { min-width: 0; padding: 9px; }
+  .admin-period-snapshot strong { font-size: 14px; overflow-wrap: anywhere; }
 
-  /* KPI hierarchy: 2-up for quick scanning; important values remain large. */
-  .admin-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-  .admin-kpi {
-    min-width: 0;
-    min-height: 108px;
-    padding: 13px;
-    border-radius: 14px;
-    display: flex;
-    flex-direction: column;
-  }
-  .admin-kpi span { font-size: 10px; line-height: 1.3; }
-  .admin-kpi strong {
-    margin: 8px 0 5px;
-    font-size: clamp(20px, 6vw, 25px);
-    line-height: 1.08;
-    letter-spacing: -.02em;
-    overflow-wrap: anywhere;
-  }
-  .admin-kpi small { margin-top: auto; font-size: 9.5px; line-height: 1.3; }
+  /* Dashboard KPIs: 2-up is more scannable than long one-card-per-row pages */
+  .admin-kpis { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .admin-kpi { min-width: 0; min-height: 102px; padding: 12px; border-radius: 13px; display: flex; flex-direction: column; }
+  .admin-kpi span { font-size: 9px; line-height: 1.3; }
+  .admin-kpi strong { margin: 7px 0 4px; font-size: clamp(19px,5.7vw,23px); line-height: 1.08; overflow-wrap: anywhere; }
+  .admin-kpi small { margin-top: auto; font-size: 9px; line-height: 1.28; }
 
-  /* Panels become true mobile sections. */
-  .admin-grid { display: block; margin-top: 10px; }
-  .admin-grid + .admin-grid { margin-top: 10px; }
-  .admin-grid > .admin-panel + .admin-panel { margin-top: 10px; }
-  .admin-panel { padding: 14px; border-radius: 15px; }
-  .admin-panel-head { margin-bottom: 13px; gap: 10px; align-items: flex-start; }
+  /* General panels */
+  .admin-grid { display: block; margin-top: 9px; }
+  .admin-grid + .admin-grid { margin-top: 9px; }
+  .admin-grid > .admin-panel + .admin-panel { margin-top: 9px; }
+  .admin-panel { padding: 13px 12px; border-radius: 14px; overflow: hidden; }
+  .admin-panel-head { margin-bottom: 11px; gap: 8px; align-items: flex-start; }
   .admin-panel-head > div { min-width: 0; }
-  .admin-panel h2 { font-size: 16px; line-height: 1.25; }
-  .admin-panel p { font-size: 10.5px; line-height: 1.4; }
-  .admin-panel-head > strong { flex: 0 0 auto; font-size: 15px; white-space: nowrap; }
+  .admin-panel h2 { font-size: 15px; line-height: 1.25; }
+  .admin-panel p { font-size: 10px; line-height: 1.4; }
+  .admin-panel-head > strong { flex: 0 0 auto; max-width: 44%; font-size: 14px; text-align: right; overflow-wrap: anywhere; }
 
-  /* Charts: smaller viewport, larger touch/focus targets. */
-  .admin-chart { width: 100%; height: 190px; }
-  .admin-chart-point { opacity: .45; stroke-width: 4; }
-  .admin-chart-labels { margin-top: 2px; font-size: 9px; }
+  /* Charts */
+  .admin-chart { width: 100%; height: 180px; min-width: 0; }
+  .admin-chart-point { opacity: .5; stroke-width: 4; }
+  .admin-chart-labels { font-size: 8.5px; }
   .admin-chart-hint { display: none; }
-
-  .admin-bars { gap: 12px; }
-  .admin-bar-row { grid-template-columns: minmax(82px, .9fr) minmax(80px, 1.5fr) 34px; gap: 8px; font-size: 11px; }
+  .admin-bars { gap: 11px; }
+  .admin-bar-row { grid-template-columns: minmax(76px,.95fr) minmax(70px,1.5fr) 32px; gap: 7px; font-size: 10px; }
   .admin-bar-row > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-transform: capitalize; }
-  .admin-bar-track { height: 10px; }
+  .admin-bar-track { height: 9px; }
+  .admin-donut-wrap { flex-direction: column; align-items: stretch; gap: 14px; }
+  .admin-donut { width: min(150px,54vw); align-self: center; }
+  .admin-legend div { font-size: 11px; }
 
-  .admin-donut-wrap { flex-direction: column; align-items: stretch; gap: 16px; }
-  .admin-donut { width: min(160px, 58vw); align-self: center; }
-  .admin-legend div { font-size: 12px; }
-
-  /* Sections and forms. */
-  .admin-section-title { margin-bottom: 12px; }
-  .admin-section-title h2 { font-size: 18px; }
-  .admin-section-title p { font-size: 11px; line-height: 1.45; }
-  .admin-card { border-radius: 15px; }
-  .admin-actions { flex-wrap: wrap; gap: 7px; }
+  /* Section headings and controls */
+  .admin-section-title { margin-bottom: 10px; }
+  .admin-section-title h2 { font-size: 17px; line-height: 1.25; }
+  .admin-section-title p { font-size: 10px; line-height: 1.4; }
+  .admin-actions { flex-wrap: wrap; gap: 6px; }
   .admin-actions button { min-height: 38px; padding: 7px 10px; font-size: 11px; }
-  .admin-primary { min-height: 42px; }
+  .admin-primary { min-height: 40px; }
+  .admin-empty { padding: 20px 10px; }
+  .admin-finance-note { font-size: 10px; line-height: 1.45; }
 
-  /* Tables stay complete but are intentionally scrollable with sticky labels. */
+  /* Tables: preserve full information, but make touch scrolling intentional */
   .admin-table-wrap {
-    margin-left: -4px;
-    margin-right: -4px;
-    border: 1px solid #e3ebe8;
-    background: #fff;
+    width: 100%; margin-left: 0; margin-right: 0; overflow-x: auto;
+    overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch;
+    border: 1px solid #e3ebe8; border-radius: 11px; background: #fff;
   }
-  .admin-table { min-width: max-content; font-size: 11px; }
-  .admin-table th,
-  .admin-table td { padding: 11px 10px; }
+  .admin-table { min-width: max-content; font-size: 10px; }
+  .admin-table th,.admin-table td { padding: 10px 9px; }
   .admin-table th { position: sticky; top: 0; z-index: 2; background: #f7faf9; }
-  .admin-table th:first-child,
-  .admin-table td:first-child { position: sticky; left: 0; background: inherit; z-index: 1; }
-  .admin-table th:first-child { z-index: 3; background: #f7faf9; }
 
-  .admin-empty { padding: 22px 12px; }
-  .admin-finance-note { font-size: 11px; line-height: 1.45; }
+  /* Patients */
+  .patient-admin-layout { display: block; }
+  .patient-admin-layout > .admin-panel + .admin-panel { margin-top: 9px; }
+  .patient-filters { grid-template-columns: 1fr !important; gap: 7px; }
+  .patient-filters input,.patient-filters select { min-height: 42px; }
+  .patient-list { max-height: 46dvh; margin-top: 10px; gap: 6px; }
+  .patient-row { grid-template-columns: 38px minmax(0,1fr) auto; padding: 9px; gap: 8px; border-radius: 10px; }
+  .patient-row b { font-size: 8px; }
+  .patient-row em { grid-column: 2/-1; }
+  .patient-detail-head { flex-direction: column; gap: 9px; }
+  .patient-detail-head .admin-actions { width: 100%; }
+  .patient-detail-head .admin-actions button { flex: 1; }
+  .patient-summary-grid,.patient-form-grid { grid-template-columns: 1fr !important; gap: 8px; margin-top: 12px; }
+  .patient-summary-grid .wide,.patient-form-grid .wide { grid-column: auto; }
+  .patient-summary-grid > div { padding: 10px; }
+  .patient-summary-grid strong { overflow-wrap: anywhere; }
+  .patient-history-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  .patient-history-grid article { padding: 9px 5px; }
+  .patient-audit-list > article { flex-direction: column; gap: 7px; }
+  .patient-audit-list article p { text-align: left; }
+
+  /* Appointments */
+  .appointment-title { flex-direction: column; gap: 9px; }
+  .appointment-stats { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; margin-bottom: 10px; }
+  .appointment-stats article { padding: 11px; }
+  .appointment-stats strong { font-size: 19px; }
+  .appointment-layout { grid-template-columns: 1fr !important; gap: 9px; }
+  .appointment-toolbar { flex-direction: column; gap: 7px; }
+  .appointment-toolbar input,.appointment-toolbar select { min-height: 42px; }
+  .appointment-list { max-height: 48dvh; gap: 6px; }
+  .appointment-list > button { flex-direction: column; gap: 6px; padding: 11px; }
+  .appointment-editor { margin-top: 0; }
+  .appointment-form input,.appointment-form select,.appointment-form textarea { min-height: 42px; }
+
+  /* Clinical */
+  .clinical-admin { gap: 9px; }
+  .clinical-summary { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 7px; }
+  .clinical-summary article { padding: 11px; }
+  .clinical-summary strong { font-size: 20px; }
+  .clinical-layout { grid-template-columns: 1fr !important; gap: 9px; }
+  .clinical-list-panel { position: static; max-height: none; }
+  .clinical-toolbar,.clinical-form-grid { grid-template-columns: 1fr !important; gap: 8px; }
+  .clinical-visit-list { gap: 6px; }
+  .clinical-visit-list > button { padding: 11px; }
+  .clinical-detail-head,.clinical-section-head,.tooth-chart-title { flex-direction: column; align-items: flex-start; gap: 7px; }
+  .clinical-action-row { flex-direction: column; align-items: stretch; }
+  .clinical-action-row button { min-height: 40px; }
+  .tooth-grid { grid-template-columns: repeat(4,minmax(52px,1fr)); gap: 5px; }
+  .tooth-cell { min-height: 62px; padding: 7px 4px; }
+  .chart-history > article { grid-template-columns: 1fr; }
+  .chart-history > article p { grid-column: 1; }
+
+  /* Gallery */
+  .gallery-admin { gap: 9px; }
+  .gallery-metrics { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 7px; }
+  .gallery-metrics article { padding: 11px; }
+  .gallery-metrics strong { font-size: 18px; }
+  .gallery-controls { grid-template-columns: 1fr !important; gap: 8px; }
+  .gallery-controls input,.gallery-controls select,.gallery-controls button { width: 100%; min-height: 42px; }
+  .gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 8px; }
+  .gallery-card { border-radius: 12px; }
+  .gallery-card-body { padding: 10px; }
+  .gallery-card-body strong { font-size: 12px; }
+  .gallery-card-body span { font-size: 10px; }
+  .gallery-modal-backdrop { padding: 0; place-items: end center; }
+  .gallery-modal { width: 100%; max-height: 94dvh; border-radius: 18px 18px 0 0; }
+  .gallery-modal > header { padding: 13px 14px; }
+  .gallery-modal-layout { grid-template-columns: 1fr; min-height: 0; }
+  .gallery-large-preview,.gallery-large-preview .gallery-document-preview,.gallery-large-preview .gallery-preview-pending { min-height: 250px; }
+  .gallery-details { padding: 14px; gap: 14px; }
+  .gallery-details dl div { grid-template-columns: 1fr; gap: 3px; }
+  .gallery-modal-actions { flex-wrap: wrap; }
+
+  /* Generic forms from finance / staff / reports / audit / settings */
+  .admin-panel input:not([type="checkbox"]):not([type="radio"]),
+  .admin-panel select,
+  .admin-panel textarea { max-width: 100%; }
+  .admin-panel form { min-width: 0; }
 }
 
 @media (max-width: 420px) {
-  .admin-content { padding-left: 10px; padding-right: 10px; }
-  .admin-topbar { padding-left: 12px; padding-right: 12px; }
-  .admin-nav button { padding-left: 11px; padding-right: 11px; }
-
-  .admin-today-grid,
-  .admin-kpis,
-  .admin-period-snapshot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-  .admin-today-grid article { min-height: 72px; }
-  .admin-kpi { min-height: 104px; padding: 12px; }
-  .admin-kpi strong { font-size: 21px; }
-
-  .admin-panel { padding: 13px 12px; }
-  .admin-chart { height: 178px; }
-  .admin-bar-row { grid-template-columns: 76px minmax(70px,1fr) 30px; gap: 7px; }
+  .admin-content { padding-left: 9px; padding-right: 9px; }
+  .admin-topbar { padding-left: 10px; padding-right: 10px; }
+  .admin-nav button { padding-left: 10px; padding-right: 10px; }
+  .admin-kpi { min-height: 98px; padding: 11px; }
+  .admin-kpi strong { font-size: 20px; }
+  .admin-panel { padding: 12px 10px; }
+  .admin-chart { height: 168px; }
+  .gallery-grid { grid-template-columns: 1fr !important; }
 }
 
 @media (max-width: 350px) {
-  .admin-today-grid,
-  .admin-kpis,
-  .admin-period-snapshot { grid-template-columns: 1fr; }
+  .admin-today-grid,.admin-kpis,.admin-period-snapshot,.appointment-stats,.clinical-summary,.gallery-metrics { grid-template-columns: 1fr !important; }
   .admin-period-snapshot > div { grid-column: auto; }
-  .admin-topbar p { max-width: calc(100vw - 82px); }
+  .patient-history-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .tooth-grid { grid-template-columns: repeat(3,minmax(52px,1fr)); }
 }
