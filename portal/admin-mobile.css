@@ -88,7 +88,7 @@
   .admin-period-snapshot article { min-width: 0; padding: 9px; }
   .admin-period-snapshot strong { font-size: 14px; overflow-wrap: anywhere; }
 
-  /* Dashboard KPIs: 2-up is more scannable than long one-card-per-row pages */
+  /* Dashboard KPIs */
   .admin-kpis { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
   .admin-kpi { min-width: 0; min-height: 102px; padding: 12px; border-radius: 13px; display: flex; flex-direction: column; }
   .admin-kpi span { font-size: 9px; line-height: 1.3; }
@@ -129,7 +129,7 @@
   .admin-empty { padding: 20px 10px; }
   .admin-finance-note { font-size: 10px; line-height: 1.45; }
 
-  /* Tables: preserve full information, but make touch scrolling intentional */
+  /* Tables */
   .admin-table-wrap {
     width: 100%; margin-left: 0; margin-right: 0; overflow-x: auto;
     overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch;
@@ -212,11 +212,98 @@
   .gallery-details dl div { grid-template-columns: 1fr; gap: 3px; }
   .gallery-modal-actions { flex-wrap: wrap; }
 
-  /* Generic forms from finance / staff / reports / audit / settings */
+  /* Generic forms */
   .admin-panel input:not([type="checkbox"]):not([type="radio"]),
   .admin-panel select,
   .admin-panel textarea { max-width: 100%; }
   .admin-panel form { min-width: 0; }
+
+  /* Mobile cascade lock.
+     Component styles are bundled after this standalone stylesheet, so lock only
+     viewport-critical mobile geometry here. This is intentionally <=760px. */
+  .admin-shell,
+  .admin-workspace,
+  .admin-content,
+  .admin-period-body,
+  .admin-today,
+  .admin-global-period,
+  .admin-period-snapshot,
+  .admin-kpis,
+  .admin-grid,
+  .admin-panel,
+  .patient-admin-layout,
+  .appointment-layout,
+  .clinical-layout,
+  .gallery-admin {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .admin-content { overflow-x: hidden !important; }
+
+  .admin-today-grid,
+  .admin-kpis,
+  .admin-period-snapshot,
+  .appointment-stats,
+  .clinical-summary,
+  .gallery-metrics {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .admin-today-grid > *,
+  .admin-kpis > *,
+  .admin-period-snapshot > *,
+  .appointment-stats > *,
+  .clinical-summary > *,
+  .gallery-metrics > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .admin-period-snapshot > div { grid-column: 1/-1 !important; }
+
+  .admin-global-period {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .admin-period-segments {
+    display: flex !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  .admin-period-segments button {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .admin-period-navigation {
+    display: grid !important;
+    grid-template-columns: 40px minmax(0,1fr) 40px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .admin-period-navigation > * { min-width: 0 !important; max-width: 100% !important; }
+  .admin-period-navigation .today { grid-column: 1/-1 !important; width: 100% !important; }
+
+  .admin-grid { display: block !important; }
+  .admin-panel { overflow: hidden !important; }
+
+  /* Horizontal scrolling is allowed only where it is intentional. */
+  .admin-nav,
+  .admin-table-wrap {
+    max-width: 100% !important;
+  }
 }
 
 @media (max-width: 420px) {
@@ -232,7 +319,7 @@
 
 @media (max-width: 350px) {
   .admin-today-grid,.admin-kpis,.admin-period-snapshot,.appointment-stats,.clinical-summary,.gallery-metrics { grid-template-columns: 1fr !important; }
-  .admin-period-snapshot > div { grid-column: auto; }
+  .admin-period-snapshot > div { grid-column: auto !important; }
   .patient-history-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .tooth-grid { grid-template-columns: repeat(3,minmax(52px,1fr)); }
 }
