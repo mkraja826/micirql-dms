@@ -10,157 +10,36 @@
   <link rel="canonical" href="https://capdent.in/">
   <link rel="icon" href="/capdent-mark.svg" type="image/svg+xml">
   <link rel="sitemap" href="/sitemap.xml" type="application/xml">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="CapDent">
-  <meta property="og:locale" content="en_IN">
-  <meta property="og:title" content="CapDent — The operating system for a modern dental clinic">
-  <meta property="og:description" content="Manage patients, treatments and money, understand clinic performance and use CapDent AI for faster clinic insights.">
-  <meta property="og:url" content="https://capdent.in/">
-  <meta property="og:image" content="https://capdent.in/social-card.svg">
-  <meta property="og:image:alt" content="CapDent dental clinic management and intelligence platform">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="CapDent — Dental Practice Management + Clinic Intelligence">
-  <meta name="twitter:description" content="Patient management, clinical workflow, owner analytics and AI-powered clinic intelligence in one platform.">
-  <meta name="twitter:image" content="https://capdent.in/social-card.svg">
-  <link rel="stylesheet" href="/styles.css?v=20260717-human">
-  <link rel="stylesheet" href="/blog.css?v=20260717-1">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="CapDent"><meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="CapDent — The operating system for a modern dental clinic"><meta property="og:description" content="Manage patients, treatments and money, understand clinic performance and use CapDent AI for faster clinic insights."><meta property="og:url" content="https://capdent.in/"><meta property="og:image" content="https://capdent.in/social-card.svg"><meta property="og:image:alt" content="CapDent dental clinic management and intelligence platform">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="CapDent — Dental Practice Management + Clinic Intelligence"><meta name="twitter:description" content="Patient management, clinical workflow, owner analytics and AI-powered clinic intelligence in one platform."><meta name="twitter:image" content="https://capdent.in/social-card.svg">
+  <link rel="stylesheet" href="/styles.css?v=20260717-human"><link rel="stylesheet" href="/blog.css?v=20260717-1">
   <style>
-    .v25-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px}
-    .v25-card{padding:24px;border:1px solid rgba(8,127,114,.16);border-radius:22px;background:#fff}
-    .v25-card span{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#e8f6f3;color:#087f72;font-weight:800}
-    .v25-card h3{margin:16px 0 8px}.v25-card p{margin:0;color:#5f6f6c;line-height:1.65}
-    .ai-shell{display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:stretch;margin-top:42px}
-    .ai-copy,.ai-demo{border-radius:28px;padding:34px;border:1px solid rgba(8,127,114,.16);background:#fff}
-    .ai-copy{background:linear-gradient(145deg,#073d39,#087f72);color:#fff}.ai-copy .overline{color:#c8fff7}.ai-copy h3{font-size:36px;margin:10px 0 16px}.ai-copy p{color:#e2f5f2;line-height:1.75}
-    .ai-list{display:grid;gap:12px;margin-top:22px}.ai-list div{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.09)}
-    .ai-demo{display:grid;gap:14px}.ai-question,.ai-answer{padding:18px;border-radius:18px}.ai-question{background:#f1f5f3}.ai-answer{background:#eaf7f4;border:1px solid #cfece6}.ai-answer strong{display:block;margin-bottom:8px;color:#087f72}
+    .v25-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px}.v25-card{padding:24px;border:1px solid rgba(8,127,114,.16);border-radius:22px;background:#fff}.v25-card span{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#e8f6f3;color:#087f72;font-weight:800}.v25-card h3{margin:16px 0 8px}.v25-card p{margin:0;color:#5f6f6c;line-height:1.65}
+    .ai-shell{display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:stretch;margin-top:42px}.ai-copy,.ai-demo{border-radius:28px;padding:34px;border:1px solid rgba(8,127,114,.16);background:#fff}.ai-copy{background:linear-gradient(145deg,#073d39,#087f72);color:#fff}.ai-copy .overline{color:#c8fff7}.ai-copy h3{font-size:36px;margin:10px 0 16px}.ai-copy p{color:#e2f5f2;line-height:1.75}.ai-list{display:grid;gap:12px;margin-top:22px}.ai-list div{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.09)}.ai-demo{display:grid;gap:14px}.ai-question,.ai-answer{padding:18px;border-radius:18px}.ai-question{background:#f1f5f3}.ai-answer{background:#eaf7f4;border:1px solid #cfece6}.ai-answer strong{display:block;margin-bottom:8px;color:#087f72}
     .plan-grid-v25{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:42px}.plan-v25{display:flex;flex-direction:column;gap:14px;padding:26px;border:1px solid rgba(8,127,114,.18);border-radius:24px;background:#fff}.plan-v25.featured{background:linear-gradient(160deg,#fff,#eaf7f4);box-shadow:0 18px 50px rgba(8,127,114,.12)}.plan-v25 .price{margin:0}.plan-v25 ul{padding-left:20px;margin:0 0 12px}.plan-v25 li{margin:8px 0}.plan-v25 .button{margin-top:auto}
-    @media(max-width:1050px){.v25-grid{grid-template-columns:repeat(2,1fr)}.plan-grid-v25{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:760px){.v25-grid,.ai-shell,.plan-grid-v25{grid-template-columns:1fr}.ai-copy,.ai-demo{padding:24px}.ai-copy h3{font-size:30px}}
+    @media(max-width:1050px){.v25-grid{grid-template-columns:repeat(2,1fr)}.plan-grid-v25{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){.v25-grid,.ai-shell,.plan-grid-v25{grid-template-columns:1fr}.ai-copy,.ai-demo{padding:24px}.ai-copy h3{font-size:30px}}
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"CapDent","url":"https://capdent.in/","downloadUrl":"https://play.google.com/store/apps/details?id=com.dms.clinic","applicationCategory":"BusinessApplication","applicationSubCategory":"Dental practice management and clinic intelligence platform","operatingSystem":"Android, Web","description":"Dental practice management platform for patient records, dental charting, treatments, payments, clinical files, analytics and AI-assisted clinic insights.","publisher":{"@type":"Organization","name":"Micirql","url":"https://micirql.com/"}}</script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="#top" aria-label="CapDent home">
-        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#087f72"/><path d="M24 10v28M13.5 16l21 16M34.5 16l-21 16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg>
-        <span>CapDent</span>
-      </a>
-      <nav class="desktop-nav" aria-label="Primary navigation"><a href="#platform">Platform</a><a href="#features">Features</a><a href="#ai">AI</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/portal/">Clinic Login</a></nav>
-      <a class="header-cta" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get CapDent</a>
-    </div>
-  </header>
-
-  <main id="main">
-    <section class="hero" id="top">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="overline">Dental practice management + clinic intelligence</p>
-          <h1>Run the clinic.<br><span>Understand the clinic.</span></h1>
-          <p class="hero-text">CapDent brings patient management, dental charting, treatments, prescriptions, clinical images, payments, staff workflow, owner analytics and AI-assisted clinic intelligence into one connected platform.</p>
-          <div class="hero-actions"><a class="button button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get CapDent on Google Play</a><a class="button button-secondary" href="#platform">Explore V25</a></div>
-          <div class="facts"><div><strong>300</strong><span>Patients on free tier</span></div><div><strong>3 roles</strong><span>Owner, doctor, reception</span></div><div><strong>AI</strong><span>Clinic intelligence</span></div></div>
-        </div>
-
-        <div class="product-stage" aria-label="CapDent product interface demo">
-          <div class="product-window">
-            <div class="window-bar"><div class="window-brand"><span class="mini-mark">✳</span><div><strong>Smile Care Dental</strong><small>Demo clinic</small></div></div><span class="date-chip">V25</span></div>
-            <div class="dashboard-grid">
-              <section class="summary-card summary-main"><span class="label">Today’s collections</span><strong>₹42,600</strong><div class="progress"><span style="width:72%"></span></div><small>18 completed visits</small></section>
-              <section class="summary-card"><span class="label">Waiting</span><strong>6</strong><small>2 ready for doctor</small></section>
-              <section class="summary-card"><span class="label">Pending dues</span><strong>₹18,400</strong><small>Across 4 patients</small></section>
-            </div>
-            <div class="work-area">
-              <section class="queue-panel">
-                <div class="panel-title"><div><span class="label">Patient queue</span><strong>Next in clinic</strong></div><span class="count-pill">6 waiting</span></div>
-                <div class="queue-list">
-                  <article class="patient-row"><span class="avatar">AM</span><div><strong>Anita M.</strong><small>Root canal · Sitting 2</small></div><span class="status ready">Ready</span></article>
-                  <article class="patient-row"><span class="avatar">RV</span><div><strong>Rahul V.</strong><small>Review · 11:30 AM</small></div><span class="status waiting">Waiting</span></article>
-                  <article class="patient-row"><span class="avatar">SP</span><div><strong>Shreya P.</strong><small>New consultation</small></div><span class="status checkin">Check-in</span></article>
-                </div>
-              </section>
-              <aside class="today-panel">
-                <div class="panel-title"><div><span class="label">Owner intelligence</span><strong>Needs attention</strong></div></div>
-                <div class="attention-card"><span class="attention-icon">₹</span><div><strong>4 pending bills</strong><small>₹18,400 to follow up</small></div></div>
-                <div class="attention-card"><span class="attention-icon">AI</span><div><strong>Ask CapDent</strong><small>Understand clinic data faster</small></div></div>
-                <button type="button" class="review-button">Open clinic review</button>
-              </aside>
-            </div>
-          </div>
-          <p class="demo-note">Interface preview uses fictional demo data.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="platform">
-      <div class="container">
-        <div class="section-head"><div><p class="overline">CapDent V25</p><h2>Five parts of the clinic. One connected system.</h2></div><p>CapDent is built to manage the entire daily workflow instead of solving only appointments or billing.</p></div>
-        <div class="v25-grid">
-          <article class="v25-card"><span>01</span><h3>Manage Patients</h3><p>Registration, patient search, appointments, queue, history and follow-ups.</p></article>
-          <article class="v25-card"><span>02</span><h3>Manage Treatments</h3><p>Dental charting, treatment plans, sittings, prescriptions, X-rays and before/after photos.</p></article>
-          <article class="v25-card"><span>03</span><h3>Manage Money</h3><p>Collections, payments, pending dues, adjustments and daily financial review.</p></article>
-          <article class="v25-card"><span>04</span><h3>Understand Your Clinic</h3><p>Daily, weekly and monthly performance views for owners and head doctors.</p></article>
-          <article class="v25-card"><span>05</span><h3>Ask CapDent AI</h3><p>Ask natural-language questions about clinic activity and get faster operational insights.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-tint" id="features">
-      <div class="container feature-layout">
-        <div class="sticky-copy"><p class="overline">Clinical + operational workflow</p><h2>Much more than a digital register.</h2><p>Every visit, procedure, payment and clinical file stays connected to the right patient and clinic workflow.</p><a class="text-link" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">View CapDent on Google Play →</a></div>
-        <div class="feature-list">
-          <article><span>01</span><div><h3>Patient directory & appointments</h3><p>Search patients quickly, manage appointments, walk-ins, queue and follow-up activity.</p></div></article>
-          <article><span>02</span><div><h3>Dental chart & treatment workflow</h3><p>Record teeth, treatment plans, procedure progress and multi-sitting clinical work.</p></div></article>
-          <article><span>03</span><div><h3>Prescriptions & clinical gallery</h3><p>Keep prescriptions, X-rays, reports and before/after treatment photos with the patient record.</p></div></article>
-          <article><span>04</span><div><h3>Payments, dues & corrections</h3><p>Track collections and balances while allowing authorized owners to correct genuine billing mistakes.</p></div></article>
-          <article><span>05</span><div><h3>Owner dashboard & analytics</h3><p>Review patient volume, collections, pending payments and clinic performance across daily, weekly and monthly views.</p></div></article>
-          <article><span>06</span><div><h3>Roles, staff & multi-clinic readiness</h3><p>Owners, doctors and receptionists get role-based workflows, with the platform designed for growing clinic operations.</p></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="ai">
-      <div class="container">
-        <div class="section-head"><div><p class="overline">CapDent AI</p><h2>Your clinic data becomes easier to understand.</h2></div><p>Instead of digging through tables and reports, clinic owners can use AI-assisted questions to understand operational and financial patterns faster.</p></div>
-        <div class="ai-shell">
-          <div class="ai-copy">
-            <p class="overline">Clinic intelligence</p>
-            <h3>Ask the clinic a question.</h3>
-            <p>CapDent AI is designed around clinic context, helping owners turn everyday records into useful answers without replacing clinical judgement.</p>
-            <div class="ai-list"><div>“How much did we collect this month?”</div><div>“Which treatments generated the most revenue?”</div><div>“Show patients with pending dues.”</div><div>“How are we performing compared with last month?”</div></div>
-          </div>
-          <div class="ai-demo">
-            <div class="ai-question"><strong>Doctor:</strong><br>How is the clinic performing this month?</div>
-            <div class="ai-answer"><strong>CapDent AI</strong>Collections are higher than the previous period, while pending dues are concentrated in a small group of patients. Review overdue balances and follow-up completion before month-end.</div>
-            <div class="ai-question"><strong>Doctor:</strong><br>Which patients still need payment follow-up?</div>
-            <div class="ai-answer"><strong>CapDent AI</strong>I can surface patients with outstanding balances from the clinic’s authorized records so the team can follow up efficiently.</div>
-            <p class="demo-note">AI examples are illustrative. Clinical decisions remain with qualified dental professionals.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section roles-section"><div class="container roles-wrap"><div class="roles-copy"><p class="overline">One clinic, clear responsibilities</p><h2>Useful for every person at the clinic.</h2></div><div class="role-cards"><article><span class="role-dot owner"></span><h3>Owner / Head Doctor</h3><p>Clinic overview, analytics, staff, payments, gallery, operational review and AI-assisted insights.</p></article><article><span class="role-dot doctor"></span><h3>Doctor</h3><p>Patient history, dental chart, treatment planning, sittings, prescriptions and clinical files.</p></article><article><span class="role-dot reception"></span><h3>Reception</h3><p>Check-in, appointments, queue management, patient search, collections and follow-ups.</p></article></div></div></section>
-
-    <section class="section pricing-section" id="pricing">
-      <div class="container">
-        <div class="section-head pricing-head"><div><p class="overline">Plans that grow with the clinic</p><h2>Start free. Upgrade when CapDent becomes part of your growth.</h2></div><p>The free tier is designed for clinics getting started. Paid tiers add scale, owner intelligence and advanced capabilities.</p></div>
-        <div class="plan-grid-v25">
-          <article class="plan-v25"><span class="plan-name">Free</span><div class="price"><strong>₹0</strong></div><p>Start using CapDent on Android with up to 300 patients.</p><ul><li>Core patient and clinic workflow</li><li>Owner, doctor and receptionist roles</li><li>Up to 300 patients</li></ul><a class="button button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Start free</a></article>
-          <article class="plan-v25 featured"><span class="plan-name">Cloud</span><div class="price"><strong>₹799</strong><span>/month</span></div><p>For growing clinics that need more capacity and owner visibility.</p><ul><li>Unlimited patient capacity</li><li>CapDent web dashboard</li><li>Expanded clinic management</li></ul><a class="button button-secondary" href="#faq">Learn more</a></article>
-          <article class="plan-v25"><span class="plan-name">Intelligence</span><div class="price"><strong>₹1,599</strong><span>/month</span></div><p>For owners who want deeper analytics and AI-assisted clinic intelligence.</p><ul><li>Everything in Cloud</li><li>Advanced analytics</li><li>CapDent AI access</li></ul><a class="button button-secondary" href="#ai">Explore AI</a></article>
-          <article class="plan-v25"><span class="plan-name">Advanced</span><div class="price"><strong>₹2,499</strong><span>/month</span></div><p>Planned advanced imaging intelligence for clinics that need deeper clinical tooling.</p><ul><li>Everything in Intelligence</li><li>Advanced imaging workflow</li><li>Credit-based X-ray intelligence</li></ul><a class="button button-secondary" href="#faq">Coming in phases</a></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section faq-section" id="faq"><div class="container faq-grid"><div><p class="overline">Frequently asked</p><h2>Before your clinic starts.</h2><p class="faq-intro">Straight answers about CapDent V25 and the platform.</p></div><div class="faq-list"><details open><summary>Can a clinic start CapDent for free?</summary><p>Yes. The free tier is designed for Android-based clinic management for up to 300 patients.</p></details><details><summary>Does CapDent include a dental chart and clinical files?</summary><p>Yes. CapDent is designed around connected patient records including treatment workflow, dental charting, prescriptions, X-rays and clinical images.</p></details><details><summary>What does CapDent AI do?</summary><p>CapDent AI is intended to help authorized clinic users understand operational and financial data through natural-language questions. It does not replace a dentist’s clinical judgement.</p></details><details><summary>Can receptionists use CapDent?</summary><p>Yes. CapDent supports owners, doctors and receptionists with role-based access suited to clinic responsibilities.</p></details><details><summary>Are all advanced features available immediately?</summary><p>CapDent is being released in phases. Some advanced AI and imaging capabilities may be introduced progressively as the platform expands.</p></details><details><summary>Is the information shown in the product preview real?</summary><p>No. Names, counts and financial values in the website preview are fictional demonstration data.</p></details></div></div></section>
-
-    <section class="final-cta"><div class="container cta-inner"><div><p class="overline light">CapDent V25</p><h2>Manage patients. Manage treatments. Manage money. Understand your clinic.</h2><p>Start with CapDent on Android and grow into dashboard and AI-powered clinic intelligence when your clinic needs it.</p></div><a class="button button-light" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Open Google Play</a></div></section>
-  </main>
-
-  <footer class="site-footer"><div class="container footer-grid"><a class="brand footer-brand" href="#top"><svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#087f72"/><path d="M24 10v28M13.5 16l21 16M34.5 16l-21 16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg><span>CapDent</span></a><p>Dental practice management and clinic intelligence platform by Micirql.</p><small>© 2026 Micirql. Product preview uses fictional demo data.</small></div></footer>
-</body>
-</html>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="container nav-wrap"><a class="brand" href="#top" aria-label="CapDent home"><svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#087f72"/><path d="M24 10v28M13.5 16l21 16M34.5 16l-21 16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg><span>CapDent</span></a><nav class="desktop-nav" aria-label="Primary navigation"><a href="#platform">Platform</a><a href="#features">Features</a><a href="#ai">AI</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="/portal/">Clinic Login</a></nav><a class="header-cta" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get CapDent</a></div></header>
+<main id="main">
+<section class="hero" id="top"><div class="container hero-grid"><div class="hero-copy"><p class="overline">Dental practice management + clinic intelligence</p><h1>Run the clinic.<br><span>Understand the clinic.</span></h1><p class="hero-text">CapDent brings patient management, dental charting, treatments, prescriptions, clinical images, payments, staff workflow, owner analytics and AI-assisted clinic intelligence into one connected platform.</p><div class="hero-actions"><a class="button button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Get CapDent on Google Play</a><a class="button button-secondary" href="#platform">Explore V25</a></div><div class="facts"><div><strong>100</strong><span>Patients on free tier</span></div><div><strong>1 GB</strong><span>Free cloud storage</span></div><div><strong>AI</strong><span>Owner intelligence</span></div></div></div>
+<div class="product-stage" aria-label="CapDent product interface demo"><div class="product-window"><div class="window-bar"><div class="window-brand"><span class="mini-mark">✳</span><div><strong>Smile Care Dental</strong><small>Demo clinic</small></div></div><span class="date-chip">V25</span></div><div class="dashboard-grid"><section class="summary-card summary-main"><span class="label">Today’s collections</span><strong>₹42,600</strong><div class="progress"><span style="width:72%"></span></div><small>18 completed visits</small></section><section class="summary-card"><span class="label">Waiting</span><strong>6</strong><small>2 ready for doctor</small></section><section class="summary-card"><span class="label">Pending dues</span><strong>₹18,400</strong><small>Across 4 patients</small></section></div><div class="work-area"><section class="queue-panel"><div class="panel-title"><div><span class="label">Patient queue</span><strong>Next in clinic</strong></div><span class="count-pill">6 waiting</span></div><div class="queue-list"><article class="patient-row"><span class="avatar">AM</span><div><strong>Anita M.</strong><small>Root canal · Sitting 2</small></div><span class="status ready">Ready</span></article><article class="patient-row"><span class="avatar">RV</span><div><strong>Rahul V.</strong><small>Review · 11:30 AM</small></div><span class="status waiting">Waiting</span></article><article class="patient-row"><span class="avatar">SP</span><div><strong>Shreya P.</strong><small>New consultation</small></div><span class="status checkin">Check-in</span></article></div></section><aside class="today-panel"><div class="panel-title"><div><span class="label">Owner intelligence</span><strong>Needs attention</strong></div></div><div class="attention-card"><span class="attention-icon">₹</span><div><strong>4 pending bills</strong><small>₹18,400 to follow up</small></div></div><div class="attention-card"><span class="attention-icon">AI</span><div><strong>Ask CapDent</strong><small>Understand clinic data faster</small></div></div><button type="button" class="review-button">Open clinic review</button></aside></div></div><p class="demo-note">Interface preview uses fictional demo data.</p></div></div></section>
+<section class="section" id="platform"><div class="container"><div class="section-head"><div><p class="overline">CapDent V25</p><h2>Five parts of the clinic. One connected system.</h2></div><p>CapDent is built to manage the entire daily workflow instead of solving only appointments or billing.</p></div><div class="v25-grid"><article class="v25-card"><span>01</span><h3>Manage Patients</h3><p>Registration, patient search, appointments, queue, history and follow-ups.</p></article><article class="v25-card"><span>02</span><h3>Manage Treatments</h3><p>Dental charting, treatment plans, sittings, prescriptions, X-rays and before/after photos.</p></article><article class="v25-card"><span>03</span><h3>Manage Money</h3><p>Collections, payments, pending dues, adjustments and daily financial review.</p></article><article class="v25-card"><span>04</span><h3>Understand Your Clinic</h3><p>Daily, weekly and monthly performance views for owners and head doctors.</p></article><article class="v25-card"><span>05</span><h3>Ask CapDent AI</h3><p>Owners can ask natural-language questions about clinic activity and get faster operational insights.</p></article></div></div></section>
+<section class="section section-tint" id="features"><div class="container feature-layout"><div class="sticky-copy"><p class="overline">Clinical + operational workflow</p><h2>Much more than a digital register.</h2><p>Every visit, procedure, payment and clinical file stays connected to the right patient and clinic workflow.</p><a class="text-link" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">View CapDent on Google Play →</a></div><div class="feature-list"><article><span>01</span><div><h3>Patient directory & appointments</h3><p>Search patients quickly, manage appointments, walk-ins, queue and follow-up activity.</p></div></article><article><span>02</span><div><h3>Dental chart & treatment workflow</h3><p>Record teeth, treatment plans, procedure progress and multi-sitting clinical work.</p></div></article><article><span>03</span><div><h3>Prescriptions & clinical gallery</h3><p>Keep prescriptions, X-rays, reports and before/after treatment photos with the patient record.</p></div></article><article><span>04</span><div><h3>Payments, dues & corrections</h3><p>Track collections and balances while allowing authorized owners to correct genuine billing mistakes.</p></div></article><article><span>05</span><div><h3>Owner dashboard & analytics</h3><p>Review patient volume, collections, pending payments and clinic performance across daily, weekly and monthly views.</p></div></article><article><span>06</span><div><h3>Roles, staff & multi-clinic readiness</h3><p>Owners, doctors and receptionists get role-based workflows, with the platform designed for growing clinic operations.</p></div></article></div></div></section>
+<section class="section" id="ai"><div class="container"><div class="section-head"><div><p class="overline">CapDent AI · Owner Intelligence</p><h2>Your clinic data becomes easier to understand.</h2></div><p>On the Intelligence plan, the clinic owner or head doctor can use AI chat inside the dashboard to understand operational and financial patterns faster.</p></div><div class="ai-shell"><div class="ai-copy"><p class="overline">Owner-only AI chat</p><h3>Ask your clinic a question.</h3><p>CapDent AI is designed for authorized owner-level dashboard use, turning everyday clinic records into useful business and operational answers without replacing clinical judgement.</p><div class="ai-list"><div>“How much did we collect this month?”</div><div>“Which treatments generated the most revenue?”</div><div>“Show patients with pending dues.”</div><div>“How are we performing compared with last month?”</div></div></div><div class="ai-demo"><div class="ai-question"><strong>Owner:</strong><br>How is the clinic performing this month?</div><div class="ai-answer"><strong>CapDent AI</strong>Collections are higher than the previous period, while pending dues are concentrated in a small group of patients. Review overdue balances and follow-up completion before month-end.</div><div class="ai-question"><strong>Owner:</strong><br>Which patients still need payment follow-up?</div><div class="ai-answer"><strong>CapDent AI</strong>I can surface patients with outstanding balances from the clinic’s authorized records so the owner can review follow-up priorities.</div><p class="demo-note">AI examples are illustrative. Clinical decisions remain with qualified dental professionals.</p></div></div></div></section>
+<section class="section roles-section"><div class="container roles-wrap"><div class="roles-copy"><p class="overline">One clinic, clear responsibilities</p><h2>Useful for every person at the clinic.</h2></div><div class="role-cards"><article><span class="role-dot owner"></span><h3>Owner / Head Doctor</h3><p>Clinic overview, analytics, staff, payments, gallery, operational review and eligible AI-assisted insights.</p></article><article><span class="role-dot doctor"></span><h3>Doctor</h3><p>Patient history, dental chart, treatment planning, sittings, prescriptions and clinical files.</p></article><article><span class="role-dot reception"></span><h3>Reception</h3><p>Check-in, appointments, queue management, patient search, collections and follow-ups.</p></article></div></div></section>
+<section class="section pricing-section" id="pricing"><div class="container"><div class="section-head pricing-head"><div><p class="overline">Plans that grow with the clinic</p><h2>Start free. Upgrade as your clinic grows.</h2></div><p>Begin with 100 patients and 1 GB of cloud storage. Paid tiers add unlimited patient capacity, owner AI intelligence and high-end AI imaging.</p></div><div class="plan-grid-v25">
+<article class="plan-v25"><span class="plan-name">Free</span><div class="price"><strong>₹0</strong></div><p>Start managing your clinic on Android at no cost.</p><ul><li>Up to 100 patients</li><li>1 GB free cloud storage</li><li>Core clinic management workflow</li><li>Owner, doctor and receptionist roles</li></ul><a class="button button-primary" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Start free</a></article>
+<article class="plan-v25 featured"><span class="plan-name">Cloud</span><div class="price"><strong>₹799</strong><span>/month</span></div><p>For clinics that have grown beyond the free 100-patient allowance.</p><ul><li>Unlimited patient capacity</li><li>CapDent web dashboard</li><li>Cloud clinic management</li><li>Owner visibility and analytics</li></ul><a class="button button-secondary" href="#faq">Learn more</a></article>
+<article class="plan-v25"><span class="plan-name">Intelligence</span><div class="price"><strong>₹1,499</strong><span>/month</span></div><p>For clinic owners who want to interact with their clinic data through AI.</p><ul><li>Everything in ₹799 Cloud</li><li>AI chat inside the dashboard</li><li>Owner / head-doctor access only</li><li>Operational and financial clinic intelligence</li></ul><a class="button button-secondary" href="#ai">Explore AI</a></article>
+<article class="plan-v25"><span class="plan-name">AI Imaging</span><div class="price"><strong>₹2,499</strong><span>/month</span></div><p>High-end AI imaging capabilities for advanced dental workflows.</p><ul><li>Everything in ₹1,499 Intelligence</li><li>High-end AI imaging</li><li>Advanced dental image intelligence</li><li>Progressive advanced clinical tooling</li></ul><a class="button button-secondary" href="#faq">Advanced plan</a></article>
+</div></div></section>
+<section class="section faq-section" id="faq"><div class="container faq-grid"><div><p class="overline">Frequently asked</p><h2>Before your clinic starts.</h2><p class="faq-intro">Straight answers about CapDent V25 and the platform.</p></div><div class="faq-list"><details open><summary>Can a clinic start CapDent for free?</summary><p>Yes. The free tier includes core Android clinic management for up to 100 patients and 1 GB of free cloud storage.</p></details><details><summary>What happens after 100 patients?</summary><p>Clinics can move to the ₹799 Cloud plan for unlimited patient capacity, dashboard access and expanded cloud clinic management.</p></details><details><summary>Who can use CapDent AI chat?</summary><p>AI chat is included in the ₹1,499 Intelligence plan and is designed for authorized clinic owner or head-doctor use inside the dashboard.</p></details><details><summary>What is included in the ₹2,499 plan?</summary><p>The AI Imaging plan builds on the Intelligence plan with high-end AI imaging and advanced dental image intelligence capabilities.</p></details><details><summary>Does CapDent include a dental chart and clinical files?</summary><p>Yes. CapDent is designed around connected patient records including treatment workflow, dental charting, prescriptions, X-rays and clinical images.</p></details><details><summary>Is the information shown in the product preview real?</summary><p>No. Names, counts and financial values in the website preview are fictional demonstration data.</p></details></div></div></section>
+<section class="final-cta"><div class="container cta-inner"><div><p class="overline light">CapDent V25</p><h2>Manage patients. Manage treatments. Manage money. Understand your clinic.</h2><p>Start free with 100 patients and 1 GB cloud storage, then grow into dashboard, owner AI intelligence and advanced AI imaging.</p></div><a class="button button-light" href="https://play.google.com/store/apps/details?id=com.dms.clinic" target="_blank" rel="noreferrer">Open Google Play</a></div></section>
+</main>
+<footer class="site-footer"><div class="container footer-grid"><a class="brand footer-brand" href="#top"><svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#087f72"/><path d="M24 10v28M13.5 16l21 16M34.5 16l-21 16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg><span>CapDent</span></a><p>Dental practice management and clinic intelligence platform by Micirql.</p><small>© 2026 Micirql. Product preview uses fictional demo data.</small></div></footer>
+</body></html>
