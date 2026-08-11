@@ -1,0 +1,40 @@
+@media (max-width: 760px) {
+  .admin-mobile-account-wrap { position: relative; flex: 0 0 auto; margin-left: auto; }
+  .admin-mobile-account-trigger {
+    min-width: 52px; height: 42px; padding: 3px 7px 3px 3px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    border: 1px solid #dbe5e1; border-radius: 12px; background: #fff; color: #17313b;
+    box-shadow: 0 3px 12px rgba(16,49,59,.08); cursor: pointer;
+  }
+  .admin-mobile-account-trigger:focus-visible { outline: 3px solid rgba(8,127,114,.18); outline-offset: 2px; }
+  .admin-mobile-avatar {
+    width: 34px; height: 34px; display: grid; place-items: center;
+    border-radius: 10px; background: #087f72; color: #fff; font-size: 11px; font-weight: 850;
+    letter-spacing: .02em;
+  }
+  .admin-mobile-avatar.large { width: 42px; height: 42px; border-radius: 12px; font-size: 12px; }
+  .admin-mobile-menu-caret { font-size: 14px; line-height: 1; color: #64767c; transform: translateY(-1px); }
+  .admin-mobile-account-menu {
+    position: absolute; top: calc(100% + 8px); right: 0; z-index: 80; width: min(286px, calc(100vw - 24px));
+    padding: 10px; border: 1px solid #dbe5e1; border-radius: 16px; background: #fff;
+    box-shadow: 0 18px 48px rgba(15,41,51,.18);
+  }
+  .admin-mobile-account-menu[hidden] { display: none !important; }
+  .admin-mobile-account-head { display: grid; grid-template-columns: 42px minmax(0,1fr); gap: 10px; align-items: center; padding: 4px 4px 10px; }
+  .admin-mobile-account-head > div { min-width: 0; display: grid; gap: 2px; }
+  .admin-mobile-account-head strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #17313b; font-size: 13px; }
+  .admin-mobile-account-head small { color: #64767c; font-size: 10px; }
+  .admin-mobile-clinic-label { padding: 10px; border-radius: 11px; background: #f2f7f5; display: grid; gap: 3px; margin-bottom: 8px; }
+  .admin-mobile-clinic-label span { color: #73858a; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .admin-mobile-clinic-label strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #17313b; font-size: 12px; }
+  .admin-mobile-account-menu button {
+    width: 100%; min-height: 42px; padding: 0 12px; border: 0; border-radius: 10px;
+    background: transparent; color: #17313b; text-align: left; font-size: 13px; font-weight: 750; cursor: pointer;
+  }
+  .admin-mobile-account-menu button:active { background: #f2f7f5; }
+  .admin-mobile-account-menu .admin-mobile-signout { margin-top: 4px; border-top: 1px solid #e3ebe8; border-radius: 0 0 10px 10px; color: #a23838; }
+}
+
+@media (min-width: 761px) {
+  .admin-mobile-account-wrap { display: none !important; }
+}
