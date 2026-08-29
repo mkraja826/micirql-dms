@@ -4,82 +4,114 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f5f8f7">
-  <title>CapDent Account Deletion | Micirql</title>
-  <meta name="description" content="Official CapDent by Micirql account deletion page for the CapDent Android app (com.dms.clinic). Learn how to delete your account and what clinic data is affected.">
-  <meta name="robots" content="index,follow">
+  <title>Delete CapDent Account & Data | CapDent</title>
+  <meta name="description" content="Official CapDent account deletion page for the CapDent Android app (com.dms.clinic). Delete your account in-app or request deletion if you no longer have access to the app.">
+  <meta name="robots" content="index,follow,max-snippet:-1">
   <link rel="canonical" href="https://capdent.in/delete-account/">
   <link rel="icon" href="/capdent-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css?v=20260811-v25-pro">
   <style>
-    body{background:#f5f8f7;color:#17313b}.legal-header{border-bottom:1px solid #d8e7e2;background:#fff}.legal-nav{max-width:1080px;margin:auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}.legal-brand{display:flex;align-items:center;gap:10px;color:#0d2f36;text-decoration:none;font-weight:900;font-size:20px}.legal-brand img{width:38px;height:38px}.legal-back{color:#087f72;text-decoration:none;font-weight:800}.legal-shell{max-width:900px;margin:0 auto;padding:72px 22px 96px}.legal-kicker{margin:0 0 12px;color:#087f72;font-size:12px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}.legal-shell h1{margin:0;color:#0d2f36;font-size:clamp(40px,7vw,64px);letter-spacing:-.045em;line-height:1}.legal-meta{margin:18px 0 38px;color:#607278}.identity{margin:0 0 22px;padding:18px 20px;border-radius:16px;background:#eaf7f4;border:1px solid #cce8e1;color:#244b51;line-height:1.65}.identity strong{color:#0d2f36}.legal-card{margin:0 0 16px;padding:26px;border:1px solid #d8e7e2;border-radius:22px;background:#fff}.legal-card h2{margin:0 0 12px;color:#0d2f36;font-size:22px}.legal-card p,.legal-card li{color:#51696f;line-height:1.75}.legal-card ol,.legal-card ul{padding-left:20px}.legal-card a{color:#087f72;font-weight:800}.delete-action{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 20px;border-radius:12px;background:#0d2f36;color:#fff!important;text-decoration:none;font-weight:900}.warning{padding:18px 20px;border-radius:16px;background:#fff0f0;color:#7a3434;line-height:1.65;border:1px solid #efcccc;font-weight:700}.legal-note{padding:18px 20px;border-radius:16px;background:#fff4e8;color:#6e5133;line-height:1.65;border:1px solid #f1dcc3}.legal-footer{border-top:1px solid #d8e7e2;background:#fff}.legal-footer-inner{max-width:900px;margin:auto;padding:24px 22px;display:flex;flex-wrap:wrap;gap:18px;color:#607278;font-size:13px}.legal-footer a{color:#087f72;text-decoration:none;font-weight:800}@media(max-width:640px){.legal-shell{padding-top:52px}.legal-card{padding:20px}.legal-nav{align-items:flex-start;flex-direction:column}}
+    :root{--accent:#087f72;--dark:#0d2f36;--soft:#eaf6f3;--line:#d8e7e2;--muted:#607278;--danger:#a33b3b;--danger-soft:#fff0f0;--warning:#6e5133;--warning-soft:#fff4e8}
+    body{background:#f5f8f7;color:#17313b}
+    .site-header{background:rgba(248,251,250,.92);backdrop-filter:blur(18px);border-bottom:1px solid rgba(216,231,226,.9)}
+    .legal-nav{min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--dark);font-weight:900;font-size:20px}
+    .brand-mark{width:38px;height:38px;flex:0 0 38px}
+    .back-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--dark);font-weight:850;text-decoration:none}
+    .legal-hero{position:relative;overflow:hidden;padding:88px 0 48px;background:linear-gradient(180deg,#fbfdfc 0%,#f2f8f6 100%)}
+    .legal-hero:before{content:"";position:absolute;width:500px;height:500px;border-radius:50%;right:-170px;top:-250px;background:radial-gradient(circle,rgba(8,127,114,.14),transparent 68%)}
+    .legal-hero-inner{position:relative;max-width:900px}
+    .eyebrow{margin:0 0 14px;color:var(--accent);font-size:12px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+    .legal-hero h1{margin:0;max-width:760px;color:var(--dark);font-size:clamp(44px,7vw,72px);line-height:.98;letter-spacing:-.055em}
+    .legal-hero p{max-width:700px;margin:22px 0 0;color:var(--muted);font-size:17px;line-height:1.75}
+    .identity-strip{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+    .identity-strip span{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#49636a;font-size:12px;font-weight:800}
+    .legal-shell{max-width:900px;margin:0 auto;padding:40px 22px 96px}
+    .legal-card{margin:0 0 16px;padding:28px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 10px 34px rgba(20,52,58,.035)}
+    .legal-card h2{margin:0 0 12px;color:var(--dark);font-size:22px;letter-spacing:-.02em}
+    .legal-card p,.legal-card li{color:#51696f;line-height:1.75}
+    .legal-card ol,.legal-card ul{padding-left:22px}
+    .legal-card strong{color:#274b52}
+    .legal-card a{color:var(--accent);font-weight:850}
+    .steps{display:grid;gap:12px;margin-top:18px;padding:0;list-style:none;counter-reset:steps}
+    .steps li{counter-increment:steps;display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;padding:14px 0;border-bottom:1px solid #edf3f1}
+    .steps li:last-child{border-bottom:0}.steps li:before{content:counter(steps);display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:var(--soft);color:var(--accent);font-weight:900}
+    .delete-action{display:inline-flex;align-items:center;justify-content:center;min-height:52px;margin-top:8px;padding:0 20px;border-radius:12px;background:var(--dark);color:#fff!important;text-decoration:none;font-weight:900}
+    .warning{margin-top:14px;padding:18px 20px;border-radius:16px;background:var(--danger-soft);color:#7a3434!important;border:1px solid #efcccc;font-weight:750}
+    .legal-note{margin-top:14px;padding:18px 20px;border-radius:16px;background:var(--warning-soft);color:var(--warning)!important;border:1px solid #f1dcc3}
+    .legal-footer{border-top:1px solid var(--line);background:#fff}.legal-footer-inner{max-width:900px;margin:auto;padding:26px 22px;display:flex;flex-wrap:wrap;gap:18px;color:var(--muted);font-size:13px}.legal-footer a{color:var(--accent);text-decoration:none;font-weight:800}
+    @media(max-width:680px){.legal-hero{padding:64px 0 38px}.legal-nav{min-height:auto;padding-top:14px;padding-bottom:14px}.brand{font-size:18px}.legal-card{padding:21px}.steps li{grid-template-columns:36px 1fr}.identity-strip{gap:8px}}
   </style>
 </head>
 <body>
-<header class="legal-header">
-  <nav class="legal-nav" aria-label="Legal navigation">
-    <a class="legal-brand" href="/"><img src="/capdent-mark.svg" alt="CapDent logo"><span>CapDent by Micirql</span></a>
-    <a class="legal-back" href="/">Back to CapDent</a>
-  </nav>
-</header>
-<main class="legal-shell">
-  <p class="legal-kicker">Official account deletion page</p>
-  <h1>CapDent Account Deletion</h1>
-  <p class="legal-meta">Delete your CapDent Android app account and understand exactly what happens to clinic data.</p>
-
-  <div class="identity">
-    <strong>App:</strong> CapDent<br>
-    <strong>Developer / service:</strong> Micirql · CapDent<br>
-    <strong>Android package:</strong> com.dms.clinic<br>
-    <strong>Official website:</strong> capdent.in
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container legal-nav">
+    <a class="brand" href="/" aria-label="CapDent home">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#087f72"/><path d="M24 10v28M13.5 16l21 16M34.5 16l-21 16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></svg>
+      <span>CapDent</span>
+    </a>
+    <a class="back-link" href="/">Back to CapDent</a>
   </div>
-
-  <section class="legal-card">
-    <h2>Delete directly inside the CapDent app</h2>
-    <ol>
-      <li>Open the <strong>CapDent</strong> Android app.</li>
-      <li>Open <strong>More → Legal &amp; Account → Delete Account &amp; Data</strong>.</li>
-      <li>Read the deletion warning shown for your clinic role.</li>
-      <li>Enter the confirmation text displayed by CapDent and confirm deletion.</li>
-    </ol>
-    <p>The in-app deletion action permanently deletes the applicable CapDent account without requiring a separate support request.</p>
+</header>
+<main id="main">
+  <section class="legal-hero">
+    <div class="container legal-hero-inner">
+      <p class="eyebrow">Privacy & account controls</p>
+      <h1>Delete your CapDent account and data.</h1>
+      <p>CapDent provides account deletion inside the Android app. This page also explains what is removed for each clinic role and how to request deletion if you no longer have access to the app.</p>
+      <div class="identity-strip" aria-label="CapDent application details">
+        <span>CapDent Android</span><span>Package: com.dms.clinic</span><span>Official domain: capdent.in</span><span>Developer: Micirql</span>
+      </div>
+    </div>
   </section>
 
-  <section class="legal-card">
-    <h2>What is deleted for Owner or Head Doctor</h2>
-    <p>In CapDent, <strong>Owner and Head Doctor are clinic-authority roles</strong>. If an Owner or Head Doctor chooses <strong>Delete Clinic &amp; Account</strong>, CapDent warns that the action will permanently delete the clinic workspace together with the clinic-authority account.</p>
-    <p>This includes clinic-owned data associated with that workspace, such as patients, appointments, visits, treatments, dental charts, prescriptions, X-rays/photos and other clinical files, invoices, payment records, reports, merchant-account configuration, clinic settings and staff access, subject to any records that must legally be retained.</p>
-    <p class="warning">This action cannot be undone. CapDent tells the Owner or Head Doctor to export or retain records the clinic is required to keep before confirming deletion.</p>
-  </section>
+  <div class="legal-shell">
+    <section class="legal-card">
+      <h2>Delete directly inside CapDent</h2>
+      <ol class="steps">
+        <li><span>Open the <strong>CapDent</strong> Android app and sign in.</span></li>
+        <li><span>Open <strong>More → Legal &amp; Account</strong>.</span></li>
+        <li><span>Tap <strong>Delete Account &amp; Data</strong>.</span></li>
+        <li><span>Read the role-specific warning, enter the confirmation text shown by CapDent, and confirm deletion.</span></li>
+      </ol>
+      <p>The in-app action is designed to permanently delete the applicable CapDent account without requiring a separate support request.</p>
+    </section>
 
-  <section class="legal-card">
-    <h2>What is deleted for Doctor, Receptionist or other staff</h2>
-    <p>Deleting a Doctor, Receptionist or other non-authority staff account deletes that user's <strong>CapDent login/profile and clinic access only</strong>.</p>
-    <p>The clinic's patients, appointments, treatments, dental records, files, invoices, payments, reports and other clinic-owned data remain with the clinic.</p>
-  </section>
+    <section class="legal-card">
+      <h2>Owner or Head Doctor</h2>
+      <p>Owner and Head Doctor are treated as clinic-authority roles. Choosing <strong>Delete Clinic &amp; Account</strong> deletes the clinic-authority account and the clinic workspace associated with it.</p>
+      <p>This can include patients, appointments, visits, treatments, dental charts, prescriptions, X-rays, photos and other clinical files, invoices, payment records, reports, clinic settings, receiving-account configuration and staff access.</p>
+      <p class="warning">This action cannot be undone. Export or retain records the clinic is required to keep before confirming deletion.</p>
+    </section>
 
-  <section class="legal-card">
-    <h2>If you no longer have the app</h2>
-    <p>You can also request deletion of your CapDent account from the email address associated with the account. CapDent Support may request only the minimum information necessary to verify that you are authorized to make the request.</p>
-    <p><a class="delete-action" href="mailto:karthikraja826@gmail.com?subject=CapDent%20account%20deletion%20request&body=Hello%20CapDent%20Support%2C%0A%0AI%20want%20to%20request%20deletion%20of%20my%20CapDent%20account.%0A%0APlease%20tell%20me%20the%20minimum%20information%20needed%20to%20verify%20my%20request.%0A">Request CapDent account deletion</a></p>
-  </section>
+    <section class="legal-card">
+      <h2>Doctor, Receptionist or other staff</h2>
+      <p>Deleting a non-authority staff account removes that user’s <strong>CapDent login/profile and clinic access</strong>.</p>
+      <p>The clinic’s patients, appointments, treatments, clinical records, files, invoices, payments, reports and other clinic-owned data remain with the clinic.</p>
+    </section>
 
-  <section class="legal-card">
-    <h2>Records that may need to be retained</h2>
-    <p>Dental clinics or service operators may be required to retain certain medical, billing, security, fraud-prevention, dispute-resolution or legal records. Where retention is legally required, access may be restricted or information may be de-identified where appropriate, and only the information necessary for the applicable obligation is retained for the required period.</p>
-  </section>
+    <section class="legal-card">
+      <h2>If you no longer have the app</h2>
+      <p>You can request account deletion from the email address associated with your CapDent account. Support may request only the minimum information needed to verify that you are authorised to make the request.</p>
+      <a class="delete-action" href="mailto:karthikraja826@gmail.com?subject=CapDent%20account%20deletion%20request&body=Hello%20CapDent%20Support%2C%0A%0AI%20want%20to%20request%20deletion%20of%20my%20CapDent%20account.%0A%0APlease%20tell%20me%20the%20minimum%20information%20needed%20to%20verify%20my%20request.%0A">Request account deletion</a>
+    </section>
 
-  <section class="legal-card">
-    <h2>Security</h2>
-    <p>Never send your password, OTP, UPI PIN, payment credentials, authentication tokens or unnecessary patient information with a deletion request. CapDent will request only the minimum information required for verification.</p>
-  </section>
+    <section class="legal-card">
+      <h2>Records that may need to be retained</h2>
+      <p>Dental clinics or service operators may be legally required to retain certain medical, billing, security, fraud-prevention, dispute-resolution or compliance records. Where retention is legally required, only the information necessary for that obligation should be retained for the applicable period.</p>
+      <p class="legal-note">Account deletion does not remove information that must be retained under applicable law or a clinic’s independent legal obligations.</p>
+    </section>
 
-  <section class="legal-card">
-    <h2>CapDent privacy contact</h2>
-    <p>For CapDent account-deletion or privacy questions, contact <a href="mailto:karthikraja826@gmail.com">karthikraja826@gmail.com</a>. You can also review the <a href="/privacy/">CapDent Privacy Policy</a> and <a href="/terms/">CapDent Terms of Service</a>.</p>
-  </section>
-
-  <p class="legal-note">This is the official account-deletion resource for the CapDent Android application published for package <strong>com.dms.clinic</strong>.</p>
+    <section class="legal-card">
+      <h2>Security and privacy</h2>
+      <p>Never send your password, OTP, UPI PIN, payment credentials, authentication tokens or unnecessary patient information with a deletion request.</p>
+      <p>For privacy or deletion questions, contact <a href="mailto:karthikraja826@gmail.com">karthikraja826@gmail.com</a>. You can also review the <a href="/privacy/">CapDent Privacy Policy</a> and <a href="/terms/">CapDent Terms of Service</a>.</p>
+    </section>
+  </div>
 </main>
-<footer class="legal-footer"><div class="legal-footer-inner"><span>© 2026 Micirql · CapDent</span><a href="/privacy/">CapDent Privacy</a><a href="/terms/">CapDent Terms</a><a href="/delete-account/">CapDent Account Deletion</a></div></footer>
+<footer class="legal-footer">
+  <div class="legal-footer-inner"><span>© 2026 Micirql · CapDent</span><a href="/">CapDent</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/delete-account/">Account deletion</a></div>
+</footer>
 </body>
 </html>
