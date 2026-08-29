@@ -17,6 +17,13 @@ const publicFiles = [
   '_headers',
 ];
 
+const publicDirectories = [
+  'blog',
+  'privacy',
+  'terms',
+  'delete-account',
+];
+
 const releaseNotice = `<aside class="release-notice" role="status" aria-label="CapDent release update">
   <div class="release-notice-track">
     <span><strong>Release update</strong><i aria-hidden="true">•</i>Android app has 13 days remaining in its testing phase<i aria-hidden="true">•</i>iOS will be released based on customer demand</span>
@@ -63,7 +70,11 @@ await rm(outputDir, { recursive: true, force: true });
 await mkdir(outputDir, { recursive: true });
 await Promise.all([
   ...publicFiles.map((file) => copyFile(join(projectRoot, file), join(outputDir, file))),
-  cp(join(projectRoot, 'blog'), join(outputDir, 'blog'), { recursive: true }),
+  ...publicDirectories.map((directory) => cp(
+    join(projectRoot, directory),
+    join(outputDir, directory),
+    { recursive: true },
+  )),
 ]);
 
 const htmlFiles = await findHtmlFiles(outputDir);
@@ -115,4 +126,4 @@ await Promise.all(['robots.txt', 'sitemap.xml'].map(async (file) => {
   await writeFile(path, source.replaceAll('https://capdent.micirql.com', marketingOrigin), 'utf8');
 }));
 
-console.log(`CapDent marketing site built for ${marketingOrigin} with the new logo, favicon, separate login links and release notice across ${htmlFiles.length} HTML pages.`);
+console.log(`CapDent marketing site built for ${marketingOrigin} with the new logo, favicon, separate login links, legal pages and release notice across ${htmlFiles.length} HTML pages.`);
