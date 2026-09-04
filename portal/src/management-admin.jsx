@@ -83,9 +83,18 @@ function InviteForm({ onClose, onSaved }) {
     try {
       const invite = await createStaffInvite(form);
       setCreated(invite);
-      await onSaved();
     } catch (err) { setError(err?.message || 'Unable to create invitation.'); }
     finally { setSaving(false); }
+  }
+
+  async function closeAfterCreate() {
+    if (created) {
+      setSaving(true); setError('');
+      try { await onSaved(); }
+      catch (err) { setError(err?.message || 'Invitation was created, but the team list could not be refreshed.'); setSaving(false); return; }
+      setSaving(false);
+    }
+    onClose();
   }
 
   async function copyCode() {
@@ -94,8 +103,8 @@ function InviteForm({ onClose, onSaved }) {
   }
 
   return <div className="management-overlay" role="dialog" aria-modal="true"><div className="management-drawer">
-    <div className="management-drawer-head"><div><h2>Invite clinic staff</h2><p>The staff member signs up and accepts this clinic code.</p></div><button type="button" onClick={onClose}>×</button></div>
-    {created ? <div className="management-invite-created"><span>Invite code</span><strong>{created.invite_code}</strong><p>Assigned to {created.email || 'any authenticated email'} as {roleLabel(created.role)}.</p><div><button onClick={copyCode}>Copy code</button><button className="admin-primary" onClick={onClose}>Done</button></div></div> : <form onSubmit={submit}>
+    <div className="management-drawer-head"><div><h2>Invite clinic staff</h2><p>The staff member signs up and accepts this clinic code.</p></div><button type="button" onClick={closeAfterCreate} disabled={saving}>×</button></div>
+    {created ? <div className="management-invite-created"><span>Invite code</span><strong>{created.invite_code}</strong><p>Assigned to {created.email || 'any authenticated email'} as {roleLabel(created.role)}.</p>{error ? <Notice type="error">{error}</Notice> : null}<div><button onClick={copyCode} disabled={saving}>Copy code</button><button className="admin-primary" onClick={closeAfterCreate} disabled={saving}>{saving ? 'Refreshing…' : 'Done'}</button></div></div> : <form onSubmit={submit}>
       <div className="management-form-grid"><label>Name<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label><label>Email (recommended)<input type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label><label>Role<select value={form.role} onChange={(event) => setForm({ ...form, role: event.target.value })}><option value="working_doctor">Working doctor</option><option value="receptionist">Receptionist</option></select></label></div>
       <label>Invitation reason<textarea rows="3" value={form.reason} onChange={(event) => setForm({ ...form, reason: event.target.value })} placeholder="Example: Adding evening-shift doctor" required /></label>
       {error ? <Notice type="error">{error}</Notice> : null}
@@ -224,3 +233,4 @@ export default function ManagementAdmin({ profile, clinic, monthStart, mode = 's
 
   return <div className="management-admin"><div className="admin-section-title"><h2>{mode === 'settings' ? 'Clinic management' : 'Doctors and staff'}</h2><p>Owner-controlled access, operations, subscription visibility and monthly activity.</p></div><section className="admin-panel management-tabs"><div>{[['team','Team'],['clinic','Clinic settings'],['storage','Storage'],['subscription','Subscription & devices'],['audit','Audit history']].map(([key, label]) => <button key={key} className={tab === key ? 'active' : ''} onClick={() => setTab(key)}>{label}</button>)}</div><label>Activity month<input type="month" value={month} max={new Date().toISOString().slice(0, 7)} onChange={(event) => setMonth(event.target.value)} /></label></section>{error ? <Notice type="error">{error}</Notice> : null}{loading ? <section className="admin-panel admin-empty">Loading clinic management…</section> : <>{tab === 'team' ? <TeamTab overview={overview} actor={profile} onReload={reloadAll} /> : null}{tab === 'clinic' ? <ClinicTab clinic={currentClinic} onSaved={reloadAll} /> : null}{tab === 'storage' ? <StorageTab storage={overview.storage} /> : null}{tab === 'subscription' ? <SubscriptionTab subscription={overview.subscription} devices={overview.devices} currency={currentClinic.currency_code} /> : null}{tab === 'audit' ? <AuditTab audit={overview.audit} /> : null}</>}</div>;
 }
+
