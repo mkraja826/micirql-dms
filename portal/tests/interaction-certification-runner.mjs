@@ -15,6 +15,10 @@ const settingsMarker = "await nav(page,'Clinic settings'); await page.getByLabel
 if (!patched.includes(settingsMarker)) throw new Error('Clinic settings interaction marker changed; update the certification runner.');
 patched = patched.replace(settingsMarker, "await nav(page,'Clinic settings'); await page.getByLabel('Settings-change reason').fill('Interaction certification');");
 
+const settingsSubmitMarker = "await page.locator('.management-settings button[type=\"submit\"]').click();";
+if (!patched.includes(settingsSubmitMarker)) throw new Error('Clinic settings save marker changed; update the certification runner.');
+patched = patched.replace(settingsSubmitMarker, "await page.getByRole('button',{name:'Save audited settings',exact:true}).click();");
+
 writeFileSync(runtimePath, patched, 'utf8');
 try {
   await import(`${pathToFileURL(runtimePath).href}?run=${Date.now()}`);
