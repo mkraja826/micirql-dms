@@ -77,7 +77,7 @@ jobs:
 
           node portal/tests/smoke.mjs
           node portal/tests/authenticated.mjs
-          node portal/tests/interaction-certification.mjs
+          node portal/tests/interaction-certification-v2.mjs
 
       - name: Upload static build
         uses: actions/upload-artifact@v4
