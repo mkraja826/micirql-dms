@@ -26,7 +26,12 @@ export default function AppointmentAdmin({ profile, monthStart, monthEnd, onChan
     setData(rows);
     if (selected) {
       const current = rows.appointments.find((row) => row.id === selected.id);
-      if (current) selectAppointment(current);
+      if (current) await selectAppointment(current);
+      else {
+        setSelected(null);
+        setAudit([]);
+        setForm(blank);
+      }
     }
   }
 
@@ -75,7 +80,7 @@ export default function AppointmentAdmin({ profile, monthStart, monthEnd, onChan
     <div className="appointment-layout">
       <section className="admin-panel appointment-list-panel">
         <div className="appointment-toolbar"><input placeholder="Search patient, phone or doctor" value={search} onChange={(e) => setSearch(e.target.value)} /><select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}><option value="all">All statuses</option>{totals.map((item) => <option key={item.status} value={item.status}>{item.status.replaceAll('_', ' ')}</option>)}</select></div>
-        <div className="appointment-list">{filtered.map((row) => <button key={row.id} className={selected?.id === row.id ? 'selected' : ''} onClick={() => selectAppointment(row)}><div><strong>{row.patient?.name || 'Unknown patient'}</strong><span>{row.patient?.phone || 'No phone'} · {row.doctor?.name || 'Unassigned'}</span></div><div><b>{dateText(row.appointment_time)}</b><em className={`appointment-status ${row.status}`}>{row.status.replaceAll('_', ' ')}</em></div></button>)}{!filtered.length && <div className="admin-empty">No appointments match this month and filter.</div>}</div>
+        <div className="appointment-list">{filtered.map((row) => <button key={row.id} className={selected?.id === row.id ? 'selected' : ''} onClick={() => selectAppointment(row)}><div><strong>{row.patient?.name || 'Unknown patient'}</strong><span>{row.patient?.phone || 'No phone'} · {row.doctor?.name || 'Unassigned'}</span></div><div><b>{dateText(row.appointment_time)}</b><em className={`appointment-status ${row.status}`}>{row.status.replaceAll('_', ' ')}</em></div></button>)}{!filtered.length && <div className="admin-empty">No appointments match this selected period and filter.</div>}</div>
       </section>
       <section className="admin-panel appointment-editor">
         <div className="admin-panel-head"><div><h2>{selected ? 'Modify appointment' : 'Create appointment'}</h2><p>{selected ? 'Every changed field is preserved in audit history.' : 'Creates a scheduled appointment in the shared Android database.'}</p></div></div>
