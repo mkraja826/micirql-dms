@@ -7,6 +7,17 @@ const dateText = (value) => value ? new Intl.DateTimeFormat('en-IN', { day: '2-d
 
 function normalisePhone(value) { return String(value ?? '').replace(/\D/g, '').slice(-10); }
 function normaliseName(value) { return String(value ?? '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+function normaliseEmail(value) { return String(value ?? '').trim().toLowerCase(); }
+function duplicateKeys(patient) {
+  const keys = [];
+  const phone = normalisePhone(patient.phone);
+  const name = normaliseName(patient.name);
+  const email = normaliseEmail(patient.email);
+  if (phone.length >= 7) keys.push(`phone:${phone}`);
+  if (name.length >= 5 && email) keys.push(`name-email:${name}:${email}`);
+  if (name.length >= 5 && patient.dob) keys.push(`name-dob:${name}:${patient.dob}`);
+  return keys;
+}
 
 export default function PatientAdmin({ patients, profile, periodStart, periodEnd, periodLabel, onChanged }) {
   const [query, setQuery] = useState('');
@@ -25,8 +36,7 @@ export default function PatientAdmin({ patients, profile, periodStart, periodEnd
     const ids = new Set();
     const buckets = new Map();
     patients.forEach((patient) => {
-      const keys = [normalisePhone(patient.phone), normaliseName(patient.name)].filter((value) => value.length >= 5);
-      keys.forEach((key) => {
+      duplicateKeys(patient).forEach((key) => {
         const list = buckets.get(key) || [];
         list.push(patient.id);
         buckets.set(key, list);
@@ -41,7 +51,7 @@ export default function PatientAdmin({ patients, profile, periodStart, periodEnd
     if (status === 'active' && archived) return false;
     if (status === 'archived' && !archived) return false;
     if (timeScope === 'period' && periodStart && periodEnd && (patient.created_at < periodStart || patient.created_at > periodEnd)) return false;
-    const haystack = [patient.name, patient.phone, patient.email, patient.patient_code].join(' ').toLowerCase();
+    const haystack = [patient.name, patient.phone, patient.email, patient.patient_code].map((value) => String(value ?? '')).join(' ').toLowerCase();
     return haystack.includes(query.trim().toLowerCase());
   }), [patients, query, status, timeScope, periodStart, periodEnd]);
 
