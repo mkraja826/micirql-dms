@@ -19,6 +19,10 @@ const settingsSubmitMarker = "await page.locator('.management-settings button[ty
 if (!patched.includes(settingsSubmitMarker)) throw new Error('Clinic settings save marker changed; update the certification runner.');
 patched = patched.replace(settingsSubmitMarker, "await page.getByRole('button',{name:'Save audited settings',exact:true}).click();");
 
+const printMarker = "if(!await page.evaluate(()=>Boolean(window.__capdentPrinted))) throw new Error('Print / Save PDF did not invoke window.print().');";
+if (!patched.includes(printMarker)) throw new Error('Print interaction marker changed; update the certification runner.');
+patched = patched.replace(printMarker, "await page.waitForFunction(()=>Boolean(window.__capdentPrinted));");
+
 writeFileSync(runtimePath, patched, 'utf8');
 try {
   await import(`${pathToFileURL(runtimePath).href}?run=${Date.now()}`);
